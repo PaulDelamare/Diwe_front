@@ -39,8 +39,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Center(
                     child: Container(
-                      width: 190,
-                      height: 190,
+                      width: 185,
+                      height: 185,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
@@ -50,31 +50,48 @@ class _HomePageState extends State<HomePage> {
                           '123', // donnée fictive en chiffre
                           style: TextStyle(
                             color: Color(0xFF004396),
-                            fontSize: 44,
+                            fontSize: 64,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                   ),
+                  Positioned(
+                    bottom: 45,
+                    left: 90, // Déplacement vers la droite
+                    child: Container(
+                      width: 100,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white, // Couleur du fond du sélecteur
+                      ),
+                      child: Center(
+                        child: DropdownButton<String>(
+                          value: _selectedUnit,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedUnit = newValue!;
+                            });
+                          },
+                          items: <String>['mmol/L', 'mg/dl'].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  color: Color(0xFF004396), // Couleur du texte
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-            SizedBox(height: 20),
-            // DropdownButton pour choisir l'unité
-            DropdownButton<String>(
-              value: _selectedUnit,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedUnit = newValue!;
-                });
-              },
-              items: <String>['mmol/L', 'mg/dl'].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
           ],
         ),
