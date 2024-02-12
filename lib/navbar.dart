@@ -51,8 +51,8 @@ class _NavbarState extends State<Navbar> {
           _assetPaths.length,
               (index) => BottomNavigationBarItem(
             icon: SizedBox(
-              width: 34,
-              height: 34,
+              width: 30,
+              height: 30,
               child: Image.asset(_assetPaths[index]),
             ),
             label: _labels[index],
