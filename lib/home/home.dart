@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Converter {
-  static double mmolToMgdl(double mmol) {
-    return mmol * 18.0182;
-  }
-
-  static double mgdlToMmol(double mgdl) {
-    return mgdl / 18.0182;
-  }
+void main() {
+  runApp(MaterialApp(
+    home: HomePage(),
+  ));
 }
 
 class HomePage extends StatefulWidget {
@@ -17,13 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _selectedUnit = 'mmol/L'; // Unité par défaut
-  double _glucoseValue = 6.2; // Valeur par défaut du glucose
-
-  void _updateGlucoseValue(double newValue) {
-    setState(() {
-      _glucoseValue = newValue;
-    });
-  }
+  double _glycemicValue = 6.2; // Valeur glycémique par défaut
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +23,13 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
+          // Cercle glycémique
           Container(
             width: 200,
             height: 200,
             child: Stack(
               children: [
+                // Dégradé de fond du cercle
                 Center(
                   child: Container(
                     width: double.infinity,
@@ -52,6 +44,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                // Conteneur blanc du cercle
                 Center(
                   child: Container(
                     width: 185,
@@ -61,17 +54,22 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                     ),
                     child: Center(
-                      child: Text(
-                        '$_glucoseValue', // Affiche la valeur du glucose
-                        style: TextStyle(
-                          color: Color(0xFF004396),
-                          fontSize: 64,
-                          fontWeight: FontWeight.bold,
+                      // Texte avec valeur glycémique ajustée au cercle
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          _glycemicValue.toStringAsFixed(1),
+                          style: TextStyle(
+                            color: Color(0xFF004396),
+                            fontSize: 64,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
+                // Sélecteur d'unité de mesure
                 Positioned(
                   bottom: 45,
                   left: 90,
@@ -87,13 +85,12 @@ class _HomePageState extends State<HomePage> {
                         value: _selectedUnit,
                         onChanged: (newValue) {
                           setState(() {
-                            if (_selectedUnit != newValue) {
-                              _selectedUnit = newValue!;
-                              if (_selectedUnit == 'mg/dl') {
-                                _glucoseValue = Converter.mmolToMgdl(_glucoseValue);
-                              } else {
-                                _glucoseValue = Converter.mgdlToMmol(_glucoseValue);
-                              }
+                            _selectedUnit = newValue!;
+                            // Mise à jour de la valeur glycémique en fonction de l'unité sélectionnée
+                            if (_selectedUnit == 'mmol/L') {
+                              _glycemicValue = 6.2; // Valeur arbitraire en mmol/L
+                            } else {
+                              _glycemicValue = 112; // Valeur arbitraire en mg/dl
                             }
                           });
                         },
@@ -112,19 +109,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: 80,
-                  left: 150,
-                  child: Icon(
-                    Icons.arrow_forward,
-                    color: Color(0xFF004396),
-                    size: 45,
-                  ),
-                ),
               ],
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 20), // Espace entre les deux blocs
+          // Fond bleu en dessous du cercle
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -138,6 +127,7 @@ class _HomePageState extends State<HomePage> {
                   topRight: Radius.circular(20),
                 ),
               ),
+              // Autres widgets à l'intérieur de ce conteneur
             ),
           ),
         ],
