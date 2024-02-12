@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home/home.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -26,9 +27,17 @@ class _NavbarState extends State<Navbar> {
     'Commandes',
   ];
 
+
+  //pour faire la navigation
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 2) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
     });
   }
 
