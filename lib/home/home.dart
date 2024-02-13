@@ -3,6 +3,7 @@ import 'glycemie.dart';
 import 'graphique.dart';
 import 'buttonBlog.dart';
 import 'buttonOrdonnance.dart';
+import 'buttonScanne.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -57,8 +58,9 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 25),
                   ButtonBlogCard(),
 
-                  SizedBox(height: 1),
                   ButtonOrdonnanceCard(),
+
+                  ButtonScanCard(),
                 ],
               ),
             ),
