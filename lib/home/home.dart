@@ -36,7 +36,33 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
-            SizedBox(height: 20), // Espace entre les deux blocs
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end, // Alignement vers la droite
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    // Action à effectuer lorsque la partie est cliquée
+                    // Naviguer vers la page d'email
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 20), // Espacement vers la droite
+                    child: CircleAvatar(
+                      backgroundColor: Color(0xFF0C8CE9), // Couleur de fond du cercle
+                      radius: 30, // Rayon réduit du cercle
+                      child: Icon(
+                        Icons.mail, // Icône lettre
+                        color: Colors.white, // Couleur de l'icône
+                        size: 35, // Taille de l'icône réduite
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+
+            SizedBox(height: 10), // Espace entre l'icône et la partie fond bleu
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
