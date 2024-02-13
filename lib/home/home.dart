@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'glycemie.dart';
 import 'graphique.dart';
+import 'buttonBlog.dart'; // Importez le fichier buttonBlog.dart
 
 void main() {
   runApp(MaterialApp(
@@ -49,9 +50,15 @@ class _HomePageState extends State<HomePage> {
                   topRight: Radius.circular(20),
                 ),
               ),
+              child: Column(
+                children: [
+                  SizedBox(height: 20), // Espacement entre le graphique et la carte
+                  GlycemicChart(), // Graphique existant
 
-              // Conteneur pour le graphique
-              child: GlycemicChart(),
+                  SizedBox(height: 20), // Espacement entre le graphique et la carte
+                  ButtonBlogCard(), // Ajout de la carte ButtonBlogCard
+                ],
+              ),
             ),
           ),
         ],

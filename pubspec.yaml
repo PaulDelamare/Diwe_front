@@ -66,6 +66,7 @@ flutter:
     - assets/home.png
     - assets/repas.png
     - assets/commandes.png
+    - assets/blog.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
