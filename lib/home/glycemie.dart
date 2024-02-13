@@ -16,7 +16,7 @@ class GlycemieCircle extends StatefulWidget {
 
 class _GlycemieCircleState extends State<GlycemieCircle> {
   double _mmolLValue = 10; // Valeur glycémique par défaut en mmol/L
-  double _mgdlValue = 180; // Valeur glycémique par défaut en mg/dl
+  double _mgdlValue = 112.0; // Valeur glycémique par défaut en mg/dl
 
   // Méthode pour convertir la valeur glycémique en mg/dl
   void _convertToMgdl(double mmolLValue) {
@@ -57,6 +57,7 @@ class _GlycemieCircleState extends State<GlycemieCircle> {
               ),
             ),
           ),
+
           // Conteneur du cercle blanc
           Center(
             child: Container(
@@ -66,6 +67,7 @@ class _GlycemieCircleState extends State<GlycemieCircle> {
                 shape: BoxShape.circle,
                 color: Colors.white,
               ),
+
               // Texte avec valeur glycémique ajustée au cercle
               child: Center(
                 child: FittedBox(
@@ -85,6 +87,7 @@ class _GlycemieCircleState extends State<GlycemieCircle> {
               ),
             ),
           ),
+
           // Sélecteur d'unité de mesure
           Positioned(
             bottom: 45,

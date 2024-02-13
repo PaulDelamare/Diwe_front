@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'glycemie.dart';
+import 'graphique.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? _selectedUnit = 'mmol/L'; // Modifier le type du variable
+  String? _selectedUnit = 'mmol/L';
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,9 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
+
           SizedBox(height: 20), // Espace entre les deux blocs
+
           // Fond bleu en dessous du cercle
           Expanded(
             child: Container(
@@ -46,7 +49,9 @@ class _HomePageState extends State<HomePage> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              // Autres widgets à l'intérieur de ce conteneur
+
+              // Conteneur pour le graphique
+              child: GlycemicChart(),
             ),
           ),
         ],
