@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'glycemie.dart';
 import 'graphique.dart';
-import 'buttonBlog.dart'; // Importez le fichier buttonBlog.dart
+import 'buttonBlog.dart';
+import 'buttonOrdonnance.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,22 +24,19 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Column(
-        children: [
-          GlycemieCircle(
-            selectedUnit: _selectedUnit,
-            onUnitChanged: (newValue) {
-              setState(() {
-                _selectedUnit = newValue;
-              });
-            },
-          ),
-
-          SizedBox(height: 20), // Espace entre les deux blocs
-
-          // Fond bleu en dessous du cercle
-          Expanded(
-            child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            GlycemieCircle(
+              selectedUnit: _selectedUnit,
+              onUnitChanged: (newValue) {
+                setState(() {
+                  _selectedUnit = newValue;
+                });
+              },
+            ),
+            SizedBox(height: 20), // Espace entre les deux blocs
+            Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFF004396), Color(0xFF0C8CE9)],
@@ -51,17 +49,21 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: 20), // Espacement entre le graphique et la carte
-                  GlycemicChart(), // Graphique existant
+                  SizedBox(height: 5),
+                  GlycemicChart(),
 
-                  SizedBox(height: 20), // Espacement entre le graphique et la carte
-                  ButtonBlogCard(), // Ajout de la carte ButtonBlogCard
+                  SizedBox(height: 25),
+                  ButtonBlogCard(),
+
+                  SizedBox(height: 1),
+                  ButtonOrdonnanceCard(),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
