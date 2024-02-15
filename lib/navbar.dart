@@ -12,11 +12,11 @@ class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
 
   static const List<String> _assetPaths = [
-    'assets/user.png',
-    'assets/bolus.png',
-    'assets/home.png',
-    'assets/repas.png',
-    'assets/commandes.png',
+    'assets/images/user.png',
+    'assets/images/bolus.png',
+    'assets/images/home.png',
+    'assets/images/repas.png',
+    'assets/images/commandes.png',
   ];
 
   static const List<String> _labels = [

@@ -24,7 +24,7 @@ class ButtonBlogCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
                   child: Image.asset(
-                    'assets/blog.png', // Chemin de votre image dans le dossier assets
+                    'assets/images/blog.png', // Chemin de votre image dans le dossier assets
                     fit: BoxFit.cover,
                   ),
                 ),

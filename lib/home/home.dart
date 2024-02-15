@@ -5,6 +5,11 @@ import 'buttonBlog.dart';
 import 'buttonOrdonnance.dart';
 import 'buttonScanne.dart';
 
+
+//note a moi même faire un dossier images dans le dossier assets
+
+
+
 void main() {
   runApp(MaterialApp(
     home: HomePage(),
