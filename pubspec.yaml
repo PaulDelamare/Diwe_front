@@ -37,6 +37,7 @@ dependencies:
   http: ^1.2.0
   hive: ^2.2.3
   flutter_secure_storage: ^9.0.0
+  fl_chart: ^0.35.0
 
 dev_dependencies:
   flutter_test:
@@ -60,11 +61,12 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/user.png
-    - assets/bolus.png
-    - assets/home.png
-    - assets/repas.png
-    - assets/commandes.png
+    - assets/images/user.png
+    - assets/images/bolus.png
+    - assets/images/home.png
+    - assets/images/repas.png
+    - assets/images/commandes.png
+    - assets/images/blog.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

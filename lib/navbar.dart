@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home/home.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -11,11 +12,11 @@ class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
 
   static const List<String> _assetPaths = [
-    'assets/user.png',
-    'assets/bolus.png',
-    'assets/home.png',
-    'assets/repas.png',
-    'assets/commandes.png',
+    'assets/images/user.png',
+    'assets/images/bolus.png',
+    'assets/images/home.png',
+    'assets/images/repas.png',
+    'assets/images/commandes.png',
   ];
 
   static const List<String> _labels = [
@@ -26,9 +27,17 @@ class _NavbarState extends State<Navbar> {
     'Commandes',
   ];
 
+
+  //pour faire la navigation
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 2) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
     });
   }
 
