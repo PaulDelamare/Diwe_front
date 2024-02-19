@@ -1,5 +1,6 @@
 name: diwe_front
 description: "A new Flutter project."
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -30,14 +31,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^1.2.0
   hive: ^2.2.3
   flutter_secure_storage: ^9.0.0
+  fl_chart: ^0.35.0
 
 dev_dependencies:
   flutter_test:
@@ -55,14 +55,20 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
 
   assets:
-       - assets/images/dewi_logo.png
+    - assets/images/dewi_logo.png
+    - assets/images/user.png
+    - assets/images/bolus.png
+    - assets/images/home.png
+    - assets/images/repas.png
+    - assets/images/commandes.png
+    - assets/images/blog.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
