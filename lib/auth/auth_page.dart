@@ -3,25 +3,7 @@ import 'package:flutter/material.dart';
 import '../custom/custom_input.dart';
 import '../main.dart';
 
-void main() {
-  runApp(const MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DI WE',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const Authpage(),
-    );
-  }
-}
 
 class Authpage extends StatelessWidget {
   const Authpage ({super.key});
