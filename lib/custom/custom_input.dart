@@ -43,3 +43,56 @@ class CustomInput extends StatelessWidget {
     );
   }
 }
+
+class CustomFormInput extends StatelessWidget {
+  final Color backgroundColor;
+  final Color borderColor;
+  final String placeholder;
+  final Color textColor;
+  final double width;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
+  final bool isPassword;
+
+  const CustomFormInput({
+    Key? key,
+    this.backgroundColor = Colors.white,
+    this.borderColor = Colors.blue,
+    this.placeholder = '',
+    this.textColor = Colors.black,
+    this.width = double.infinity,
+    this.keyboardType = TextInputType.text,
+    required this.controller,
+    this.isPassword = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 0, bottom: 0),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(
+          color: borderColor,
+          width: 1.0,
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: placeholder,
+          hintStyle: TextStyle(color: textColor.withOpacity(0.7)),
+        ),
+        style: TextStyle(
+          color: textColor,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+}

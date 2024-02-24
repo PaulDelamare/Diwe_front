@@ -68,6 +68,7 @@ flutter:
     - assets/images/repas.png
     - assets/images/commandes.png
     - assets/images/blog.png
+    - assets/images/diwe_blanc.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

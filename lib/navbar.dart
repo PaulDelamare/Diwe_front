@@ -1,3 +1,4 @@
+import 'package:diwe_front/auth/auth_page.dart';
 import 'package:flutter/material.dart';
 import 'home/home.dart';
 
@@ -36,6 +37,12 @@ class _NavbarState extends State<Navbar> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+      if (_selectedIndex == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Authpage()),
         );
       }
     });

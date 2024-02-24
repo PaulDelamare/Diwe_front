@@ -1,3 +1,4 @@
+import 'package:diwe_front/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import '../custom/custom_input.dart';
 import '../main.dart';
@@ -98,6 +99,12 @@ class Authpage extends StatelessWidget {
                   placeholder: 'Connexion',
                   textColor: Colors.white,
                   width: 250.0,
+                  onTap: () {
+                    // Action à exécuter au tapotement
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LoginPage()), // Assurez-vous que la destination est valide.
+                    );
+                  },
                 ),
                 SizedBox(height: 16),
                 CustomInput(
@@ -109,7 +116,7 @@ class Authpage extends StatelessWidget {
                   onTap: () {
                     // Action à exécuter au tapotement
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => MyHomePage(title: 'claude')), // Assurez-vous que la destination est valide.
+                      MaterialPageRoute(builder: (context) => MyHomePage()), // Assurez-vous que la destination est valide.
                     );
                   },
                 ),
