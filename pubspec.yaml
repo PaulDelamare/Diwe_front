@@ -38,6 +38,7 @@ dependencies:
   hive: ^2.2.3
   flutter_secure_storage: ^9.0.0
   fl_chart: ^0.35.0
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +70,7 @@ flutter:
     - assets/images/commandes.png
     - assets/images/blog.png
     - assets/images/diwe_blanc.png
+    - .env
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

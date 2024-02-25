@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import '../service/authService.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -15,68 +13,31 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final storage = FlutterSecureStorage(); // Créez le storage
+  final AuthService authService = AuthService();
+  double getScreenHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
 
   Future<void> _login() async {
-    final String apiUrl = 'http://10.0.2.2:3000/api/auth/login';
-
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'email': _emailController.text,
-        'password': _passwordController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      // Connexion réussie, traiter la réponse ici si nécessaire
-      print('Connexion réussie');
-
-      // Récupérer le jeton à partir de la réponse JSON
-      final token = jsonDecode(response.body)['access_token'];
-      // Extraire les données de l'utilisateur
-      final user = jsonDecode(response.body)['user'];
-
-      final firstname = user['firstname'];
-      final lastname = user['lastname'];
-      final email = user['email'];
-      final role = user['role'];
-      final phone = user['phone'];      
-
-      // Stocker le jeton de manière sécurisée
-      await storage.write(key: 'jwt', value: token);
-
-// Imprimer la valeur du jeton
-      print(token);
-      print(user);
-
-    } else {
-      // Connexion échouée, afficher un message d'erreur
-      print('Erreur de connexion: ${response.statusCode}');
-      print('Corps de la réponse: ${response.body}');
-    }
+    await authService.login(_emailController.text, _passwordController.text);
+    final String? token = await authService.getToken();
+    final dynamic user = await authService.getUser();
   }
 
 
-
+  @override
   Widget build(BuildContext context) {
-    // Obtenez la hauteur totale de l'écran
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          height: screenHeight,
+          height: getScreenHeight(context),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               colors: [
-                Color(0xFF004396), // Couleur de début
-                Color(0xFF0066CC), // Couleur de fin, ajustez selon le dégradé désiré
+                Color(0xFF004396),
+                Color(0xFF0066CC),
               ],
             ),
           ),
@@ -84,7 +45,9 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1), // Espace dynamique en fonction de la taille de l'écran
+                SizedBox(
+                  height: getScreenHeight(context) * 0.1,
+                ),
                 Image.asset(
                   'assets/images/diwe_blanc.png',
                   width: 250,
@@ -121,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF004396),
-                    onPrimary: Colors.white, // Couleur du texte du bouton
+                    onPrimary: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
