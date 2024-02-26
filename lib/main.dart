@@ -61,9 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('DIWE'),
-      ),
       // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
