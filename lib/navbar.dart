@@ -29,12 +29,6 @@ class _NavbarState extends State<Navbar> {
     'Commandes',
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -46,7 +40,12 @@ class _NavbarState extends State<Navbar> {
         selectedItemColor: const Color(0xFF0C8CE9),
         unselectedItemColor: const Color(0xFF004396),
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          widget.onItemTapped(index); // Utiliser la fonction fournie par le widget parent
+        },
         items: List.generate(
           _assetPaths.length,
               (index) => BottomNavigationBarItem(
