@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'home/home.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -27,30 +26,19 @@ class _NavbarState extends State<Navbar> {
     'Commandes',
   ];
 
-
-  //pour faire la navigation
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (_selectedIndex == 2) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('DIWE'),
-      ),
-      body: Center(
-        child: Text('Selected Page: ${_labels[_selectedIndex]}'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: BottomNavigationBar(
         backgroundColor: const Color(0xFFF8F8F8),
         selectedItemColor: const Color(0xFF0C8CE9),
         unselectedItemColor: const Color(0xFF004396),

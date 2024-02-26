@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
+import '../navbar.dart';
 import 'glycemie.dart';
 import 'graphique.dart';
 import 'buttonBlog.dart';
 import 'buttonOrdonnance.dart';
 import 'buttonScanne.dart';
-
-
-//note a moi même faire un dossier images dans le dossier assets
-
-
-
-void main() {
-  runApp(MaterialApp(
-    home: HomePage(),
-  ));
-}
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,7 +31,7 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
-
+            SizedBox(height: 10), // Espace entre les deux blocs
             Row(
               mainAxisAlignment: MainAxisAlignment.end, // Alignement vers la droite
               children: [
@@ -65,8 +55,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-
-
             SizedBox(height: 10), // Espace entre l'icône et la partie fond bleu
             Container(
               decoration: BoxDecoration(
@@ -85,12 +73,9 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   SizedBox(height: 5),
                   GlycemicChart(),
-
                   SizedBox(height: 25),
                   ButtonBlogCard(),
-
                   ButtonOrdonnanceCard(),
-
                   ButtonScanCard(),
                 ],
               ),
@@ -98,6 +83,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+
     );
   }
 }
