@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../navbar.dart';
 import 'glycemie.dart';
 import 'graphique.dart';
 import 'buttonBlog.dart';
@@ -7,6 +6,8 @@ import 'buttonOrdonnance.dart';
 import 'buttonScanne.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Accueil'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -31,31 +32,28 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
-            SizedBox(height: 10), // Espace entre les deux blocs
+            SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end, // Alignement vers la droite
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    // Action à effectuer lorsque la partie est cliquée
-                    // Naviguer vers la page d'email
-                  },
+                  onTap: () {},
                   child: Padding(
-                    padding: EdgeInsets.only(right: 20), // Espacement vers la droite
+                    padding: EdgeInsets.only(right: 20),
                     child: CircleAvatar(
-                      backgroundColor: Color(0xFF0C8CE9), // Couleur de fond du cercle
-                      radius: 30, // Rayon réduit du cercle
+                      backgroundColor: Color(0xFF0C8CE9),
+                      radius: 30,
                       child: Icon(
-                        Icons.mail, // Icône lettre
-                        color: Colors.white, // Couleur de l'icône
-                        size: 35, // Taille de l'icône réduite
+                        Icons.mail,
+                        color: Colors.white,
+                        size: 35,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10), // Espace entre l'icône et la partie fond bleu
+            SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(

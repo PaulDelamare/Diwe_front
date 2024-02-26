@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'navbar.dart'; // Importez votre Navbar ici
-import 'home/home.dart'; // Importez votre home.dart ici
+import 'navbar.dart';
+import 'home/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,11 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const MyHomePage(),
-        // Ajoutez d'autres routes pour les autres pages ici
+        '/Accueil': (context) => const HomePage(),
+        //'/profile': (context) => const ProfilePage(),
+        //'/bolus': (context) => const BolusPage(),
+        //'/repas': (context) => const RepasPage(),
+        //'/commandes': (context) => const CommandesPage(),
       },
     );
   }
@@ -36,30 +40,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
+  // Variable pour stocker le contenu de la page sélectionnée
+  Widget _selectedPage = Container();
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      // Mettez à jour le contenu de la page sélectionnée en fonction de l'index
+      switch (index) {
+        case 2:
+          _selectedPage = const HomePage(); // Afficher le contenu de home.dart
+          break;
+      // Ajoutez d'autres cas pour les autres pages si nécessaire
+        default:
+          _selectedPage = Container(); // Par défaut, afficher un conteneur vide
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget bodyWidget;
-    switch (_selectedIndex) {
-      case 0:
-        bodyWidget = HomePage(); // Afficher le contenu de home.dart
-        break;
-    // Ajoutez d'autres cas pour les autres pages si nécessaire
-      default:
-        bodyWidget = Container(); // Par défaut, afficher un conteneur vide
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('DIWE'),
       ),
-      body: bodyWidget, // Afficher le contenu de la page correspondante
-      bottomNavigationBar: Navbar(), // Utilisez votre Navbar ici
+      // Afficher le contenu de la page sélectionnée
+      body: _selectedPage,
+      bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
     );
   }
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({Key? key}) : super(key: key);
+  final Function(int) onItemTapped;
+
+  const Navbar({Key? key, required this.onItemTapped}) : super(key: key);
 
   @override
   State<Navbar> createState() => _NavbarState();
 }
+
 
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
