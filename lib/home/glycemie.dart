@@ -15,7 +15,7 @@ class GlycemieCircle extends StatefulWidget {
 }
 
 class _GlycemieCircleState extends State<GlycemieCircle> {
-  double _mmolLValue = 10; // Valeur glycémique par défaut en mmol/L
+  double _mmolLValue = 5; // Valeur glycémique par défaut en mmol/L
   double _mgdlValue = 112.0; // Valeur glycémique par défaut en mg/dl
 
   // Méthode pour convertir la valeur glycémique en mg/dl
