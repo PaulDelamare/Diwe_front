@@ -70,10 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              width: 50,
+              width: 85,
               height: 50,
               decoration: BoxDecoration(
-                shape: BoxShape.circle, // Forme de cercle pour le conteneur
+                shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -82,27 +82,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     offset: Offset(0, 2),
                   ),
                 ],
+                color: Color(0xFFFF914D),
               ),
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFF914D),
-                ),
-                child: Center(
-                  child: IconButton(
-                    onPressed: () {
-                      // Action à effectuer lorsque le bouton est cliqué
-                      // Par exemple, lancer un appel d'urgence
-                    },
-                    icon: Icon(
-                      Icons.phone,
-                      color: Colors.white,
-                    ),
-                    iconSize: 27,
-                    tooltip: 'Appeler les urgences',
+              child: Center(
+                child: IconButton(
+                  onPressed: () {
+                    // Action à effectuer lorsque le bouton est cliqué
+                    // Par exemple, lancer un appel d'urgence
+                  },
+                  icon: Icon(
+                    Icons.phone,
+                    color: Colors.white,
                   ),
+                  iconSize: 27,
+                  tooltip: 'Appeler les urgences',
                 ),
               ),
             ),
