@@ -38,6 +38,7 @@ dependencies:
   hive: ^2.2.3
   flutter_secure_storage: ^9.0.0
   fl_chart: ^0.35.0
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
     - assets/images/repas.png
     - assets/images/commandes.png
     - assets/images/blog.png
+    - assets/images/diwe_logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
