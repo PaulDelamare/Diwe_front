@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'home/home.dart';
+import 'user/user.dart'; // Importer le fichier user.dart
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const MyHomePage(),
         '/Accueil': (context) => const HomePage(),
-        //'/profile': (context) => const ProfilePage(),
+        '/user': (context) => const UserPage(),
         //'/bolus': (context) => const BolusPage(),
         //'/repas': (context) => const RepasPage(),
         //'/commandes': (context) => const CommandesPage(),
@@ -48,6 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
       // Mettez à jour le contenu de la page sélectionnée en fonction de l'index
       switch (index) {
+        case 0:
+          _selectedPage = const UserPage(); // Afficher le contenu de user.dart
+          break;
         case 2:
           _selectedPage = const HomePage(); // Afficher le contenu de home.dart
           break;
