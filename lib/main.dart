@@ -61,6 +61,56 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: Image.asset(
+          'assets/images/diwe_logo.png',
+          width: 150,
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, // Forme de cercle pour le conteneur
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFF914D),
+                ),
+                child: Center(
+                  child: IconButton(
+                    onPressed: () {
+                      // Action à effectuer lorsque le bouton est cliqué
+                      // Par exemple, lancer un appel d'urgence
+                    },
+                    icon: Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                    ),
+                    iconSize: 27,
+                    tooltip: 'Appeler les urgences',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+
+
       // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),

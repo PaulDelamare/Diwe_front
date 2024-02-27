@@ -67,6 +67,7 @@ flutter:
     - assets/images/repas.png
     - assets/images/commandes.png
     - assets/images/blog.png
+    - assets/images/diwe_logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
