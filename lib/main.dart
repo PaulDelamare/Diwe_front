@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'home/home.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -79,18 +80,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 2,
                     blurRadius: 5,
-                    offset: Offset(0, 2),
+                    offset: const Offset(0, 2),
                   ),
                 ],
-                color: Color(0xFFFF914D),
+                color: const Color(0xFFFF914D),
               ),
               child: Center(
                 child: IconButton(
                   onPressed: () {
-                    // Action à effectuer lorsque le bouton est cliqué
-                    // Par exemple, lancer un appel d'urgence
+                    _launchEmergencyCall('tel:15'); // Appeler le numéro d'urgence
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.phone,
                     color: Colors.white,
                   ),
@@ -102,11 +102,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
-
       // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
     );
+  }
+
+  void _launchEmergencyCall(String phoneNumber) async {
+    if (await canLaunch(phoneNumber)) {
+      await launch(phoneNumber);
+    } else {
+      throw 'Impossible de lancer $phoneNumber';
+    }
   }
 }
