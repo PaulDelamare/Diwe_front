@@ -4,6 +4,7 @@ import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
+import 'commandes/commandes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         '/user': (context) => const UserPage(),
         '/bolus': (context) => const BolusPage(),
         '/repas': (context) => const RepasPage(),
-        //'/commandes': (context) => const CommandesPage(),
+        '/commandes': (context) => const CommandesPage(),
       },
     );
   }
@@ -62,6 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
         case 3:
           _selectedPage = const RepasPage(); // Afficher le contenu de repas.dart
+          break;
+        case 4:
+          _selectedPage = const CommandesPage(); // Afficher le contenu de commandes.dart
           break;
       // Ajoutez d'autres cas pour les autres pages si nécessaire
         default:
