@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,14 +12,32 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService authService = AuthService();
+
   double getScreenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
 
   Future<void> _login() async {
-    await authService.login(_emailController.text, _passwordController.text);
-    final String? token = await authService.getToken();
-    final dynamic user = await authService.getUser();
+    try {
+      await authService.login(_emailController.text, _passwordController.text);
+      final String? token = await authService.getToken();
+      final dynamic user = await authService.getUser();
+    } catch (error) {
+      String errorMessage = 'Erreur de connexion';
+
+      if (error is ServiceException) {
+        List<dynamic> errors = error.responseBody['errors'];
+        errorMessage = 'Invalid credentiel';
+      }
+
+      print("ErrorMessage: $errorMessage"); // Ajouter ce print pour déboguer
+
+      final snackBar = SnackBar(
+        content: Text(errorMessage),
+        backgroundColor: Colors.red,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
 
