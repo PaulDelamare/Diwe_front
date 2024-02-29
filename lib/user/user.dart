@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'avatar.dart';
+import 'infos.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -76,6 +77,12 @@ class _UserPageState extends State<UserPage> {
                 Navigator.pushNamed(context, '/edit');
               },
             ),
+          ),
+          // InfosWidget
+          Positioned(
+            top: 220, // Ajustez la position verticale selon vos besoins
+            left: 65, // Ajustez la position horizontale selon vos besoins
+            child: InfosWidget(),
           ),
         ],
       ),
