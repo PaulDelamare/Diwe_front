@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'avatar.dart';
 
 class UserPage extends StatefulWidget {
@@ -10,14 +9,6 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  File? _selectedImage;
-
-  void _onImageSelected(File image) {
-    setState(() {
-      _selectedImage = image;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +33,7 @@ class _UserPageState extends State<UserPage> {
                 left: 0,
                 right: 0,
                 child: Center(
-                  child: AvatarPage(onImageSelected: _onImageSelected),
+                  child: AvatarPage(), // Importez l'avatar ici
                 ),
               ),
               // Ajoutez le reste du contenu ici

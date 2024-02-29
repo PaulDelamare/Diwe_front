@@ -33,54 +33,49 @@ class _AvatarPageState extends State<AvatarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sélectionner une photo'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: getImage,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.white, Colors.black],
-                  ),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 3,
-                  ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          GestureDetector(
+            onTap: getImage,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.white, Colors.black],
                 ),
-                child: _image == null
-                    ? Icon(
-                  Icons.person,
-                  size: 100,
-                  color: Colors.grey[800],
-                )
-                    : ClipOval(
-                  child: Image.file(
-                    _image!,
-                    width: 150,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  ),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 3,
+                ),
+              ),
+              child: _image == null
+                  ? Icon(
+                Icons.person,
+                size: 100,
+                color: Colors.grey[800],
+              )
+                  : ClipOval(
+                child: Image.file(
+                  _image!,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: getImage,
-              child: Text('Choisir une photo'),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: getImage,
+            child: Text('Choisir une photo'),
+          ),
+        ],
       ),
     );
   }
