@@ -14,7 +14,7 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Espace au-dessus du fond bleu
+          // Espace au-dessus du fond bleu avec l'icône Paramètres
           Positioned(
             top: 0,
             left: 0,
@@ -22,6 +22,17 @@ class _UserPageState extends State<UserPage> {
             height: 100, // Hauteur de l'espace au-dessus du fond bleu
             child: Container(
               color: Colors.white, // Couleur de l'espace au-dessus du fond bleu
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: () {
+                      // Naviguer vers la page des paramètres
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           // Fond bleu
