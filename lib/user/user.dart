@@ -14,7 +14,7 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Espace au-dessus du fond bleu avec l'icône Paramètres
+          // Espace au-dessus du fond bleu
           Positioned(
             top: 0,
             left: 0,
@@ -22,17 +22,6 @@ class _UserPageState extends State<UserPage> {
             height: 100, // Hauteur de l'espace au-dessus du fond bleu
             child: Container(
               color: Colors.white, // Couleur de l'espace au-dessus du fond bleu
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      // Naviguer vers la page des paramètres
-                      Navigator.pushNamed(context, '/settings');
-                    },
-                  ),
-                ],
-              ),
             ),
           ),
           // Fond bleu
@@ -55,13 +44,37 @@ class _UserPageState extends State<UserPage> {
               ),
             ),
           ),
+          // Icon Paramètres
+          Positioned(
+            top: 75,
+            left: 10,
+            child: IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                // Naviguer vers la page des paramètres
+                Navigator.pushNamed(context, '/settings');
+              },
+            ),
+          ),
           // Avatar
           Positioned(
-            top: 0, // Ajustez la position de l'avatar pour le rendre partiellement visible dans l'espace
+            top: 0,
             left: 0,
             right: 0,
             child: Center(
               child: AvatarPage(),
+            ),
+          ),
+          // Icon edit
+          Positioned(
+            top: 75,
+            right: 10,
+            child: IconButton(
+              icon: Icon(Icons.mode_edit, color: Colors.white),
+              onPressed: () {
+                // Naviguer vers la page des modifications
+                Navigator.pushNamed(context, '/edit');
+              },
             ),
           ),
         ],
