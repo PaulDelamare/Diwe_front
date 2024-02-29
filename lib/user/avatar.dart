@@ -47,18 +47,19 @@ class _AvatarPageState extends State<AvatarPage> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.white, Colors.black],
+                  colors: [Color(0xFF004396), Color(0xFF0C8CE9)],
                 ),
                 border: Border.all(
-                  color: Colors.white,
+                  color: Colors.transparent,
                   width: 3,
                 ),
               ),
               child: _image == null
-                  ? Icon(
-                Icons.person,
-                size: 100,
-                color: Colors.grey[800],
+                  ? Image.asset(
+                'assets/images/profile.png', // Chemin vers l'image par défaut
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
               )
                   : ClipOval(
                 child: Image.file(
