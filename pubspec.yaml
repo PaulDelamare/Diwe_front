@@ -38,6 +38,7 @@ dependencies:
   hive: ^2.2.3
   flutter_secure_storage: ^9.0.0
   fl_chart: ^0.35.0
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
@@ -61,14 +62,18 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/dewi_logo.png
     - assets/images/user.png
     - assets/images/bolus.png
     - assets/images/home.png
     - assets/images/repas.png
     - assets/images/commandes.png
     - assets/images/blog.png
+    - assets/images/diwe_logo.png
 
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
