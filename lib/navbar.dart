@@ -1,3 +1,5 @@
+import 'package:diwe_front/auth/auth_page.dart';
+import 'package:diwe_front/home/home.dart';
 import 'package:flutter/material.dart';
 
 class Navbar extends StatefulWidget {
@@ -28,6 +30,27 @@ class _NavbarState extends State<Navbar> {
     'Repas',
     'Commandes',
   ];
+
+
+  //pour faire la navigation
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (_selectedIndex == 2) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+      if (_selectedIndex == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Authpage()),
+        );
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
