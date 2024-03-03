@@ -1,4 +1,5 @@
 import 'package:diwe_front/auth/Authhandler.dart';
+import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'navbar.dart';
@@ -33,8 +34,8 @@ class MyApp extends StatelessWidget {
         '/commandes': (context) => const CommandesPage(),
         '/': (context) => AuthHandler(
           roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const LoginPage(),
-          onLoggedOut: (context) => const LoginPage(),
+          onLoggedIn:  (context) => const UserPage(),
+          onLoggedOut: (context) => const Authpage(),
         ),
       },
     );
