@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/commandes': (context) => const CommandesPage(),
         '/': (context) => AuthHandler(
           roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn:  (context) => const UserPage(),
+          onLoggedIn:  (context) => const Authpage(),
           onLoggedOut: (context) => const Authpage(),
         ),
       },

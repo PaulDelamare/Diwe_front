@@ -22,6 +22,9 @@ class _LoginPageState extends State<LoginPage> {
       await authService.login(_emailController.text, _passwordController.text);
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
+
+      // Si la connexion est réussie, naviguez vers la page des utilisateurs
+      Navigator.of(context).pushReplacementNamed('/user');
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
 
@@ -30,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = 'Invalid credentiel';
       }
 
-      print("ErrorMessage: $errorMessage"); // Ajouter ce print pour déboguer
+      print("ErrorMessage: $errorMessage");
 
       final snackBar = SnackBar(
         content: Text(errorMessage),
@@ -39,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
+
 
 
   @override
