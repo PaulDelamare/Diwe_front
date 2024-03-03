@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: getScreenHeight(context) * 0.1,
                 ),
+
                 Image.asset(
                   'assets/images/diwe_blanc.png',
                   width: 250,
@@ -98,19 +99,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF004396),
-                    onPrimary: Colors.white,
-                    shape: RoundedRectangleBorder(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Color(0xFF004396)),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    )),
+                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
                   ),
                   onPressed: () {
                     _login();
                   },
                   child: Text('VALIDER'),
                 ),
+
+
               ],
             ),
           ),
