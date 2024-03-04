@@ -1,3 +1,6 @@
+import 'package:diwe_front/auth/Authhandler.dart';
+import 'package:diwe_front/auth/auth_page.dart';
+import 'package:diwe_front/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'home/home.dart';
@@ -16,6 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'DIWE',
       theme: ThemeData(
@@ -24,16 +28,20 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(),
-        '/Accueil': (context) => const HomePage(),
         '/user': (context) => const UserPage(),
         '/bolus': (context) => const BolusPage(),
         '/repas': (context) => const RepasPage(),
         '/commandes': (context) => const CommandesPage(),
+        '/': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn:  (context) => const Authpage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
       },
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
