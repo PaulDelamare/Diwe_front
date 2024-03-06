@@ -3,6 +3,7 @@ import 'glycemie.dart';
 import 'glucide.dart';
 import 'correction.dart';
 import 'suggestion.dart';
+import 'boutons.dart';
 
 class BolusPage extends StatefulWidget {
   const BolusPage({Key? key}) : super(key: key);
@@ -103,6 +104,12 @@ class _BolusPageState extends State<BolusPage> {
               child: Center(
                 child: SuggestionBlock(),
               ),
+            ),
+            Positioned(
+              top: 660,
+              left: 0,
+              right: 0,
+              child: ButtonRow(), // Utilisation du widget ButtonRow pour les boutons
             ),
           ],
         ),
