@@ -53,13 +53,27 @@ class _BolusPageState extends State<BolusPage> {
               left: 0,
               right: 0,
               child: Center(
-                child: GlycemieCircle(
-                  selectedUnit: _selectedUnit,
-                  onUnitChanged: (newValue) {
-                    setState(() {
-                      _selectedUnit = newValue;
-                    });
-                  },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GlycemieCircle(
+                      selectedUnit: _selectedUnit,
+                      onUnitChanged: (newValue) {
+                        setState(() {
+                          _selectedUnit = newValue;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 16), // Espacement entre le cercle et le texte
+                    Text(
+                      'GLYCEMIE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
