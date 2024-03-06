@@ -10,8 +10,12 @@ import 'repas/repas.dart';
 import 'commandes/commandes.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+
+void main() async{
+  //Find the .env for use it in other file
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
