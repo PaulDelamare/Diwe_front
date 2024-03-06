@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:diwe_front/home/glycemie.dart';
+import 'glycemie.dart';
 
 class BolusPage extends StatefulWidget {
   const BolusPage({Key? key}) : super(key: key);
@@ -9,20 +9,7 @@ class BolusPage extends StatefulWidget {
 }
 
 class _BolusPageState extends State<BolusPage> {
-  late String _selectedUnit; // Unité de mesure sélectionnée
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedUnit = 'mmol/L'; // Initialisation de l'unité de mesure sélectionnée
-  }
-
-  // Fonction de gestion du changement d'unité de mesure
-  void _handleUnitChange(String? newUnit) {
-    setState(() {
-      _selectedUnit = newUnit!;
-    });
-  }
+  String? _selectedUnit = 'mmol/L';
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +55,11 @@ class _BolusPageState extends State<BolusPage> {
               child: Center(
                 child: GlycemieCircle(
                   selectedUnit: _selectedUnit,
-                  onUnitChanged: _handleUnitChange,
+                  onUnitChanged: (newValue) {
+                    setState(() {
+                      _selectedUnit = newValue;
+                    });
+                  },
                 ),
               ),
             ),
