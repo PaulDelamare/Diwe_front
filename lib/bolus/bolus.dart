@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:diwe_front/home/glycemie.dart'; // Import du fichier glycemie.dart
+import 'package:diwe_front/home/glycemie.dart';
 
-class BolusPage extends StatelessWidget {
+class BolusPage extends StatefulWidget {
   const BolusPage({Key? key}) : super(key: key);
+
+  @override
+  _BolusPageState createState() => _BolusPageState();
+}
+
+class _BolusPageState extends State<BolusPage> {
+  late String _selectedUnit; // Unité de mesure sélectionnée
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedUnit = 'mmol/L'; // Initialisation de l'unité de mesure sélectionnée
+  }
+
+  // Fonction de gestion du changement d'unité de mesure
+  void _handleUnitChange(String? newUnit) {
+    setState(() {
+      _selectedUnit = newUnit!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,59 +66,15 @@ class BolusPage extends StatelessWidget {
               left: 0,
               right: 0,
               child: Center(
-                child: _GlycemieCircleWidget(),
+                child: GlycemieCircle(
+                  selectedUnit: _selectedUnit,
+                  onUnitChanged: _handleUnitChange,
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _GlycemieCircleWidget extends StatefulWidget {
-  const _GlycemieCircleWidget({Key? key}) : super(key: key);
-
-  @override
-  __GlycemieCircleWidgetState createState() => __GlycemieCircleWidgetState();
-}
-
-class __GlycemieCircleWidgetState extends State<_GlycemieCircleWidget> {
-  String? _selectedUnit = 'mmol/L';
-  double _mmolLValue = 5; // Valeur glycémique par défaut en mmol/L
-  double _mgdlValue = 112.0; // Valeur glycémique par défaut en mg/dl
-
-  // Méthode pour convertir la valeur glycémique en mg/dl
-  void _convertToMgdl(double mmolLValue) {
-    setState(() {
-      _mgdlValue = mmolLValue * 18.018;
-    });
-  }
-
-  // Méthode pour convertir la valeur glycémique en mmol/L
-  void _convertToMmolL(double mgdlValue) {
-    setState(() {
-      _mmolLValue = mgdlValue / 18.018;
-    });
-  }
-
-  // Fonction de gestion du changement d'unité de mesure
-  void _handleUnitChange(String? newUnit) {
-    setState(() {
-      _selectedUnit = newUnit;
-      if (_selectedUnit == 'mmol/L') {
-        _convertToMmolL(_mgdlValue);
-      } else {
-        _convertToMgdl(_mmolLValue);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GlycemieCircle(
-      selectedUnit: _selectedUnit,
-      onUnitChanged: _handleUnitChange,
     );
   }
 }
