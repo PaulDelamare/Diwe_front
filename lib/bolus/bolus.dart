@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'glycemie.dart';
+import 'glucide.dart';
 
 class BolusPage extends StatefulWidget {
   const BolusPage({Key? key}) : super(key: key);
@@ -75,6 +76,14 @@ class _BolusPageState extends State<BolusPage> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Positioned(
+              top: 270, // Ajustez la position verticale selon vos besoins
+              left: 0, // Ajustez la position horizontale selon vos besoins
+              right: 0,
+              child: Center(
+                child: GlucideBlock(),
               ),
             ),
           ],
