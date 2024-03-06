@@ -40,6 +40,7 @@ dependencies:
   fl_chart: ^0.35.0
   flutter_dotenv: ^5.1.0
   url_launcher: ^6.0.9
+  image_picker: ^0.8.4
 
 dev_dependencies:
   flutter_test:
@@ -70,10 +71,10 @@ flutter:
     - assets/images/commandes.png
     - assets/images/blog.png
     - assets/images/dewi_blanc.png
-    - .env
     - assets/images/diwe_logo.png
-    - assets/images/dewi_blanc.png
     - assets/images/diwe_blanc.png
+    - assets/images/profile.png
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

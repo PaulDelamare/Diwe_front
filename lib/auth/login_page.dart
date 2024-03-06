@@ -19,9 +19,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     try {
+      //mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
       await authService.login(_emailController.text, _passwordController.text);
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
+      //Jusqu'a cette partie
 
       // Si la connexion est réussie, naviguez vers la page des utilisateurs
       Navigator.of(context).pushReplacementNamed('/user');
