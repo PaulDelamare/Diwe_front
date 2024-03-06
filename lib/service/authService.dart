@@ -14,13 +14,11 @@ class AuthService {
   final storage = FlutterSecureStorage();
 
   Future<void> login(String email, String password) async {
-    await dotenv.load();
-    final String apiUrl = dotenv.get('API_LOGIN');
-
-    print(dotenv.get('API_LOGIN'));
+    //Stock the api url in variable
+    final String apiUrl = dotenv.get('API_HOST');
 
     final response = await http.post(
-      Uri.parse(apiUrl),
+      Uri.parse(apiUrl + "auth/login"),
       headers: {
         'Content-Type': 'application/json',
       },
