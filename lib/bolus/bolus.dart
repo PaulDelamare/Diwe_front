@@ -42,9 +42,12 @@ class BolusPage extends StatelessWidget {
             ),
             // GlycemieWidget
             Positioned(
-              top: 220, // Ajustez la position verticale selon vos besoins
-              left: 40, // Ajustez la position horizontale selon vos besoins
-              child: _GlycemieCircleWidget(), // Utilisation du nouveau widget pour la glycémie
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: _GlycemieCircleWidget(),
+              ),
             ),
           ],
         ),
