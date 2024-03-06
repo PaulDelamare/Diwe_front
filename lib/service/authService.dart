@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:connectivity/connectivity.dart';
+
 
 class ServiceException {
   final Map<String, dynamic> responseBody;
@@ -43,6 +45,7 @@ class AuthService {
     }
   }
 
+
   Future<String?> getToken() async {
     return await storage.read(key: 'jwt');
   }
@@ -68,4 +71,12 @@ class AuthService {
     }
     return false;
   }
+
+  // Fonction pour vérifier si l'utilisateur est connecté au WiFi
+  Future<bool> isWiFiConnected() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult == ConnectivityResult.wifi;
+  }
+
+
 }

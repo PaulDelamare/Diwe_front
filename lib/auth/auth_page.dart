@@ -70,7 +70,7 @@ class Authpage extends StatelessWidget {
               children: <Widget>[
                 Spacer(flex: 3),
                 Image.asset(
-                  'assets/images/diwe_logo.png',
+                  'assets/images/logo_dewi.png',
                   width: 250,
                 ),
                 SizedBox(height: 80.0),

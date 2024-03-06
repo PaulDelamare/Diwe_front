@@ -17,7 +17,7 @@ class AuthHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /* Utilisation de FutureBuilder pour gérer de manière asynchrone la vérification des rôles */
+    /* Utilisation de FutureBuilder pour gérer de manière asynchrone la vérification des rôles et de la connexion WiFi */
     return FutureBuilder<bool>(
       /* Appel de la méthode hasAnyUserRole de la classe AuthService pour vérifier les rôles */
       future: AuthService().hasAnyUserRole(roles),
@@ -27,8 +27,42 @@ class AuthHandler extends StatelessWidget {
           /* Afficher un indicateur de chargement pendant la vérification */
           return CircularProgressIndicator();
         } else {
-          /* Si la vérification est terminée, afficher le widget approprié en fonction du résultat */
-          return snapshot.data == true ? onLoggedIn(context) : onLoggedOut(context);
+          /* Si la vérification est terminée, vérifiez la connexion WiFi */
+          return FutureBuilder<bool>(
+            /* Appel de la méthode isWiFiConnected de la classe AuthService pour vérifier la connexion WiFi */
+            future: AuthService().isWiFiConnected(),
+            builder: (context, wifiSnapshot) {
+              /* Vérifier si la vérification de la connexion WiFi est en cours */
+              if (wifiSnapshot.connectionState == ConnectionState.waiting) {
+                /* Afficher un indicateur de chargement pendant la vérification */
+                return CircularProgressIndicator();
+              } else {
+                /* Si la vérification est terminée, afficher le widget approprié en fonction du résultat */
+                if (snapshot.data == true && wifiSnapshot.data == true) {
+                  return onLoggedIn(context);
+                } else {
+                  // Afficher un AlertDialog si l'utilisateur n'est pas connecté au WiFi
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Veuillez connecter aux réseaux internet'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return onLoggedOut(context);
+                }
+              }
+            },
+          );
         }
       },
     );
