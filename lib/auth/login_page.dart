@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
             child: InkWell(
               onTap: () {
                 // Naviguer vers une nouvelle page nommée AuthPage
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyHomePage()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
               },
 
               child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
