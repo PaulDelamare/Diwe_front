@@ -17,8 +17,8 @@ class AuthService {
 
   Future<void> login(String email, String password) async {
     //Stock the api url in variable
-    final String apiUrl = dotenv.get('API_HOST');
 
+    final String apiUrl = dotenv.get('API_HOST');
     final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
       headers: {

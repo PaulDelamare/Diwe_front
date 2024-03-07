@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/auth/login_page.dart';
+import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
+import 'service/authService.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -30,13 +31,33 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
+      home: AuthHandler(
+        roles: ['user', 'health'],
+        onLoggedIn: (context) => const MyHomePage(),
+        onLoggedOut: (context) => const Authpage(),
+      ),
       routes: {
-        '/user': (context) => const UserPage(),
-        '/bolus': (context) => const BolusPage(),
-        '/repas': (context) => const RepasPage(),
-        '/commandes': (context) => const CommandesPage(),
-        '/': (context) => const MyHomePage(),
+        '/user': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const UserPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/bolus': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const BolusPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/repas': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const RepasPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/commandes': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const CommandesPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
       },
     );
   }

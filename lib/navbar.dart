@@ -28,7 +28,7 @@ class _NavbarState extends State<Navbar> {
     'Bolus',
     'Accueil',
     'Repas',
-    'Commandes',
+    'Cflutommandes',
   ];
 
 

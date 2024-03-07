@@ -1,3 +1,5 @@
+import 'package:diwe_front/auth/auth_page.dart';
+import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
 
@@ -41,7 +43,6 @@ class _LoginPageState extends State<LoginPage> {
       await authService.login(_emailController.text, _passwordController.text);
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
-      //Jusqu'a cette partie
 
       // Si la connexion est réussie, naviguez vers la page des utilisateurs
       Navigator.of(context).pushReplacementNamed('/user');
@@ -142,6 +143,16 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('VALIDER'),
                 ),
+          Center(
+            child: InkWell(
+              onTap: () {
+                // Naviguer vers une nouvelle page nommée AuthPage
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyHomePage()));
+              },
+
+              child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
+            ),
+          ),
               ],
             ),
           ),
