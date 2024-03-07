@@ -1,3 +1,4 @@
+import 'package:diwe_front/Auth/register.dart';
 import 'package:flutter/material.dart';
 import 'navbar.dart';
 
@@ -12,11 +13,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'DIWE',
+      home: RegisterPage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      // home: const MyHomePage(),
     );
   }
 }
