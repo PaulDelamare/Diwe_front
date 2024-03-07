@@ -38,7 +38,12 @@ class MyApp extends StatelessWidget {
         onLoggedOut: (context) => const Authpage(),
       ),
       routes: {
-        '/user': (context) => AuthHandler(
+        '/home': (contextR) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const HomePage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/user': (contextR) => AuthHandler(
           roles:  ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const UserPage(),
           onLoggedOut: (context) => const Authpage(),
@@ -71,7 +76,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -99,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _selectedPage = const CommandesPage();
         break;
       default:
-        _selectedPage = Container();
+        _selectedPage = HomePage();
     }
 
     return Scaffold(
