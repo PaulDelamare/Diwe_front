@@ -3,6 +3,7 @@ import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/auth/login_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'navbar.dart';
 import 'home/home.dart';
@@ -11,7 +12,10 @@ import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
 
-void main() {
+
+void main() async{
+  //Find the .env for use it in other file
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
