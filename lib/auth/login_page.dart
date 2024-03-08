@@ -2,11 +2,7 @@ import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
-
-
-
-
-
+import '../../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -39,13 +35,16 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      //mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
+      // Mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
       await authService.login(_emailController.text, _passwordController.text);
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
+      // Jusqu'à cette partie
 
-      // Si la connexion est réussie, naviguez vers la page des utilisateurs
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyHomePage()));
+      // Si la connexion est réussie, naviguez vers la page principale (MyHomePage)
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
 
@@ -67,6 +66,8 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
