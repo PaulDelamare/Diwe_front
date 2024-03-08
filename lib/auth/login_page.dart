@@ -1,3 +1,5 @@
+import 'package:diwe_front/auth/auth_page.dart';
+import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
 import '../../main.dart';
@@ -14,11 +16,24 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService authService = AuthService();
 
+  bool _isLoading = false; // Ajout de la variable pour suivre l'état du chargement
+
+  // Définition du widget de chargement
+  Widget _buildLoadingWidget() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
   double getScreenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
 
   Future<void> _login() async {
+    setState(() {
+      _isLoading = true; // Affichage du chargement lorsque le processus de connexion commence
+    });
+
     try {
       // Mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
       await authService.login(_emailController.text, _passwordController.text);
@@ -35,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (error is ServiceException) {
         List<dynamic> errors = error.responseBody['errors'];
-        errorMessage = 'Invalid credentiel';
+        errorMessage = 'Identifiants invalides';
       }
 
       print("ErrorMessage: $errorMessage");
@@ -45,13 +60,21 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.red,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } finally {
+      setState(() {
+        _isLoading = false; // Masquage du chargement une fois le processus terminé
+      });
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: _isLoading // Affichage du widget de chargement si _isLoading est vrai
+          ? _buildLoadingWidget()
+          : SingleChildScrollView(
         child: Container(
           height: getScreenHeight(context),
           decoration: BoxDecoration(
@@ -107,20 +130,30 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 30),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Color(0xFF004396)),
+                    backgroundColor:
+                    MaterialStateProperty.all(Color(0xFF004396)),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     )),
-                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
+                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15)),
                   ),
                   onPressed: () {
                     _login();
                   },
                   child: Text('VALIDER'),
                 ),
+          Center(
+            child: InkWell(
+              onTap: () {
+                // Naviguer vers une nouvelle page nommée AuthPage
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
+              },
 
-
+              child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
+            ),
+          ),
               ],
             ),
           ),
