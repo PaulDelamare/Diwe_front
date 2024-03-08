@@ -69,8 +69,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 2; // Initialisez avec la valeur correspondant à la page d'accueil
+
+  // Variable pour stocker le contenu de la page sélectionnée
   late Widget _selectedPage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPage = const HomePage(); // Définit la page d'accueil comme page sélectionnée au démarrage
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -95,12 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _selectedPage = Container();
       }
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedPage = const HomePage();
   }
 
   @override
@@ -146,8 +148,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+      // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
-      bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
+      bottomNavigationBar: Navbar(
+        // Indiquer l'index correspondant à la page d'accueil pour la navigation
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 
