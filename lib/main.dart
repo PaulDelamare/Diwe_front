@@ -1,22 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/auth/login_page.dart';
-import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'navbar.dart';
 import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
-import 'service/authService.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
-void main() async{
-  //Find the .env for use it in other file
-  await dotenv.load(fileName: ".env");
+void main() {
   runApp(const MyApp());
 }
 
@@ -31,7 +26,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
       home: AuthHandler(
         roles: ['user', 'health'],
         onLoggedIn: (context) => const MyHomePage(),
@@ -63,7 +57,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -73,38 +66,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 2;
-
-  // Variable pour stocker le contenu de la page sélectionnée
-  Widget _selectedPage = Container();
+  late Widget _selectedPage;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      switch (_selectedIndex) {
+        case 0:
+          _selectedPage = const UserPage();
+          break;
+        case 1:
+          _selectedPage = const BolusPage();
+          break;
+        case 2:
+          _selectedPage = const HomePage();
+          break;
+        case 3:
+          _selectedPage = const RepasPage();
+          break;
+        case 4:
+          _selectedPage = const CommandesPage();
+          break;
+        default:
+          _selectedPage = Container();
+      }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget _selectedPage;
-    switch (_selectedIndex) {
-      case 0:
-        _selectedPage = const UserPage();
-        break;
-      case 1:
-        _selectedPage = const BolusPage();
-        break;
-      case 2:
-        _selectedPage = const HomePage();
-        break;
-      case 3:
-        _selectedPage = const RepasPage();
-        break;
-      case 4:
-        _selectedPage = const CommandesPage();
-        break;
-      default:
-        _selectedPage = Container();
-    }
+  void initState() {
+    super.initState();
+    _selectedPage = const HomePage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
     );
