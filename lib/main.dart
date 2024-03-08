@@ -8,8 +8,11 @@ import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
+import 'service/authService.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 void main() async{
   //Find the .env for use it in other file
@@ -22,29 +25,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'DIWE',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
+      home: AuthHandler(
+        roles: ['user', 'health'],
+        onLoggedIn: (context) => const MyHomePage(),
+        onLoggedOut: (context) => const Authpage(),
+      ),
       routes: {
-        '/user': (context) => const UserPage(),
-        '/bolus': (context) => const BolusPage(),
-        '/repas': (context) => const RepasPage(),
-        '/commandes': (context) => const CommandesPage(),
-        '/': (context) => AuthHandler(
-          roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn:  (context) => const Authpage(),
+        '/user': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const UserPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/bolus': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const BolusPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/repas': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const RepasPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/commandes': (context) => AuthHandler(
+          roles:  ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const CommandesPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
       },
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -54,34 +71,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2; // Initialisez avec la valeur correspondant à la page d'accueil
 
   // Variable pour stocker le contenu de la page sélectionnée
-  Widget _selectedPage = Container();
+  late Widget _selectedPage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPage = const HomePage(); // Définit la page d'accueil comme page sélectionnée au démarrage
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Mettez à jour le contenu de la page sélectionnée en fonction de l'index
-      switch (index) {
+      switch (_selectedIndex) {
         case 0:
-          _selectedPage = const UserPage(); // Afficher le contenu de user.dart
+          _selectedPage = const UserPage();
           break;
         case 1:
-          _selectedPage = const BolusPage(); // Afficher le contenu de bolus.dart
+          _selectedPage = const BolusPage();
           break;
         case 2:
-          _selectedPage = const HomePage(); // Afficher le contenu de home.dart
+          _selectedPage = const HomePage();
           break;
         case 3:
-          _selectedPage = const RepasPage(); // Afficher le contenu de repas.dart
+          _selectedPage = const RepasPage();
           break;
         case 4:
-          _selectedPage = const CommandesPage(); // Afficher le contenu de commandes.dart
+          _selectedPage = const CommandesPage();
           break;
-      // Ajoutez d'autres cas pour les autres pages si nécessaire
         default:
-          _selectedPage = Container(); // Par défaut, afficher un conteneur vide
+          _selectedPage = Container();
       }
     });
   }
@@ -131,7 +152,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
-      bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
+      bottomNavigationBar: Navbar(
+        // Indiquer l'index correspondant à la page d'accueil pour la navigation
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 
@@ -143,3 +168,4 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
+

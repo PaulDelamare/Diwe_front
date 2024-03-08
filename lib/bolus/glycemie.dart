@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'glycemie.dart';
 
 class GlycemieCircle extends StatefulWidget {
   final String? selectedUnit;
