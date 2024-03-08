@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
-import '../../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,16 +19,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     try {
-      // Mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
+      //mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
       await authService.login(_emailController.text, _passwordController.text);
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
-      // Jusqu'à cette partie
+      //Jusqu'a cette partie
 
-      // Si la connexion est réussie, naviguez vers la page principale (MyHomePage)
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
+      // Si la connexion est réussie, naviguez vers la page des utilisateurs
+      Navigator.of(context).pushReplacementNamed('/user');
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
 
@@ -47,6 +44,8 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

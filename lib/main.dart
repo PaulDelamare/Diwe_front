@@ -54,7 +54,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
 
   // Variable pour stocker le contenu de la page sélectionnée
   Widget _selectedPage = Container();

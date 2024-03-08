@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:connectivity/connectivity.dart';
+
 
 class ServiceException {
   final Map<String, dynamic> responseBody;
@@ -15,8 +17,8 @@ class AuthService {
 
   Future<void> login(String email, String password) async {
     //Stock the api url in variable
-    final String apiUrl = dotenv.get('API_HOST');
 
+    final String apiUrl = dotenv.get('API_HOST');
     final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
       headers: {
@@ -43,6 +45,7 @@ class AuthService {
     }
   }
 
+
   Future<String?> getToken() async {
     return await storage.read(key: 'jwt');
   }
@@ -68,4 +71,12 @@ class AuthService {
     }
     return false;
   }
+
+  // Fonction pour vérifier si l'utilisateur est connecté au WiFi
+  Future<bool> isWiFiConnected() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult == ConnectivityResult.wifi;
+  }
+
+
 }
