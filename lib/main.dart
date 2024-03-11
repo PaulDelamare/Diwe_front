@@ -111,9 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(
-          'assets/images/diwe_logo.png',
-          width: 150,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0), // Ajoutez du padding à gauche du logo
+          child: Image.asset(
+            'assets/images/diwe_logo.png',
+          ),
         ),
         actions: [
           Padding(
@@ -150,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+
       // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(
