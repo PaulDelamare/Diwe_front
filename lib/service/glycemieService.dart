@@ -1,14 +1,23 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GlycemieService {
   static Future<List<double>> getGlycemieData() async {
-    // Définissez la clé d'API
-    final apiKey = 'a8715102-5814-4ed4-bde4-c6e9e9d5bb5f';
+    // Chargez les variables d'environnement à partir du fichier .env
+    await dotenv.load();
+
+    // Récupérez la clé d'API à partir du fichier .env
+    final apiKey = dotenv.env['API_KEY'];
+
+    // Vérifiez si la clé d'API est null ou vide
+    if (apiKey == null || apiKey.isEmpty) {
+      throw Exception('API key is missing or empty');
+    }
 
     // Effectuez une requête HTTP pour récupérer les données de glycémie
     final response = await http.get(
-      Uri.parse('https://example.com/glycemie'),
+      Uri.parse('${dotenv.env['API_HOST']}glycemie'), // Utilisez la variable API_HOST du .env
       headers: {
         'x-api-key': apiKey, // Ajoutez la clé d'API dans l'en-tête
       },
