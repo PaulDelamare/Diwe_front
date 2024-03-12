@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'glycemie.dart';
+import '/../service/glycemieService.dart'; // Importez votre service API
 
 class GlycemieCircle extends StatefulWidget {
   final String? selectedUnit;
@@ -19,19 +19,29 @@ class _GlycemieCircleState extends State<GlycemieCircle> {
   double _mmolLValue = 5; // Valeur glycémique par défaut en mmol/L
   double _mgdlValue = 112.0; // Valeur glycémique par défaut en mg/dl
 
-  // Méthode pour convertir la valeur glycémique en mg/dl
-  void _convertToMgdl(double mmolLValue) {
-    setState(() {
-      _mgdlValue = mmolLValue * 18.018;
-    });
+  @override
+  void initState() {
+    super.initState();
+    // Appel de la méthode pour récupérer les données de glycémie lors de l'initialisation du widget
+    _fetchGlycemieData();
   }
 
-  // Méthode pour convertir la valeur glycémique en mmol/L
-  void _convertToMmolL(double mgdlValue) {
-    setState(() {
-      _mmolLValue = mgdlValue / 18.018;
-    });
+  // Méthode pour récupérer les données de glycémie à partir du service API
+  void _fetchGlycemieData() async {
+    try {
+      final glycemieData = await GlycemieService.getGlycemieData();
+      setState(() {
+        // Mettre à jour les valeurs de glycémie
+        _mmolLValue = glycemieData[0];
+        _mgdlValue = glycemieData[1];
+      });
+    } catch (e) {
+      // Gérer les erreurs de récupération des données
+      print('Error fetching glycemie data: $e');
+    }
   }
+
+  // Méthodes de conversion et de gestion du changement d'unité omises pour la clarté
 
   @override
   Widget build(BuildContext context) {
@@ -131,5 +141,19 @@ class _GlycemieCircleState extends State<GlycemieCircle> {
         ],
       ),
     );
+  }
+
+  // Méthodes de conversion et de gestion du changement d'unité omises pour la clarté
+
+  void _convertToMgdl(double mmolLValue) {
+    setState(() {
+      _mgdlValue = mmolLValue * 18.018;
+    });
+  }
+
+  void _convertToMmolL(double mgdlValue) {
+    setState(() {
+      _mmolLValue = mgdlValue / 18.018;
+    });
   }
 }

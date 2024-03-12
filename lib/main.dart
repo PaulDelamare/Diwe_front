@@ -1,16 +1,17 @@
-import 'package:flutter/material.dart';
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/auth/login_page.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
+import 'service/authService.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 void main() async{
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
+      // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
       home: AuthHandler(
         roles: ['user', 'health'],
         onLoggedIn: (context) => const MyHomePage(),
@@ -109,9 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(
-          'assets/images/diwe_logo.png',
-          width: 150,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0), // Ajoutez du padding à gauche du logo
+          child: Image.asset(
+            'assets/images/diwe_logo.png',
+          ),
         ),
         actions: [
           Padding(
@@ -148,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+
       // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(
@@ -166,3 +171,4 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
+

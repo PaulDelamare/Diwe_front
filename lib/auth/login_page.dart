@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import '../service/authService.dart';
 import '../../main.dart';
 
+
+
+
+
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -45,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
+
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
 
@@ -66,8 +72,6 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
