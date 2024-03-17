@@ -106,7 +106,7 @@ class _BolusPageState extends State<BolusPage> {
               ),
             ),
             Positioned(
-              top: 660,
+              top: 645,
               left: 0,
               right: 0,
               child: ButtonRow(), // Utilisation du widget ButtonRow pour les boutons
