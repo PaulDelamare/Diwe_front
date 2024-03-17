@@ -38,6 +38,10 @@ dependencies:
   hive: ^2.2.3
   intl: ^0.17.0
   flutter_secure_storage: ^9.0.0
+  fl_chart: ^0.35.0
+  flutter_dotenv: ^5.1.0
+  url_launcher: ^6.0.9
+  image_picker: ^0.8.4
 
 dev_dependencies:
   flutter_test:
@@ -61,11 +65,17 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/user.png
-    - assets/bolus.png
-    - assets/home.png
-    - assets/repas.png
-    - assets/commandes.png
+    - assets/images/user.png
+    - assets/images/bolus.png
+    - assets/images/home.png
+    - assets/images/repas.png
+    - assets/images/commandes.png
+    - assets/images/blog.png
+    - assets/images/dewi_blanc.png
+    - assets/images/diwe_logo.png
+    - assets/images/diwe_blanc.png
+    - assets/images/profile.png
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
