@@ -10,12 +10,12 @@ import 'package:intl/intl.dart';
 
 import '../service/authService.dart';
 
-class RegisterPage extends StatefulWidget{
+class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage>{
+class _RegisterPageState extends State<RegisterPage> {
   final PageController _pageController = PageController(initialPage: 0);
   final TextEditingController nameController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
@@ -39,7 +39,6 @@ class _RegisterPageState extends State<RegisterPage>{
   String? checkPasswordError;
   String? userRoleError;
   String? secretPinError;
-
 
   String? validateName(String name) {
     if (name.isEmpty) {
@@ -97,7 +96,6 @@ class _RegisterPageState extends State<RegisterPage>{
       if (birthDateTime.isAfter(now) || year < 1900) {
         return 'Date de naissance non plausible';
       }
-
     } catch (e) {
       return 'Date invalide';
     }
@@ -108,25 +106,25 @@ class _RegisterPageState extends State<RegisterPage>{
   String? isValidPhoneNumber(String phoneNumber) {
     String cleanedNumber = phoneNumber.replaceAll(RegExp(r'\s+\b|\b\s'), '');
     final RegExp phoneRegex = RegExp(r'^\d{10}$');
-    if(phoneRegex.hasMatch(cleanedNumber) == false){
+    if (phoneRegex.hasMatch(cleanedNumber) == false) {
       return 'Le numéro de téléphone est incorect';
     }
     return null;
   }
 
-  String? validatePassword(String password){
-    if(password.isEmpty){
+  String? validatePassword(String password) {
+    if (password.isEmpty) {
       return 'Le mot de passe ne peut pas être vide';
     }
     int passwordLength = password.length;
-    if(passwordLength < 5 ){
+    if (passwordLength < 5) {
       return 'Le mot de passe est trop court';
     }
     return null;
   }
 
-  String? validateCheckPassword(String checkPassword){
-    if(checkPassword != passwordController.text){
+  String? validateCheckPassword(String checkPassword) {
+    if (checkPassword != passwordController.text) {
       return 'Les mots de passes ne sont pas identique';
     }
     return null;
@@ -141,17 +139,17 @@ class _RegisterPageState extends State<RegisterPage>{
     return null;
   }
 
-  String ? selectedRole = null;
+  String? selectedRole = null;
   String? checkBoxError = null;
 
-  void currentRoleSelect(String currentValue){
+  void currentRoleSelect(String currentValue) {
     setState(() {
       selectedRole = currentValue;
     });
   }
 
-  String? validateUserRole(){
-    if(selectedRole == null){
+  String? validateUserRole() {
+    if (selectedRole == null) {
       return 'Veuillez cocher votre role';
     }
     return null;
@@ -163,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage>{
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _pageController.dispose();
     nameController.dispose();
     firstNameController.dispose();
@@ -182,10 +180,16 @@ class _RegisterPageState extends State<RegisterPage>{
     String? newFirstNameError = validateFirstName(firstNameController.text);
     String? newEmailError = validateEmail(emailController.text);
     String? newPasswordError = validatePassword(passwordController.text);
-    String? newCheckPasswordError = validateCheckPassword(checkPasswordController.text);
+    String? newCheckPasswordError =
+        validateCheckPassword(checkPasswordController.text);
     String? errorUserRole = validateUserRole();
 
-    if (newNameError != null || newFirstNameError != null || newEmailError != null || newPasswordError != null || newCheckPasswordError != null || userRoleError != null) {
+    if (newNameError != null ||
+        newFirstNameError != null ||
+        newEmailError != null ||
+        newPasswordError != null ||
+        newCheckPasswordError != null ||
+        userRoleError != null) {
       hasError = true;
     }
 
@@ -212,7 +216,16 @@ class _RegisterPageState extends State<RegisterPage>{
     DateTime birthday = format.parse(birthDateController.text);
     int secretPin = int.parse(secretPinController.text);
     try {
-      await authService.register(nameController.text, firstNameController.text, emailController.text, birthday, numberController.text, passwordController.text, secretPin , selectedRole!);
+      await authService.registerTest(
+          nameController.text,
+          firstNameController.text,
+          emailController.text,
+          birthday,
+          numberController.text,
+          passwordController.text,
+          secretPin,
+          selectedRole!);
+
       print('INCRIPTION SUCCESS');
       // Navigator.of(context).pushReplacementNamed('/user');
     } catch (error) {
@@ -238,7 +251,9 @@ class _RegisterPageState extends State<RegisterPage>{
     String? newNumberError = isValidPhoneNumber(numberController.text);
     String? newSecretPinError = validateSecretPin(secretPinController.text);
 
-    if (newBirthDateError != null || newNumberError != null || newSecretPinError != null) {
+    if (newBirthDateError != null ||
+        newNumberError != null ||
+        newSecretPinError != null) {
       hasError = true;
     }
 
@@ -249,26 +264,58 @@ class _RegisterPageState extends State<RegisterPage>{
     });
 
     if (_currentPageState == 2 && !hasError) {
-      // _register();
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => CheckMailPage(email: emailController.text)),
-      );
+      _register();
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //       builder: (context) => CheckMailPage(email: emailController.text)),
+      // );
     }
   }
 
   Widget build(BuildContext context) {
-
     double screenHeight = MediaQuery.of(context).size.height;
 
     List<Widget> stepOneWidgets = [
       RegisterStepCustom(stepNumberLeft: '1', stepNumberRight: ''),
-      CheckboxWidget(onSelectionChanged: currentRoleSelect, error: userRoleError,),
-      InputFormCustom(placeholder: 'Nom', inputType: 'text', controller: nameController, error: nameError,),
-      InputFormCustom(placeholder: 'Prénom', inputType: 'text', controller: firstNameController, error: firstNameError,),
-      InputFormCustom(placeholder: 'Email', inputType: 'text', controller: emailController, error: emailError,),
-      InputFormCustom(placeholder: 'Mot de passe', inputType: 'password', controller: passwordController, error: passwordError,),
-      InputFormCustom(placeholder: 'Confirmer le Mot de passe', inputType: 'password', controller: checkPasswordController, error: checkPasswordError,),
-      SubmitForm(buttonText: 'Suivant', backgroundColor: 0xFF004396, onPressed: _nextStep ,)
+      CheckboxWidget(
+        onSelectionChanged: currentRoleSelect,
+        error: userRoleError,
+      ),
+      InputFormCustom(
+        placeholder: 'Nom',
+        inputType: 'text',
+        controller: nameController,
+        error: nameError,
+      ),
+      InputFormCustom(
+        placeholder: 'Prénom',
+        inputType: 'text',
+        controller: firstNameController,
+        error: firstNameError,
+      ),
+      InputFormCustom(
+        placeholder: 'Email',
+        inputType: 'text',
+        controller: emailController,
+        error: emailError,
+      ),
+      InputFormCustom(
+        placeholder: 'Mot de passe',
+        inputType: 'password',
+        controller: passwordController,
+        error: passwordError,
+      ),
+      InputFormCustom(
+        placeholder: 'Confirmer le Mot de passe',
+        inputType: 'password',
+        controller: checkPasswordController,
+        error: checkPasswordError,
+      ),
+      SubmitForm(
+        buttonText: 'Suivant',
+        backgroundColor: 0xFF004396,
+        onPressed: _nextStep,
+      )
     ];
 
     List<String> selectOptions = [
@@ -278,59 +325,111 @@ class _RegisterPageState extends State<RegisterPage>{
 
     List<Widget> stepTwoWidgets = [
       RegisterStepCustom(stepNumberLeft: '', stepNumberRight: '2'),
-      InputFormCustom(placeholder: 'JJ-MM-AAAA', inputType: 'date', controller: birthDateController, error: birthDateError,),
-      InputFormCustom(placeholder: 'Telephone', inputType: 'number', controller: numberController, error: numberError,),
-      SelectFormCustom(options: selectOptions, onSelected: (value){selectedOption = value;}, defaultValue: 'Sexe', error: '',),
-      InputFormCustom(placeholder: 'Code Secret', inputType: 'number', controller: secretPinController, error: secretPinError,),
-      SubmitForm(backgroundColor: 0xFF004396, buttonText: 'Envoyé', onPressed: _submitForm)
+      InputFormCustom(
+        placeholder: 'JJ-MM-AAAA',
+        inputType: 'date',
+        controller: birthDateController,
+        error: birthDateError,
+      ),
+      InputFormCustom(
+        placeholder: 'Telephone',
+        inputType: 'number',
+        controller: numberController,
+        error: numberError,
+      ),
+      SelectFormCustom(
+        options: selectOptions,
+        onSelected: (value) {
+          selectedOption = value;
+        },
+        defaultValue: 'Sexe',
+        error: '',
+      ),
+      InputFormCustom(
+        placeholder: 'Code Secret',
+        inputType: 'number',
+        controller: secretPinController,
+        error: secretPinError,
+      ),
+      SubmitForm(
+          backgroundColor: 0xFF004396,
+          buttonText: 'Envoyé',
+          onPressed: _submitForm)
     ];
 
     return Scaffold(
-      body:
-        Container(
-          height: screenHeight,
-          decoration: BoxDecoration(
+      body: Container(
+        height: screenHeight,
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xff004396),
-            Color(0xff0C8CE9),
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xff004396),
+              Color(0xff0C8CE9),
             ],
           ),
         ),
-        child:
-          SingleChildScrollView(
-              child: Stack( children: [
-                BackgroundBubble(left: -100,top: -90 ,color: Color(0x00C7E6).withOpacity(0.3), width: 300, height: 300),
-                BackgroundBubble(right: -100,bottom: -10 ,color: Color(0x00C7E6).withOpacity(0.3), width: 300, height: 300),
-                BackgroundBubble(left: -50,bottom: 250 ,color: Color(0x00C7E6).withOpacity(0.3), width: 100, height: 100),
-                BackgroundBubble(right: 50,top: 250 ,color: Color(0x00C7E6).withOpacity(0.3), width: 100, height: 100),
-                Container(
-                  child:
-                  Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 60),
-                          child: Text('INSCRIPTION', style: TextStyle( fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white),),
-                        ),
+        child: SingleChildScrollView(
+            child: Stack(
+          children: [
+            BackgroundBubble(
+                left: -100,
+                top: -90,
+                color: Color(0x00C7E6).withOpacity(0.3),
+                width: 300,
+                height: 300),
+            BackgroundBubble(
+                right: -100,
+                bottom: -10,
+                color: Color(0x00C7E6).withOpacity(0.3),
+                width: 300,
+                height: 300),
+            BackgroundBubble(
+                left: -50,
+                bottom: 250,
+                color: Color(0x00C7E6).withOpacity(0.3),
+                width: 100,
+                height: 100),
+            BackgroundBubble(
+                right: 50,
+                top: 250,
+                color: Color(0x00C7E6).withOpacity(0.3),
+                width: 100,
+                height: 100),
+            Container(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: Text(
+                        'INSCRIPTION',
+                        style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text('Etapes', style: TextStyle( fontSize: 20, color: Colors.white),),
-                        ),
-                      ),
-                      ...(_currentPageState == 1 ? stepOneWidgets : stepTwoWidgets),
-                    ],
+                    ),
                   ),
-                ),
-                ],)
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Etapes',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  ...(_currentPageState == 1 ? stepOneWidgets : stepTwoWidgets),
+                ],
               ),
-          ),
+            ),
+          ],
+        )),
+      ),
     );
   }
 }
