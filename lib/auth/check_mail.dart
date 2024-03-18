@@ -43,20 +43,39 @@ class _CheckMailPageState extends State<CheckMailPage> {
   }
 
   void _navigateToLogin() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          BackgroundBubble(right: 250, bottom: -120, color: Color(0xFFFFAB91).withOpacity(0.9), width: 300, height: 300),
-          BackgroundBubble(right: 130, bottom: 130, color: Color(0xFFFFAB91).withOpacity(0.9), width: 80, height: 80),
-          BackgroundBubble(right: -100, top: -80, color: Color(0xFFFFAB91).withOpacity(0.9), width: 300, height: 300),
-          BackgroundBubble(left: 100, top: 40, color: Color(0xFFFFAB91).withOpacity(0.9), width: 80, height: 80),
+          BackgroundBubble(
+              right: 250,
+              bottom: -120,
+              color: Color(0xFFFFAB91).withOpacity(0.9),
+              width: 300,
+              height: 300),
+          BackgroundBubble(
+              right: 130,
+              bottom: 130,
+              color: Color(0xFFFFAB91).withOpacity(0.9),
+              width: 80,
+              height: 80),
+          BackgroundBubble(
+              right: -100,
+              top: -80,
+              color: Color(0xFFFFAB91).withOpacity(0.9),
+              width: 300,
+              height: 300),
+          BackgroundBubble(
+              left: 100,
+              top: 40,
+              color: Color(0xFFFFAB91).withOpacity(0.9),
+              width: 80,
+              height: 80),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -69,31 +88,39 @@ class _CheckMailPageState extends State<CheckMailPage> {
                       SizedBox(height: 100),
                       Text(
                         widget.email,
-                        style: TextStyle(color: Color(0xff004396), fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Color(0xff004396),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 20),
                       Text(
                         'Un email de confirmation vous a été envoyé, veuillez le confirmer pour accéder à votre compte.',
-                        style: TextStyle(color: Color(0xff004396), fontSize: 18),
+                        style:
+                            TextStyle(color: Color(0xff004396), fontSize: 18),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _isButtonDisabled ? null : _sendMailAgain,
-                        child: Text('Renvoyer le mail', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: Text('Renvoyer le mail',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xff004396),
-                          onPrimary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
+                            // primary: Color(0xff004396),
+                            // onPrimary: Colors.white,
+                            // shape: RoundedRectangleBorder(
+                            //   borderRadius: BorderRadius.circular(20),
+                            // ),
+                            ),
                       ),
                       if (_isButtonDisabled) // Afficher le timer si le bouton est désactivé
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: Text('Vous pouvez renvoyer le mail dans $_countdownSeconds secondes',
-                              style: TextStyle(color: Colors.grey, fontSize: 14)),
+                          child: Text(
+                              'Vous pouvez renvoyer le mail dans $_countdownSeconds secondes',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14)),
                         ),
                     ],
                   ),
@@ -103,7 +130,9 @@ class _CheckMailPageState extends State<CheckMailPage> {
                   child: Container(
                     padding: EdgeInsets.only(bottom: 1),
                     decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Color(0xff004396), width: 1)),
+                      border: Border(
+                          bottom:
+                              BorderSide(color: Color(0xff004396), width: 1)),
                     ),
                     child: Text(
                       'Se connecter',
