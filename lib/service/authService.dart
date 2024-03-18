@@ -69,37 +69,42 @@ class AuthService {
     return false;
   }
 
-
-
-
-  Future<void> register(String name, String firstname, String email, DateTime birthday, String phone, String password, int secretPin, String role ) async {
+  Future<void> registerTest(
+      String name,
+      String firstname,
+      String email,
+      DateTime birthday,
+      String phone,
+      String password,
+      int secretPin,
+      String role) async {
     //Stock the api url in variable
     final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('API_KEY');
 
-
-    final response = await http.post(
-      Uri.parse(apiUrl + "auth/register"),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-        'firstname': firstname,
-        'role': role,
-        'birthday': birthday,
-        'secret_pin': secretPin,
-        'lastname': name,
-        'phone': phone
-      }),
-    );
-    if (response.statusCode == 200) {
-      print('Incsription réussie');
-    } else {
-      print('Erreur: ${response.statusCode}');
-      print('Corps de la réponse: ${response.body}');
-      throw ServiceException(jsonDecode(response.body));
+    print(Uri.parse(apiUrl + "auth/register"));
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl + "auth/register"),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+        },
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+          'firstname': firstname,
+          'role': role,
+          'birthday': birthday.toIso8601String(),
+          'secret_pin': secretPin,
+          'lastname': name,
+          'phone': phone
+        }),
+      );
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    } catch (e) {
+      print("Erreur : $e");
     }
   }
-
 }
