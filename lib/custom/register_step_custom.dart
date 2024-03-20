@@ -4,12 +4,11 @@ class RegisterStepCustom extends StatelessWidget {
   final String? stepNumberLeft;
   final String? stepNumberRight;
 
-
-  const RegisterStepCustom ({
+  const RegisterStepCustom({
     Key? key,
-     this.stepNumberLeft,
-     this.stepNumberRight,
-}) : super(key: key);
+    this.stepNumberLeft,
+    this.stepNumberRight,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,23 +16,25 @@ class RegisterStepCustom extends StatelessWidget {
       padding: EdgeInsets.all(20),
       child: Row(
         children: <Widget>[
-          _buildCircleIndicator(stepNumberLeft!, true),
+          _buildCircleIndicator(stepNumberLeft ?? "", true),
           Expanded(
             child: Divider(color: Colors.white, thickness: 2),
           ),
-          _buildCircleIndicator(stepNumberRight!, false),
+          _buildCircleIndicator(stepNumberRight ?? "", false),
         ],
       ),
     );
   }
 
   Widget _buildCircleIndicator(String number, bool isLeftPin) {
+    double size = number.isNotEmpty ? 40 : 20;
+
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
         Container(
-          width: 30,
-          height: 30,
+          width: size,
+          height: size,
           decoration: BoxDecoration(
             color: Colors.orange,
             shape: BoxShape.circle,
@@ -44,6 +45,7 @@ class RegisterStepCustom extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: 18
           ),
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:diwe_front/auth/double_auth.dart';
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
 
@@ -26,7 +27,10 @@ class _LoginPageState extends State<LoginPage> {
       //Jusqu'a cette partie
 
       // Si la connexion est réussie, naviguez vers la page des utilisateurs
-      Navigator.of(context).pushReplacementNamed('/user');
+      // Navigator.of(context).pushReplacementNamed('/user');
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => DoubleAuthPage(email: _emailController.text)),
+      );
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
 
