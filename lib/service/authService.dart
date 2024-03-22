@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +18,13 @@ class AuthService {
   Future<void> login(String email, String password) async {
     //Stock the api url in variable
     final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('API_KEY');
 
-    final response = await http.post(
+      final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': apiKey,
       },
       body: jsonEncode({
         'email': email,

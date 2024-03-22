@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/custom/background_bubble_custom.dart';
-import 'package:diwe_front/Auth/login_page.dart'; // Assurez-vous que ce chemin est correct
+import 'package:diwe_front/Auth/login_page.dart';
 
 class DoubleAuthPage extends StatefulWidget {
   final String email;
@@ -14,26 +14,34 @@ class DoubleAuthPage extends StatefulWidget {
 
 class _DoubleAuthPageState extends State<DoubleAuthPage> {
   final TextEditingController _codeController = TextEditingController();
-  bool _isButtonDisabled = false;
-  int _countdownSeconds = 30;
+  bool _isVerifyButtonDisabled = false;
+  bool _isResendButtonDisabled = false;
+  int _resendCountdownSeconds = 60;
 
   void _verifyCode() {
     print("Code submitted: ${_codeController.text}");
+    // Votre logique de vérification ici
+  }
+
+  void _resendCode() {
+    print("Resend code");
+
+    // Ici, vous pouvez ajouter votre logique pour renvoyer le code.
 
     setState(() {
-      _isButtonDisabled = true;
+      _isResendButtonDisabled = true;
     });
 
     Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      if (_countdownSeconds > 0) {
+      if (_resendCountdownSeconds > 0) {
         setState(() {
-          _countdownSeconds--;
+          _resendCountdownSeconds--;
         });
       } else {
         timer.cancel();
         setState(() {
-          _isButtonDisabled = false;
-          _countdownSeconds = 30; // Réinitialise le timer pour la prochaine utilisation
+          _isResendButtonDisabled = false;
+          _resendCountdownSeconds = 60; // Réinitialiser pour la prochaine fois
         });
       }
     });
@@ -52,12 +60,11 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
+            icon: Icon(Icons.arrow_back, color: Color(0xff004396)),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
       ),
-
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(
@@ -72,17 +79,15 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
         ),
         child: Stack(
           children: [
-            BackgroundBubble(left: -100, top: -90, color: Color(0x00C7E6).withOpacity(0.3), width: 300, height: 300),
-            BackgroundBubble(right: -100, bottom: -90, color: Color(0x00C7E6).withOpacity(0.3), width: 300, height: 300),
-            BackgroundBubble(left: 50, top: 600, color: Color(0x00C7E6).withOpacity(0.3), width: 80, height: 80),
-            BackgroundBubble(right: 90, top: 100, color: Color(0x00C7E6).withOpacity(0.3), width: 100, height: 100),
-            BackgroundBubble(right: -90, top: 300, color: Color(0x00C7E6).withOpacity(0.3), width: 250, height: 250),
+            // Vos bulles de fond ici
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.asset('assets/images/diwe_blanc.png', width: 250),
+                  SizedBox(height: 20),
                   Text(
                     'Double Authentification',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
@@ -110,7 +115,7 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _isButtonDisabled ? null : _verifyCode,
+                    onPressed: _isVerifyButtonDisabled ? null : _verifyCode,
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xff004396),
                       onPrimary: Colors.white,
@@ -121,9 +126,20 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
                     child: Text('Vérifier le code', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
                   SizedBox(height: 20),
-                  if (_isButtonDisabled)
+                  ElevatedButton(
+                    onPressed: _isResendButtonDisabled ? null : _resendCode,
+                    child: Text('Renvoyer le mail', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blueGrey, // Optional: Change the button color
+                      onPrimary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  if (_isResendButtonDisabled)
                     Text(
-                      'Veuillez attendre $_countdownSeconds secondes avant de réessayer.',
+                      'Veuillez attendre $_resendCountdownSeconds secondes avant de réessayer.',
                       style: TextStyle(color: Colors.white70, fontSize: 16),
                     ),
                 ],

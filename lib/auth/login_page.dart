@@ -25,9 +25,9 @@ class _LoginPageState extends State<LoginPage> {
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
       //Jusqu'a cette partie
-
-      // Si la connexion est réussie, naviguez vers la page des utilisateurs
+      // Si la connexion est réussie, naviguez vers la page de double auth
       // Navigator.of(context).pushReplacementNamed('/user');
+      print('OKKKKKKK');
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => DoubleAuthPage(email: _emailController.text)),
       );
@@ -35,10 +35,9 @@ class _LoginPageState extends State<LoginPage> {
       String errorMessage = 'Erreur de connexion';
 
       if (error is ServiceException) {
-        List<dynamic> errors = error.responseBody['errors'];
+        List<dynamic> errors = error.responseBody['error'];
         errorMessage = 'Invalid credentiel';
       }
-
       print("ErrorMessage: $errorMessage");
 
       final snackBar = SnackBar(
