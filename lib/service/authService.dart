@@ -19,10 +19,13 @@ class AuthService {
     //Stock the api url in variable
 
     final String apiUrl = dotenv.get('API_HOST');
+    String? apiKey = dotenv.env['X_API_KEY'];
+
     final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key' : '$apiKey'
       },
       body: jsonEncode({
         'email': email,
@@ -36,7 +39,9 @@ class AuthService {
 
       await storage.write(key: 'jwt', value: token);
       await storage.write(key: 'user', value: jsonEncode(user));
-
+     print(token);
+     print(user);
+     print(response.body);
       print('Connexion réussie');
     } else {
       print('Erreur: ${response.statusCode}');

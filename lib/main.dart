@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         ),
         '/repas': (context) => AuthHandler(
           roles:  ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const RepasPage(),
+          onLoggedIn: (context) =>  RepasPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/commandes': (context) => AuthHandler(
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _selectedPage = const HomePage();
         break;
       case 3:
-        _selectedPage = const RepasPage();
+        _selectedPage =  RepasPage();
         break;
       case 4:
         _selectedPage = const CommandesPage();
