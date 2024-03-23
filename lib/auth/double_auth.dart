@@ -116,27 +116,33 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _isVerifyButtonDisabled ? null : _verifyCode,
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xff004396),
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff004396)),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
                     child: Text('Vérifier le code', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
+
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _isResendButtonDisabled ? null : _resendCode,
                     child: Text('Renvoyer le mail', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blueGrey, // Optional: Change the button color
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
                   ),
+
                   if (_isResendButtonDisabled)
                     Text(
                       'Veuillez attendre $_resendCountdownSeconds secondes avant de réessayer.',

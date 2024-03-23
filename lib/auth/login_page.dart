@@ -32,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => DoubleAuthPage(email: _emailController.text)),
       );
     } catch (error) {
+      print(error);
       String errorMessage = 'Erreur de connexion';
 
       if (error is ServiceException) {
