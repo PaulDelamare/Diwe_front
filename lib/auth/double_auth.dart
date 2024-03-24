@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:diwe_front/service/authService.dart';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/custom/background_bubble_custom.dart';
 import 'package:diwe_front/Auth/login_page.dart';
@@ -13,20 +14,33 @@ class DoubleAuthPage extends StatefulWidget {
 }
 
 class _DoubleAuthPageState extends State<DoubleAuthPage> {
+  final AuthService authService = AuthService();
+
   final TextEditingController _codeController = TextEditingController();
   bool _isVerifyButtonDisabled = false;
   bool _isResendButtonDisabled = false;
   int _resendCountdownSeconds = 60;
 
-  void _verifyCode() {
-    print("Code submitted: ${_codeController.text}");
-    // Votre logique de vérification ici
+
+  void _verifyCode() async {
+    try {
+      await authService.verifycode(context, widget.email, _codeController.text);
+      // La navigation est déjà gérée dans verifycode
+    } catch (e) {
+      // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
+      print(e);
+    }
   }
 
-  void _resendCode() {
+  void _resendCode() async {
     print("Resend code");
-
-    // Ici, vous pouvez ajouter votre logique pour renvoyer le code.
+    try {
+      await authService.resend_code(context, widget.email);
+      // Code de succès ici, si nécessaire
+    } catch (e) {
+      // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
+      print(e);
+    }
 
     setState(() {
       _isResendButtonDisabled = true;

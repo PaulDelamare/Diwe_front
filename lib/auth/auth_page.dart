@@ -9,6 +9,7 @@ import '../custom/custom_input.dart';
 class Authpage extends StatelessWidget {
   const Authpage ({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

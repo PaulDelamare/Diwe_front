@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:diwe_front/auth/double_auth.dart';
+import 'package:diwe_front/user/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +17,10 @@ class ServiceException {
 class AuthService {
   final storage = FlutterSecureStorage();
 
-  Future<void> login(String email, String password) async {
-    //Stock the api url in variable
+  Future<void> login(BuildContext context,String email, String password) async {
     final String apiUrl = dotenv.get('API_HOST');
-    final String apiKey = dotenv.get('API_KEY');
+    final String apiKey = dotenv.get('X_API_KEY');
+    print(apiKey);
 
       final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
@@ -33,11 +35,11 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      final token = jsonDecode(response.body)['access_token'];
-      final user = jsonDecode(response.body)['user'];
+      // Action à exécuter au tapotement
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => DoubleAuthPage(email: email)),
+      );
 
-      await storage.write(key: 'jwt', value: token);
-      await storage.write(key: 'user', value: jsonEncode(user));
 
       print('Connexion réussie');
     } else {
@@ -46,6 +48,82 @@ class AuthService {
       throw ServiceException(jsonDecode(response.body));
     }
   }
+
+  Future<void> resend_code(BuildContext context,String email) async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('X_API_KEY');
+    print(apiKey);
+
+    final response = await http.post(
+      Uri.parse(apiUrl + "auth/resend-code"),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+      },
+      body: jsonEncode({
+        'email': email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+
+
+
+      print('email envoyé');
+      print(response.body);
+    } else {
+      print('Erreur: ${response.statusCode}');
+      print('Corps de la réponse: ${response.body}');
+      throw ServiceException(jsonDecode(response.body));
+    }
+  }
+
+  Future<void> verifycode(BuildContext context, String email, String code) async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('X_API_KEY');
+    print(apiKey);
+
+    final response = await http.post(
+      Uri.parse(apiUrl + "auth/two-factor"),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+      },
+      body: jsonEncode({
+        'email': email,
+        'code': code,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Décodage du corps de la réponse
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      // Stockage du access_token dans le stockage sécurisé
+      final String accessToken = responseBody['access_token'];
+      await storage.write(key: 'jwt', value: accessToken);
+
+      // Affichage du JWT Token pour vérification
+      print('JWT Token: $accessToken'); // Ajouté pour afficher le JWT Token
+
+      // Stockage des informations de l'utilisateur dans le stockage sécurisé
+      final String userData = jsonEncode(responseBody['user']);
+      await storage.write(key: 'user', value: userData);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => UserPage()),
+      );
+
+      print('Connexion réussie');
+    } else {
+      print('Erreur: ${response.statusCode}');
+      print('Corps de la réponse: ${response.body}');
+      throw ServiceException(jsonDecode(response.body));
+    }
+  }
+
+
+
 
   Future<String?> getToken() async {
     return await storage.read(key: 'jwt');
