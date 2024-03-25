@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:diwe_front/service/graphiqueService.dart';
 
 class GlycemicChart extends StatefulWidget {
   @override
@@ -7,38 +8,58 @@ class GlycemicChart extends StatefulWidget {
 }
 
 class _GlycemicChartState extends State<GlycemicChart> {
-  bool _showByDay = true; // Afficher par jour par défaut
+  bool _showByDay = true;
+  List<double> _chartData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchChartData();
+  }
+
+  Future<void> _fetchChartData() async {
+    try {
+      final chartData = await GraphiqueService.getGlycemicChartData(byDay: _showByDay);
+      setState(() {
+        _chartData = chartData;
+      });
+    } catch (e) {
+      // Gérer les erreurs de récupération des données
+      print('Error fetching chart data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20), // Ajout du padding horizontal
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end, // Alignement vers la droite
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               DropdownButton<bool>(
                 value: _showByDay,
                 onChanged: (newValue) {
                   setState(() {
                     _showByDay = newValue!;
+                    _fetchChartData(); // Actualiser les données du graphique lors du changement de sélection
                   });
                 },
-                underline: Container(), // Suppression du soulignement
+                underline: Container(),
                 style: TextStyle(
-                  color: _showByDay ? Colors.white : Colors.black, // Couleur du texte en fonction de la sélection
+                  color: _showByDay ? Colors.white : Colors.black,
                 ),
                 items: [
                   DropdownMenuItem(
                     value: true,
                     child: Container(
-                      color: _showByDay ? Color(0xFF004396) : Colors.white, // Fond du choix "Par jour"
+                      color: _showByDay ? Color(0xFF004396) : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Par jour',
-                          style: TextStyle(color: _showByDay ? Colors.white : Colors.black), // Couleur du texte en fonction de la sélection
+                          style: TextStyle(color: _showByDay ? Colors.white : Colors.black),
                         ),
                       ),
                     ),
@@ -46,12 +67,12 @@ class _GlycemicChartState extends State<GlycemicChart> {
                   DropdownMenuItem(
                     value: false,
                     child: Container(
-                      color: !_showByDay ? Color(0xFF004396) : Colors.white, // Fond du choix "Par heure"
+                      color: !_showByDay ? Color(0xFF004396) : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Par heure',
-                          style: TextStyle(color: !_showByDay ? Colors.white : Colors.black), // Couleur du texte en fonction de la sélection
+                          style: TextStyle(color: !_showByDay ? Colors.white : Colors.black),
                         ),
                       ),
                     ),
@@ -63,17 +84,21 @@ class _GlycemicChartState extends State<GlycemicChart> {
         ),
         SizedBox(height: 0.5),
         AspectRatio(
-          aspectRatio: 1.8, // Réduction de la hauteur du graphique
+          aspectRatio: 1.8,
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20), // Ajout de marges horizontales
+            margin: EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
-              color: Colors.white, // Fond du graphique en blanc
+              color: Colors.white,
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: LineChart(
+              child: _chartData.isNotEmpty
+                  ? LineChart(
                 _showByDay ? _getDayChartData() : _getHourChartData(),
+              )
+                  : Center(
+                child: CircularProgressIndicator(), // Afficher un indicateur de chargement pendant la récupération des données
               ),
             ),
           ),
@@ -86,14 +111,11 @@ class _GlycemicChartState extends State<GlycemicChart> {
     return LineChartData(
       lineBarsData: [
         LineChartBarData(
-          spots: [
-            FlSpot(0, 3),
-            FlSpot(1, 4),
-            FlSpot(2, 3.5),
-            FlSpot(3, 5),
-            FlSpot(4, 4.5),
-            FlSpot(5, 6),
-          ],
+          spots: _chartData
+              .asMap()
+              .map((index, value) => MapEntry(index.toDouble(), FlSpot(index.toDouble(), value)))
+              .values
+              .toList(),
           isCurved: true,
           colors: [Colors.blue],
           barWidth: 4,
@@ -108,14 +130,11 @@ class _GlycemicChartState extends State<GlycemicChart> {
     return LineChartData(
       lineBarsData: [
         LineChartBarData(
-          spots: [
-            FlSpot(0, 6),
-            FlSpot(1, 5),
-            FlSpot(2, 7),
-            FlSpot(3, 4),
-            FlSpot(4, 6),
-            FlSpot(5, 5),
-          ],
+          spots: _chartData
+              .asMap()
+              .map((index, value) => MapEntry(index.toDouble(), FlSpot(index.toDouble(), value)))
+              .values
+              .toList(),
           isCurved: true,
           colors: [Colors.blue],
           barWidth: 4,

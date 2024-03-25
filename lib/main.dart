@@ -1,21 +1,15 @@
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
-import 'package:diwe_front/auth/login_page.dart';
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
-import 'service/authService.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'navbar.dart';
 
-void main() async{
-  //Find the .env for use it in other file
-  await dotenv.load(fileName: ".env");
+void main() async {
   runApp(const MyApp());
 }
 
@@ -30,35 +24,34 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
       home: AuthHandler(
         roles: ['user', 'health'],
         onLoggedIn: (context) => const MyHomePage(selectedIndex: 2),
         onLoggedOut: (context) => const Authpage(),
       ),
       routes: {
-        '/home': (contextR) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+        '/home': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const HomePage(),
           onLoggedOut: (context) => const Authpage(),
         ),
-        '/user': (contextR) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+        '/user': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const UserPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/bolus': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const BolusPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/repas': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) =>  RepasPage(),
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => RepasPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/commandes': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const CommandesPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
@@ -83,9 +76,16 @@ class _MyHomePageState extends State<MyHomePage> {
     _selectedIndex = selectedIndex;
   }
 
+  late Widget _selectedPage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPage = const HomePage();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget _selectedPage;
     switch (_selectedIndex) {
       case 0:
         _selectedPage = const UserPage();
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _selectedPage = const HomePage();
         break;
       case 3:
-        _selectedPage =  RepasPage();
+        _selectedPage = RepasPage();
         break;
       case 4:
         _selectedPage = const CommandesPage();
@@ -108,9 +108,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(
-          'assets/images/diwe_logo.png',
-          width: 150,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Image.asset(
+            'assets/images/diwe_logo.png',
+          ),
         ),
         actions: [
           Padding(
@@ -148,7 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: _selectedPage,
-      bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
+      bottomNavigationBar: Navbar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 
