@@ -1,20 +1,15 @@
-import 'package:diwe_front/Auth/register.dart';
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
-import 'package:diwe_front/auth/login_page.dart';
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'navbar.dart';
 
-void main() async{
-  //Find the .env for use it in other file
-  await dotenv.load(fileName: ".env");
+void main() async {
   runApp(const MyApp());
 }
 
@@ -23,24 +18,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'DIWE',
-      // home: RegisterPage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // home: const MyHomePage(),
-      initialRoute: '/',
+      home: AuthHandler(
+        roles: ['user', 'health'],
+        onLoggedIn: (context) => const MyHomePage(selectedIndex: 2),
+        onLoggedOut: (context) => const Authpage(),
+      ),
       routes: {
-        '/user': (context) => const UserPage(),
-        '/bolus': (context) => const BolusPage(),
-        '/repas': (context) => const RepasPage(),
-        '/commandes': (context) => const CommandesPage(),
-        '/': (context) => AuthHandler(
+        '/home': (context) => AuthHandler(
           roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn:  (context) => const Authpage(),
+          onLoggedIn: (context) => const HomePage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/user': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const UserPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/bolus': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const BolusPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/repas': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => RepasPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/commandes': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const CommandesPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
       },
@@ -48,54 +60,59 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final int selectedIndex;
+
+  const MyHomePage({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState(selectedIndex: selectedIndex);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  // Variable pour stocker le contenu de la page sélectionnée
-  Widget _selectedPage = Container();
+  _MyHomePageState({required int selectedIndex}) {
+    _selectedIndex = selectedIndex;
+  }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      // Mettez à jour le contenu de la page sélectionnée en fonction de l'index
-      switch (index) {
-        case 0:
-          _selectedPage = const UserPage(); // Afficher le contenu de user.dart
-          break;
-        case 1:
-          _selectedPage = const BolusPage(); // Afficher le contenu de bolus.dart
-          break;
-        case 2:
-          _selectedPage = const HomePage(); // Afficher le contenu de home.dart
-          break;
-        case 3:
-          _selectedPage = const RepasPage(); // Afficher le contenu de repas.dart
-          break;
-        case 4:
-          _selectedPage = const CommandesPage(); // Afficher le contenu de commandes.dart
-          break;
-      // Ajoutez d'autres cas pour les autres pages si nécessaire
-        default:
-          _selectedPage = Container(); // Par défaut, afficher un conteneur vide
-      }
-    });
+  late Widget _selectedPage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPage = const HomePage();
   }
 
   @override
   Widget build(BuildContext context) {
+    switch (_selectedIndex) {
+      case 0:
+        _selectedPage = const UserPage();
+        break;
+      case 1:
+        _selectedPage = const BolusPage();
+        break;
+      case 2:
+        _selectedPage = const HomePage();
+        break;
+      case 3:
+        _selectedPage = RepasPage();
+        break;
+      case 4:
+        _selectedPage = const CommandesPage();
+        break;
+      default:
+        _selectedPage = HomePage();
+    }
+
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(
-          'assets/images/diwe_logo.png',
-          width: 150,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Image.asset(
+            'assets/images/diwe_logo.png',
+          ),
         ),
         actions: [
           Padding(
@@ -118,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Center(
                 child: IconButton(
                   onPressed: () {
-                    _launchEmergencyCall('tel:15'); // Appeler le numéro d'urgence
+                    _launchEmergencyCall('tel:15');
                   },
                   icon: const Icon(
                     Icons.phone,
@@ -132,10 +149,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
-      bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
+      bottomNavigationBar: Navbar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   void _launchEmergencyCall(String phoneNumber) async {

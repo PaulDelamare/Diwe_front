@@ -41,6 +41,12 @@ dependencies:
   fl_chart: ^0.35.0
   flutter_dotenv: ^5.1.0
   url_launcher: ^6.0.9
+  connectivity: ^3.0.6
+  carousel_slider: ^4.2.1
+  image: ^4.1.7
+
+
+
   image_picker: ^0.8.4
 
 dev_dependencies:
@@ -62,6 +68,7 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+
   uses-material-design: true
 
   assets:
@@ -74,7 +81,9 @@ flutter:
     - assets/images/dewi_blanc.png
     - assets/images/diwe_logo.png
     - assets/images/diwe_blanc.png
+    - assets/images/logo_dewi.png
     - assets/images/profile.png
+    - assets/images/camera.png
     - .env
 
   # To add assets to your application, add an assets section, like this:
