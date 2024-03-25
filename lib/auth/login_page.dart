@@ -17,7 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService authService = AuthService();
 
-  bool _isLoading = false; // Ajout de la variable pour suivre l'état du chargement
+  bool _isLoading =
+      false; // Ajout de la variable pour suivre l'état du chargement
 
   // Définition du widget de chargement
   Widget _buildLoadingWidget() {
@@ -32,12 +33,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     setState(() {
-      _isLoading = true; // Affichage du chargement lorsque le processus de connexion commence
+      _isLoading =
+          true; // Affichage du chargement lorsque le processus de connexion commence
     });
 
     try {
       // Mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
       await authService.login(_emailController.text, _passwordController.text);
+
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
       // Jusqu'à cette partie
@@ -48,10 +51,11 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // Si la connexion est réussie, naviguez vers la page des utilisateurs
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 1)));
-
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MyHomePage(selectedIndex: 1)));
     } catch (error) {
-      String errorMessage = 'Erreur de connexion';
+      String errorMessage = 'Erreur de connexion $error';
+      print(error);
 
       if (error is ServiceException) {
         List<dynamic> errors = error.responseBody['errors'];
@@ -67,7 +71,8 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } finally {
       setState(() {
-        _isLoading = false; // Masquage du chargement une fois le processus terminé
+        _isLoading =
+            false; // Masquage du chargement une fois le processus terminé
       });
     }
   }
@@ -75,103 +80,97 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading // Affichage du widget de chargement si _isLoading est vrai
-          ? _buildLoadingWidget()
-          : SingleChildScrollView(
-        child: Container(
-          height: getScreenHeight(context),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color(0xFF004396),
-                Color(0xFF0066CC),
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: getScreenHeight(context) * 0.1,
-                ),
-
-                Image.asset(
-                  'assets/images/diwe_blanc.png',
-                  width: 250,
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide.none,
+      body:
+          _isLoading // Affichage du widget de chargement si _isLoading est vrai
+              ? _buildLoadingWidget()
+              : SingleChildScrollView(
+                  child: Container(
+                    height: getScreenHeight(context),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Color(0xFF004396),
+                          Color(0xFF0066CC),
+                        ],
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: getScreenHeight(context) * 0.1,
+                          ),
+                          Image.asset(
+                            'assets/images/diwe_blanc.png',
+                            width: 250,
+                          ),
+                          SizedBox(height: 16),
+                          TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'Email',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'Mot de passe',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Color(0xFF004396)),
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              )),
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 15)),
+                            ),
+                            onPressed: () {
+                              _login();
+                            },
+                            child: Text('VALIDER'),
+                          ),
+                          Center(
+                            child: InkWell(
+                              onTap: () {
+                                // Naviguer vers une nouvelle page nommée AuthPage
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Authpage()));
+                              },
+                              child: Text('Retour en arrière',
+                                  style: TextStyle(color: Colors.blue)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Mot de passe',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all(Color(0xFF004396)),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    )),
-                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15)),
-                  ),
-                  onPressed: () {
-                    _login();
-                  },
-                  child: Text('VALIDER'),
-                ),
-                Center(
-                  child: InkWell(
-                    onTap: () {
-                      // Naviguer vers une nouvelle page nommée AuthPage
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
-                    },
-
-                    child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
-}
-
-void main() async {
-  // Appel à SystemChrome.setPreferredOrientations pour définir les orientations préférées
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
-
-  runApp(const MyApp());
 }
