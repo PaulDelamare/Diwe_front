@@ -25,6 +25,15 @@ class AuthService {
     final String apiUrl = dotenv.get('API_HOST');
     final String apiKey = dotenv.get('API_KEY');
     print(apiKey);
+
+
+
+    Future<void> login(String email, String password) async {
+      //Stock the api url in variable
+
+      final String apiUrl = dotenv.get('API_HOST');
+      String? apiKey = dotenv.env['API_KEY'];
+
       final response = await http.post(
         Uri.parse(apiUrl + "auth/login"),
         headers: {
@@ -53,6 +62,25 @@ class AuthService {
         throw ServiceException(jsonDecode(response.body));
       }
     }
+
+
+
+
+
+
+
+
+
+
+
+    Future<Map<String, dynamic>?> getUser() async {
+      final String? userJson = await storage.read(key: 'user');
+      if (userJson != null) {
+        return jsonDecode(userJson);
+      }
+      return null;
+    }
+  }
 
   Future<void> registerTest(String name,
       String firstname,

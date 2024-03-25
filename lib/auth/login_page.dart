@@ -39,19 +39,29 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      //mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
+      // Modification ici: passage de 'context' comme premier argument
       await authService.login(context, _emailController.text, _passwordController.text);
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
 
+      print(" JWT Token : ezaeaze $token");
+
       // Si la connexion est réussie, naviguez vers la page des utilisateurs
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 1)));
+      if (mounted && token != null) {
+      }
+      else {
+        // Gérer le cas où le token est nul après la connexion réussie
+        print("Erreur de récupération du token");
+        // Afficher une snackbar ou une alerte à l'utilisateur
+      }
     } catch (error) {
+      print(error);
       String errorMessage = 'Erreur de connexion';
 
       if (error is ServiceException) {
         List<dynamic> errors = error.responseBody['errors'];
         errorMessage = 'Identifiants invalides';
+
       }
 
       print("ErrorMessage: $errorMessage");
@@ -143,16 +153,16 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('VALIDER'),
                 ),
-          Center(
-            child: InkWell(
-              onTap: () {
-                // Naviguer vers une nouvelle page nommée AuthPage
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
-              },
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      // Naviguer vers une nouvelle page nommée AuthPage
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
+                    },
 
-              child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
-            ),
-          ),
+                    child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
               ],
             ),
           ),
