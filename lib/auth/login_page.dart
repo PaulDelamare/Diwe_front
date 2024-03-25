@@ -45,14 +45,11 @@ class _LoginPageState extends State<LoginPage> {
       final dynamic user = await authService.getUser();
       // Jusqu'à cette partie
 
-      // Si la connexion est réussie, naviguez vers la page principale (MyHomePage)
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
-      );
+
 
       // Si la connexion est réussie, naviguez vers la page des utilisateurs
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => MyHomePage(selectedIndex: 1)));
+          builder: (context) => MyHomePage(selectedIndex: 3)));
     } catch (error) {
       String errorMessage = 'Erreur de connexion $error';
       print(error);
