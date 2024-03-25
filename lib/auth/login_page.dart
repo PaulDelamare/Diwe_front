@@ -1,13 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Importez le package SystemChrome
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/main.dart';
-import 'package:flutter/material.dart';
 import '../service/authService.dart';
 import '../../main.dart';
-
-
-
-
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -48,8 +44,11 @@ class _LoginPageState extends State<LoginPage> {
 
       // Si la connexion est réussie, naviguez vers la page principale (MyHomePage)
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage()),
+        MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
       );
+
+      // Si la connexion est réussie, naviguez vers la page des utilisateurs
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 1)));
 
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
@@ -148,16 +147,16 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('VALIDER'),
                 ),
-          Center(
-            child: InkWell(
-              onTap: () {
-                // Naviguer vers une nouvelle page nommée AuthPage
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
-              },
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      // Naviguer vers une nouvelle page nommée AuthPage
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
+                    },
 
-              child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
-            ),
-          ),
+                    child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
               ],
             ),
           ),
@@ -165,4 +164,14 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+void main() async {
+  // Appel à SystemChrome.setPreferredOrientations pour définir les orientations préférées
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
+
+  runApp(const MyApp());
 }
