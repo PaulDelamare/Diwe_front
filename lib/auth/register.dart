@@ -150,7 +150,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? validateUserRole() {
     if (selectedRole == null) {
+      print('eze');
       return 'Veuillez cocher votre role';
+    } else {
+      return 'Veuillez cocher votre role';
+
     }
     return null;
   }
@@ -180,27 +184,29 @@ class _RegisterPageState extends State<RegisterPage> {
     String? newFirstNameError = validateFirstName(firstNameController.text);
     String? newEmailError = validateEmail(emailController.text);
     String? newPasswordError = validatePassword(passwordController.text);
-    String? newCheckPasswordError =
-        validateCheckPassword(checkPasswordController.text);
-    String? errorUserRole = validateUserRole();
+    String? newCheckPasswordError = validateCheckPassword(checkPasswordController.text);
+    String? errorUserRole = validateUserRole(); // Appel de la fonction de validation
 
+    // Vérification des erreurs
     if (newNameError != null ||
         newFirstNameError != null ||
         newEmailError != null ||
         newPasswordError != null ||
         newCheckPasswordError != null ||
-        userRoleError != null) {
+        errorUserRole != null) {
       hasError = true;
     }
 
     setState(() {
+      // Assignation des erreurs
       nameError = newNameError;
       firstNameError = newFirstNameError;
       emailError = newEmailError;
       passwordError = newPasswordError;
       checkPasswordError = newCheckPasswordError;
-      userRoleError = errorUserRole;
+      userRoleError = errorUserRole; // Utilisation de l'erreur de rôle d'utilisateur
 
+      // Passage à l'étape suivante si aucune erreur et si l'étape actuelle est inférieure à 2
       if (!hasError && _currentPageState < 2) {
         _currentPageState++;
       }
@@ -210,6 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
   }
+
 
   Future<void> _register() async {
     DateFormat format = DateFormat("yyyy-mm-dd");
@@ -227,7 +234,6 @@ class _RegisterPageState extends State<RegisterPage> {
           selectedRole!);
 
       print('INCRIPTION SUCCESS');
-      // Navigator.of(context).pushReplacementNamed('/user');
     } catch (error) {
       String errorMessage = 'Erreur de connexion';
 
@@ -235,7 +241,7 @@ class _RegisterPageState extends State<RegisterPage> {
         List<dynamic> errors = error.responseBody['errors'];
         errorMessage = 'Invalid';
       }
-      print("ErrorMessage: $errorMessage");
+      print("ErrorMessage: $error ");
 
       final snackBar = SnackBar(
         content: Text(errorMessage),
@@ -295,7 +301,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       InputFormCustom(
         placeholder: 'Email',
-        inputType: 'text',
+        inputType: 'email',
         controller: emailController,
         error: emailError,
       ),

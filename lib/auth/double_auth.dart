@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'package:diwe_front/service/authService.dart';
 import 'package:flutter/material.dart';
-import 'package:diwe_front/custom/background_bubble_custom.dart';
-import 'package:diwe_front/Auth/login_page.dart';
+import 'package:diwe_front/service/authService.dart';
+// Importez vos autres fichiers ici si nécessaire.
 
 class DoubleAuthPage extends StatefulWidget {
   final String email;
@@ -15,12 +14,10 @@ class DoubleAuthPage extends StatefulWidget {
 
 class _DoubleAuthPageState extends State<DoubleAuthPage> {
   final AuthService authService = AuthService();
-
   final TextEditingController _codeController = TextEditingController();
   bool _isVerifyButtonDisabled = false;
   bool _isResendButtonDisabled = false;
   int _resendCountdownSeconds = 60;
-
 
   void _verifyCode() async {
     try {
@@ -63,6 +60,8 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -80,93 +79,102 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
         ),
       ),
       extendBodyBehindAppBar: true,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff004396),
-              Color(0xff0C8CE9),
-            ],
-          ),
+      body: SingleChildScrollView(
+      child: ConstrainedBox(
+      constraints: BoxConstraints(
+      minHeight: screenHeight,
+    ),
+    child: IntrinsicHeight(
+    child: Container(
+    decoration: BoxDecoration(
+    gradient: LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+    Color(0xff004396),
+    Color(0xff0C8CE9),
+    ],
+    ),
+    ),
+    child: Stack(
+    children: [
+    // Vos bulles de fond ici, si elles sont toujours nécessaires.
+    Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+    Image.asset('assets/images/diwe_blanc.png', width: 250),
+    SizedBox(height: 20),
+    Text(
+    'Double Authentification',
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+    textAlign: TextAlign.center,
+    ),
+    SizedBox(height: 20),
+    Text(
+    'Entrez le code reçu par mail',
+    style: TextStyle(color: Colors.white70, fontSize: 18),
+    textAlign: TextAlign.center,
+    ),
+    SizedBox(height: 20),
+    TextField(
+    controller: _codeController,
+    keyboardType: TextInputType.number,
+    decoration: InputDecoration(
+    filled: true,
+    fillColor: Colors.white,
+    hintText: 'Code de vérification',
+    border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12),
+    borderSide: BorderSide.none,
+    ),
+    ),
+    ),
+    SizedBox(height: 20),
+    ElevatedButton(
+    onPressed: _isVerifyButtonDisabled ? null : _verifyCode,
+    style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff004396)),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    shape: MaterialStateProperty.all<OutlinedBorder>(
+    RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20),
+    ),
+    ),
+    ),
+    child: Text('Vérifier le code', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+    ),
+
+    SizedBox(height: 20),
+    ElevatedButton(
+    onPressed: _isResendButtonDisabled ? null : _resendCode,
+    child: Text('Renvoyer le mail', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+    style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    shape: MaterialStateProperty
+        .all<OutlinedBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+    ),
+    ),
+
+      if (_isResendButtonDisabled)
+        Text(
+          'Veuillez attendre $_resendCountdownSeconds secondes avant de réessayer.',
+          style: TextStyle(color: Colors.white70, fontSize: 16),
         ),
-        child: Stack(
-          children: [
-            // Vos bulles de fond ici
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset('assets/images/diwe_blanc.png', width: 250),
-                  SizedBox(height: 20),
-                  Text(
-                    'Double Authentification',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Entrez le code reçu par mail',
-                    style: TextStyle(color: Colors.white70, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _codeController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Code de vérification',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _isVerifyButtonDisabled ? null : _verifyCode,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff004396)),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    child: Text('Vérifier le code', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  ),
-
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _isResendButtonDisabled ? null : _resendCode,
-                    child: Text('Renvoyer le mail', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  if (_isResendButtonDisabled)
-                    Text(
-                      'Veuillez attendre $_resendCountdownSeconds secondes avant de réessayer.',
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    ],
+    ),
+    ),
+    ],
+    ),
+    ),
+    ),
+      ),
       ),
     );
   }

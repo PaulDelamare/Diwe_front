@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:diwe_front/auth/check_mail.dart';
 import 'package:diwe_front/auth/double_auth.dart';
 import 'package:diwe_front/user/user.dart';
 import 'package:http/http.dart' as http;
@@ -16,13 +17,12 @@ class ServiceException {
 
 class AuthService {
   final storage = FlutterSecureStorage();
-
-  Future<void> login(BuildContext context,String email, String password) async {
+  Future<void> login(BuildContext context, String email, String password) async {
     final String apiUrl = dotenv.get('API_HOST');
-    final String apiKey = dotenv.get('X_API_KEY');
+    final String apiKey = dotenv.get('API_KEY');
     print(apiKey);
 
-      final response = await http.post(
+    final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
       headers: {
         'Content-Type': 'application/json',
@@ -35,23 +35,38 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      // Action à exécuter au tapotement
+      // Connexion réussie
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => DoubleAuthPage(email: email)),
       );
-
-
       print('Connexion réussie');
+    } else if (response.statusCode == 401) {
+      // Vérification de la clé "redirect" dans la réponse
+      final responseBody = jsonDecode(response.body);
+      final bool redirectToPage = responseBody['redirect'] ?? false;
+
+      if (redirectToPage) {
+        // Rediriger vers une autre page
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => CheckMailPage(email: email)),
+        );
+      } else {
+        // Autre gestion de l'erreur 401
+        print('Erreur 401: ${responseBody['error']}');
+        throw ServiceException(responseBody);
+      }
     } else {
+      // Gestion des autres codes d'erreur
       print('Erreur: ${response.statusCode}');
       print('Corps de la réponse: ${response.body}');
       throw ServiceException(jsonDecode(response.body));
     }
   }
 
+
   Future<void> resend_code(BuildContext context,String email) async {
     final String apiUrl = dotenv.get('API_HOST');
-    final String apiKey = dotenv.get('X_API_KEY');
+    final String apiKey = dotenv.get('API_KEY');
     print(apiKey);
 
     final response = await http.post(
@@ -66,9 +81,6 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-
-
-
       print('email envoyé');
       print(response.body);
     } else {
@@ -80,7 +92,7 @@ class AuthService {
 
   Future<void> verifycode(BuildContext context, String email, String code) async {
     final String apiUrl = dotenv.get('API_HOST');
-    final String apiKey = dotenv.get('X_API_KEY');
+    final String apiKey = dotenv.get('API_KEY');
     print(apiKey);
 
     final response = await http.post(
@@ -123,6 +135,31 @@ class AuthService {
   }
 
 
+  Future<void> active_code(BuildContext context,String email) async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('API_KEY');
+    print(apiKey);
+
+    final response = await http.post(
+      Uri.parse(apiUrl + "auth/resend"),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+      },
+      body: jsonEncode({
+        'email': email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('email envoyé');
+      print(response.body);
+    } else {
+      print('Erreur: ${response.statusCode}');
+      print('Corps de la réponse: ${response.body}');
+      throw ServiceException(jsonDecode(response.body));
+    }
+  }
 
 
   Future<String?> getToken() async {
@@ -159,8 +196,9 @@ class AuthService {
       String phone,
       String password,
       int secretPin,
-      String role) async {
-    //Stock the api url in variable
+      String role,
+      ) async {
+    // Stock the api url in variable
     final String apiUrl = dotenv.get('API_HOST');
     final String apiKey = dotenv.get('API_KEY');
 
@@ -180,13 +218,18 @@ class AuthService {
           'birthday': birthday.toIso8601String(),
           'secret_pin': secretPin,
           'lastname': name,
-          'phone': phone
+          'phone': phone,
         }),
       );
       print('Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
+
+      if (response.statusCode != 200) {
+        throw Exception('Erreur HTTP: ${response.statusCode}');
+      }
     } catch (e) {
       print("Erreur : $e");
     }
   }
+
 }

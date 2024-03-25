@@ -51,10 +51,14 @@ class _InputFormCustomState extends State<InputFormCustom> {
         textInputType = TextInputType.phone;
         inputFormatters = [FilteringTextInputFormatter.digitsOnly];
         break;
+      case 'email':
+        textInputType = TextInputType.emailAddress;
+        break;
       case 'text':
       default:
         textInputType = TextInputType.text;
         break;
+
     }
   }
 

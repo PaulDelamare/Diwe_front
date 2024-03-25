@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:diwe_front/Auth/login_page.dart';
+import 'package:diwe_front/service/authService.dart';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/custom/background_bubble_custom.dart';
 
@@ -11,11 +12,27 @@ class CheckMailPage extends StatefulWidget {
   @override
   _CheckMailPageState createState() => _CheckMailPageState();
 }
-
 class _CheckMailPageState extends State<CheckMailPage> {
+  final AuthService authService = AuthService();
   bool _isButtonDisabled = false;
   int _countdownSeconds = 60;
   Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _verifyAccount(); // Appeler _verifyAccount lorsque vous arrivez sur la page
+  }
+
+  void _verifyAccount() async {
+    try {
+      await authService.active_code(context, widget.email);
+      // La navigation est déjà gérée dans verifycode
+    } catch (e) {
+      // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
+      print(e);
+    }
+  }
 
   void _sendMailAgain() {
     if (_isButtonDisabled) return;
@@ -53,29 +70,33 @@ class _CheckMailPageState extends State<CheckMailPage> {
       body: Stack(
         children: [
           BackgroundBubble(
-              right: 250,
-              bottom: -120,
-              color: Color(0xFFFFAB91).withOpacity(0.9),
-              width: 300,
-              height: 300),
+            right: 250,
+            bottom: -120,
+            color: Color(0xFFFFAB91).withOpacity(0.9),
+            width: 300,
+            height: 300,
+          ),
           BackgroundBubble(
-              right: 130,
-              bottom: 130,
-              color: Color(0xFFFFAB91).withOpacity(0.9),
-              width: 80,
-              height: 80),
+            right: 130,
+            bottom: 130,
+            color: Color(0xFFFFAB91).withOpacity(0.9),
+            width: 80,
+            height: 80,
+          ),
           BackgroundBubble(
-              right: -100,
-              top: -80,
-              color: Color(0xFFFFAB91).withOpacity(0.9),
-              width: 300,
-              height: 300),
+            right: -100,
+            top: -80,
+            color: Color(0xFFFFAB91).withOpacity(0.9),
+            width: 300,
+            height: 300,
+          ),
           BackgroundBubble(
-              left: 100,
-              top: 40,
-              color: Color(0xFFFFAB91).withOpacity(0.9),
-              width: 80,
-              height: 80),
+            left: 100,
+            top: 40,
+            color: Color(0xFFFFAB91).withOpacity(0.9),
+            width: 80,
+            height: 80,
+          ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -89,38 +110,42 @@ class _CheckMailPageState extends State<CheckMailPage> {
                       Text(
                         widget.email,
                         style: TextStyle(
-                            color: Color(0xff004396),
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold),
+                          color: Color(0xff004396),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(height: 20),
                       Text(
                         'Un email de confirmation vous a été envoyé, veuillez le confirmer pour accéder à votre compte.',
-                        style:
-                            TextStyle(color: Color(0xff004396), fontSize: 18),
+                        style: TextStyle(
+                          color: Color(0xff004396),
+                          fontSize: 18,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _isButtonDisabled ? null : _sendMailAgain,
-                        child: Text('Renvoyer le mail',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16)),
-                        style: ElevatedButton.styleFrom(
-                            // primary: Color(0xff004396),
-                            // onPrimary: Colors.white,
-                            // shape: RoundedRectangleBorder(
-                            //   borderRadius: BorderRadius.circular(20),
-                            // ),
-                            ),
+                        child: Text(
+                          'Renvoyer le mail',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(),
                       ),
-                      if (_isButtonDisabled) // Afficher le timer si le bouton est désactivé
+                      if (_isButtonDisabled)
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
-                              'Vous pouvez renvoyer le mail dans $_countdownSeconds secondes',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 14)),
+                            'Vous pouvez renvoyer le mail dans $_countdownSeconds secondes',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -131,8 +156,11 @@ class _CheckMailPageState extends State<CheckMailPage> {
                     padding: EdgeInsets.only(bottom: 1),
                     decoration: BoxDecoration(
                       border: Border(
-                          bottom:
-                              BorderSide(color: Color(0xff004396), width: 1)),
+                        bottom: BorderSide(
+                          color: Color(0xff004396),
+                          width: 1,
+                        ),
+                      ),
                     ),
                     child: Text(
                       'Se connecter',
