@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:diwe_front/main.dart';
 import 'package:diwe_front/repas/repas.dart';
 import 'package:diwe_front/service/repasService.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +41,11 @@ class _PhotoRepasPageState  extends State<Photorepas> {
           try {
             await foodvisorPost.analyzeImage(apiKey, _image!);
            // Si la réponse est bonne tu me recharge la page repas.dart
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
-              MaterialPageRoute(builder: (BuildContext context) => RepasPage()),
+              MaterialPageRoute(builder: (BuildContext context) => MyHomePage(selectedIndex: 3)),
             );
+
 
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(

@@ -13,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 void main() async{
   //Find the .env for use it in other file
   await dotenv.load(fileName: ".env");
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
       // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
       home: AuthHandler(
         roles: ['user', 'health'],
-        onLoggedIn: (context) => const MyHomePage(),
+        onLoggedIn: (context) => const MyHomePage(selectedIndex: 2),
         onLoggedOut: (context) => const Authpage(),
       ),
       routes: {
@@ -69,19 +68,19 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final int selectedIndex;
+
+  const MyHomePage({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState(selectedIndex: selectedIndex);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 2;
+  late int _selectedIndex;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  _MyHomePageState({required int selectedIndex}) {
+    _selectedIndex = selectedIndex;
   }
 
   @override
@@ -151,6 +150,12 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _selectedPage,
       bottomNavigationBar: Navbar(onItemTapped: _onItemTapped),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   void _launchEmergencyCall(String phoneNumber) async {
