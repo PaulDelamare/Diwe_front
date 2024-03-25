@@ -115,7 +115,7 @@ class MealGet {
     }
    print(apiKey);
     print(jwtToken);
-    var url = Uri.parse('$apiUrl?number=0'); // Ajoutez le paramètre "number" à l'URL
+    var url = Uri.parse('$apiUrl?limit=0'); // Ajoutez le paramètre "number" à l'URL
     var response = await http.get(url, headers: {
       'Authorization' : 'Bearer $jwtToken',
       'x-api-key' : '$apiKey'
@@ -137,6 +137,39 @@ class MealGet {
     }
   }
 
+  Future<void> deleteMeal(String mealId) async {
+    String? jwtToken = await storage.read(key: 'jwt');
+    String? apiKey = dotenv.env['X_API_KEY'];
+
+    if (jwtToken == null || apiKey == null) {
+      throw Exception('JWT Token or API Key not found');
+    }
+
+    try {
+      var url = Uri.parse('$apiUrl?id=$mealId'); // Ajoutez l'ID du repas à l'URL
+      var response = await http.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'x-api-key': apiKey,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Meal deleted successfully.');
+      } else {
+        throw Exception('Failed to delete meal. Status code: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error deleting meal: $e');
+    }
+  }
+
+
+
+
+
+
   Future<List<Meals>> fetchMealsWithPage(int page) async {
     String? jwtToken = await storage.read(key: 'jwt');
 
@@ -144,7 +177,7 @@ class MealGet {
       throw FetchMealsException(message: 'JWT Token not found');
     }
 
-    var url = Uri.parse('$apiUrl?number=$page'); // Ajoutez le paramètre "number" à l'URL
+    var url = Uri.parse('$apiUrl?limit=$page'); // Ajoutez le paramètre "number" à l'URL
     var response = await http.get(url, headers: {
       'Authorization' : 'Bearer $jwtToken',
       'x-api-key' : ' $apiKey'

@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:diwe_front/repas/repas.dart';
 import 'package:diwe_front/service/repasService.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class Photorepas extends StatefulWidget {
   final void Function(File)? onImageSelected;
@@ -15,7 +18,7 @@ class Photorepas extends StatefulWidget {
 class _PhotoRepasPageState  extends State<Photorepas> {
   File? _image;
   final foodvisorPost = FoodVisorPost();
-  final apiKey = 'dkWsMur4.ONWyXaroBu4akoWsgX5C0nUAN9s80iFZ';
+  final apiKey = dotenv.env['API_KEY_FOOD_VISOR'];
 
   final picker = ImagePicker();
 
@@ -32,19 +35,30 @@ class _PhotoRepasPageState  extends State<Photorepas> {
       }
 
       if (_image != null) {
-        try {
-          await foodvisorPost.analyzeImage(apiKey, _image!);
-          // Traiter la réponse de l'API FoodVisor
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erreur lors de l\'envoi de l\'image à l\'API FoodVisor')),
-          );
+        final apiKey = dotenv.env['API_KEY_FOOD_VISOR'];
+        if (apiKey != null) {
+          try {
+            await foodvisorPost.analyzeImage(apiKey, _image!);
+           // Si la réponse est bonne tu me recharge la page repas.dart
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) => RepasPage()),
+            );
+
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Erreur lors de l\'envoi de l\'image à l\'API FoodVisor')),
+            );
+          }
+        } else {
+          print('Clé API non trouvée.');
         }
       }
     } else {
       print('Aucune image sélectionnée.');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

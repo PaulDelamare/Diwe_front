@@ -11,6 +11,8 @@ class _MealsListState extends State<MealsList> {
   List<Meals> _meals = [];
   int _currentPage = 1;
   bool _isLoading = true;
+  final String _baseUrl = 'http://10.0.2.2:3000/'; // Remplacez par l'URL réelle de votre serveur
+
 
   @override
   void initState() {
@@ -21,7 +23,6 @@ class _MealsListState extends State<MealsList> {
   Future<void> _fetchMeals(int page) async {
     try {
       MealGet mealGet = MealGet();
-      String apiKey = 'your_api_key_here';
       List<Meals> loadedMeals = await mealGet.fetchMealsWithPage(page);
 
       setState(() {
@@ -47,6 +48,35 @@ class _MealsListState extends State<MealsList> {
     });
     _fetchMeals(_currentPage);
   }
+  void _deleteMealbyID(Meals meal) async {
+    try {
+      // Ajoutez un print pour afficher l'identifiant du repas
+      print('Identifiant du repas à supprimer : ${meal.id}');
+
+      MealGet mealGet = MealGet();
+
+      // Appelez votre méthode deleteMeal du service repasService
+      await mealGet.deleteMeal(meal.id); // Supposant que meal.id est l'identifiant unique du repas
+      // Après avoir supprimé le repas avec succès, vous pouvez mettre à jour l'état de votre liste de repas pour refléter les changements
+      setState(() {
+        _meals.remove(meal);
+      });
+    } catch (error) {
+      print('Erreur lors de la suppression du repas: $error');
+      // Gérez l'erreur ici
+    }
+  }
+
+
+
+
+
+  void _deleteMeal(int index) {
+    setState(() {
+      _meals.removeAt(index);
+    });
+    // Ajoutez ici la logique pour supprimer le repas
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +94,38 @@ class _MealsListState extends State<MealsList> {
           if (index < _meals.length) {
             // Affichez les informations du repas ici
             final meal = _meals[index];
-            return ListTile(
-              title: Text(meal.name),
-              subtitle: Text('Glucides : ${meal.glucids} g'),
-              trailing: Text('Calories : ${meal.calories} kcal'),
+            return Container(
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(meal.name),
+                    subtitle: Text('Glucides : ${meal.glucids} g'),
+                    trailing: Text('Calories : ${meal.calories} kcal'),
+
+                  ),
+                  // Bouton de suppression
+                  ElevatedButton(
+                    onPressed: () => _deleteMealbyID(meal),
+                    child: Text('Supprimer'),
+                  ),
+
+                ],
+              ),
             );
           } else {
             // Affichez un bouton pour charger plus de repas
@@ -81,4 +139,3 @@ class _MealsListState extends State<MealsList> {
     );
   }
 }
-

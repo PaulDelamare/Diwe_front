@@ -1,7 +1,6 @@
 import 'package:diwe_front/model/Meal.dart';
 import 'package:diwe_front/repas/meals_list.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:diwe_front/repas/carrousel.dart';
 import 'package:diwe_front/repas/info_repas.dart';
 import 'package:diwe_front/repas/photorepas.dart';
@@ -17,6 +16,8 @@ class RepasPage extends StatefulWidget {
 class _RepasPageState extends State<RepasPage> {
   List<Meals> meals = [];
   bool isLoading = true;
+  final String _baseUrl = 'http://10.0.2.2:3000/'; // Remplacez par l'URL réelle de votre serveur
+
 
   @override
   void initState() {
@@ -27,7 +28,6 @@ class _RepasPageState extends State<RepasPage> {
   Future<void> _fetchMeals() async {
     try {
       MealGet mealGet = MealGet();
-      String apiKey = 'your_api_key_here';
       List<Meals> loadedMeals = await mealGet.fetchMeals();
 
       setState(() {
@@ -46,6 +46,9 @@ class _RepasPageState extends State<RepasPage> {
       });
     }
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,14 +113,12 @@ class _RepasPageState extends State<RepasPage> {
             left: 10,
             right: 10,
             child: MealInfoWidget(
-              // Ici, vous devez ajuster pour utiliser les données de `meals`
-              // Ceci est juste un placeholder
-              mealImage: 'https://cdn.foodvisor.io/img/vision/examples/4.jpg',
-              calories: 505,
-              proteins: 42,
-              lipids: 19,
-              glucides: 39,
-              fibres: 7,
+              mealImage: _baseUrl + meals.first.imagePath, // Suppose que `imagePath` est une URL complète
+              calories: meals.first.calories.toInt(),
+              proteins: meals.first.calcium,
+              lipids: meals.first.lipids,
+              glucides: meals.first.glucids,
+              fibres: meals.first.fibers,
             ),
           ),
           Positioned(

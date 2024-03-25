@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:diwe_front/model/Meal.dart'; // Assurez-vous que le chemin d'importation est correct
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class MealCarouselWidget extends StatelessWidget {
+
   final List<Meals> meals;
-  final String _baseUrl = 'http://localhost:3000/'; // Remplacez par l'URL réelle de votre serveur
+  final String _baseUrl = 'http://10.0.2.2:3000/'; // Remplacez par l'URL réelle de votre serveur
 
   MealCarouselWidget({Key? key, required this.meals}) : super(key: key);
 
