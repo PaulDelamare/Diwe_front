@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class MealCarouselWidget extends StatelessWidget {
 
   final List<Meals> meals;
-  final String _baseUrl = 'http://10.0.2.2:3000/'; // Remplacez par l'URL réelle de votre serveur
+  final String _baseUrl = dotenv.get('URL_IMAGE'); // Assigner une chaîne vide si la valeur est nulle
 
   MealCarouselWidget({Key? key, required this.meals}) : super(key: key);
 

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:diwe_front/model/Meal.dart';
-import 'package:diwe_front/repas/carrousel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -9,6 +8,7 @@ import 'package:mime/mime.dart';
 import 'package:path/path.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// Classe responsable de l'envoi des informations du repas au serveur
 class MealPost {
   final String apiUrl = "${dotenv.env['API_HOST']}meal";
   final FlutterSecureStorage storage = FlutterSecureStorage();
@@ -53,7 +53,7 @@ class MealPost {
 }
 
 
-
+// Classe responsable de l'envoi de l'image à l'API FoodVisor pour analyse
 class FoodVisorPost {
   final FlutterSecureStorage storage = FlutterSecureStorage();
   final String foodVisorApiUrl = 'https://vision.foodvisor.io/api/1.0/fr/analysis/';
@@ -96,12 +96,15 @@ class FoodVisorPost {
     }
   }
 }
+
+// Classe responsable de la récupération des repas depuis le serveur
 class FetchMealsException implements Exception {
 final String message;
 
 FetchMealsException({required this.message});
 }
 
+// Recherche un repas en fonction du repas
 class MealGet {
   final FlutterSecureStorage storage = FlutterSecureStorage();
   final String apiUrl = "${dotenv.env['API_HOST']}meal";
@@ -136,6 +139,8 @@ class MealGet {
       throw FetchMealsException(message: errorMessage);
     }
   }
+
+  // Supprime un repas en fonction de son identifiant
 
   Future<void> deleteMeal(String mealId) async {
     String? jwtToken = await storage.read(key: 'jwt');

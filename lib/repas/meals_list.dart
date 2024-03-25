@@ -1,6 +1,8 @@
 import 'package:diwe_front/service/repasService.dart';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/model/Meal.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class MealsList extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class _MealsListState extends State<MealsList> {
   List<Meals> _meals = [];
   int _currentPage = 1;
   bool _isLoading = true;
-  final String _baseUrl = 'http://10.0.2.2:3000/'; // Remplacez par l'URL réelle de votre serveur
+  final String _baseUrl = dotenv.env['http://10.0.2.2:3000'] ?? ''; // Assigner une chaîne vide si la valeur est nulle
 
 
   @override
@@ -19,28 +21,29 @@ class _MealsListState extends State<MealsList> {
     super.initState();
     _fetchMeals(_currentPage);
   }
-
+// Fonction pour récupérer les repas en fonction de la page
   Future<void> _fetchMeals(int page) async {
     try {
-      MealGet mealGet = MealGet();
-      List<Meals> loadedMeals = await mealGet.fetchMealsWithPage(page);
+      MealGet mealGet = MealGet(); // Initialise un objet MealGet pour récupérer les repas
+      List<Meals> loadedMeals = await mealGet.fetchMealsWithPage(page); // Récupère les repas à partir de l'API avec la pagination
 
       setState(() {
-        _meals.addAll(loadedMeals);
-        _isLoading = false;
+        _meals.addAll(loadedMeals); // Ajoute les repas récupérés à la liste des repas existante
+        _isLoading = false; // Indique que le chargement des repas est terminé
       });
-    } on FetchMealsException catch (e) {
-      print("Erreur lors de la récupération des repas: ${e.message}");
+    } on FetchMealsException catch (e) { // Gère les exceptions spécifiques à la récupération des repas
+      print("Erreur lors de la récupération des repas: ${e.message}"); // Affiche un message d'erreur dans la console
       setState(() {
-        _isLoading = false;
+        _isLoading = false; // Indique que le chargement des repas est terminé
       });
-    } catch (e) {
-      print("Erreur inattendue lors de la récupération des repas: $e");
+    } catch (e) { // Gère les autres exceptions imprévues
+      print("Erreur inattendue lors de la récupération des repas: $e"); // Affiche un message d'erreur dans la console
       setState(() {
-        _isLoading = false;
+        _isLoading = false; // Indique que le chargement des repas est terminé
       });
     }
   }
+
 
   void _loadMoreMeals() {
     setState(() {
