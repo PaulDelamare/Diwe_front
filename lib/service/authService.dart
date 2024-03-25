@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:connectivity/connectivity.dart';
 
-
 class ServiceException {
   final Map<String, dynamic> responseBody;
 
@@ -17,16 +16,13 @@ class AuthService {
 
   Future<void> login(String email, String password) async {
     //Stock the api url in variable
+    String apiUrl = dotenv.get('API_HOST');
 
-    final String apiUrl = dotenv.get('API_HOST');
-    String? apiKey = dotenv.env['X_API_KEY'];
+    String apiKey = dotenv.get('API_KEY');
 
     final response = await http.post(
       Uri.parse(apiUrl + "auth/login"),
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key' : '$apiKey'
-      },
+      headers: {'Content-Type': 'application/json', 'x-api-key': '$apiKey'},
       body: jsonEncode({
         'email': email,
         'password': password,
@@ -39,9 +35,9 @@ class AuthService {
 
       await storage.write(key: 'jwt', value: token);
       await storage.write(key: 'user', value: jsonEncode(user));
-     print(token);
-     print(user);
-     print(response.body);
+      print(token);
+      print(user);
+      print(response.body);
       print('Connexion réussie');
     } else {
       print('Erreur: ${response.statusCode}');
@@ -49,7 +45,6 @@ class AuthService {
       throw ServiceException(jsonDecode(response.body));
     }
   }
-
 
   Future<String?> getToken() async {
     return await storage.read(key: 'jwt');
@@ -82,6 +77,4 @@ class AuthService {
     var connectivityResult = await (Connectivity().checkConnectivity());
     return connectivityResult == ConnectivityResult.wifi;
   }
-
-
 }
