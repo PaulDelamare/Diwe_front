@@ -1,6 +1,8 @@
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'home/home.dart';
 import 'user/user.dart';
@@ -10,6 +12,11 @@ import 'commandes/commandes.dart';
 import 'navbar.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
 }
 
@@ -31,30 +38,30 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/home': (context) => AuthHandler(
-          roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const HomePage(),
-          onLoggedOut: (context) => const Authpage(),
-        ),
+              roles: ['user', 'admin', 'health', 'blog'],
+              onLoggedIn: (context) => const HomePage(),
+              onLoggedOut: (context) => const Authpage(),
+            ),
         '/user': (context) => AuthHandler(
-          roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const UserPage(),
-          onLoggedOut: (context) => const Authpage(),
-        ),
+              roles: ['user', 'admin', 'health', 'blog'],
+              onLoggedIn: (context) => const UserPage(),
+              onLoggedOut: (context) => const Authpage(),
+            ),
         '/bolus': (context) => AuthHandler(
-          roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const BolusPage(),
-          onLoggedOut: (context) => const Authpage(),
-        ),
+              roles: ['user', 'admin', 'health', 'blog'],
+              onLoggedIn: (context) => const BolusPage(),
+              onLoggedOut: (context) => const Authpage(),
+            ),
         '/repas': (context) => AuthHandler(
-          roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => RepasPage(),
-          onLoggedOut: (context) => const Authpage(),
-        ),
+              roles: ['user', 'admin', 'health', 'blog'],
+              onLoggedIn: (context) => RepasPage(),
+              onLoggedOut: (context) => const Authpage(),
+            ),
         '/commandes': (context) => AuthHandler(
-          roles: ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const CommandesPage(),
-          onLoggedOut: (context) => const Authpage(),
-        ),
+              roles: ['user', 'admin', 'health', 'blog'],
+              onLoggedIn: (context) => const CommandesPage(),
+              onLoggedOut: (context) => const Authpage(),
+            ),
       },
     );
   }
@@ -66,7 +73,8 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState(selectedIndex: selectedIndex);
+  State<MyHomePage> createState() =>
+      _MyHomePageState(selectedIndex: selectedIndex);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
