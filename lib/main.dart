@@ -32,14 +32,41 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: AuthHandler(
-        roles: ["user", 'health'],
+        roles: ['user', 'health'],
         onLoggedIn: (context) => const MyHomePage(selectedIndex: 2),
         onLoggedOut: (context) => const Authpage(),
       ),
-
+      routes: {
+        '/home': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const HomePage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/user': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const UserPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/bolus': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const BolusPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/repas': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => RepasPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/commandes': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const CommandesPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+      },
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   final int selectedIndex;
