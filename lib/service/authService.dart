@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:diwe_front/auth/check_mail.dart';
 import 'package:diwe_front/auth/double_auth.dart';
+import 'package:diwe_front/main.dart';
 import 'package:diwe_front/user/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,11 +29,7 @@ class AuthService {
 
 
 
-    Future<void> login(String email, String password) async {
-      //Stock the api url in variable
 
-      final String apiUrl = dotenv.get('API_HOST');
-      String? apiKey = dotenv.env['API_KEY'];
 
       final response = await http.post(
         Uri.parse(apiUrl + "auth/login"),
@@ -61,7 +58,7 @@ class AuthService {
         print('Corps de la réponse: ${response.body}');
         throw ServiceException(jsonDecode(response.body));
       }
-    }
+
 
 
 
@@ -189,9 +186,7 @@ class AuthService {
     return null;
   }
 
-  Future<String?> getToken() async {
-    return await storage.read(key: 'jwt');
-  }
+
 
   Future<bool> isLoggedIn(BuildContext context) async {
     final String? token = await getToken();
@@ -199,17 +194,10 @@ class AuthService {
   }
 
 
-  Future<bool> hasAnyUserRole(List<String> roles) async {
-    final Map<String, dynamic>? user = await getUser();
-    if (user != null && user.containsKey('role')) {
-      String userRole = user['role'];
-      return roles.contains(userRole);
-    }
-    return false;
-  }
 
-  Future<void> verifycode(BuildContext context, String email,
-      String code) async {
+
+
+  Future<void> verifycode(BuildContext context, String email, String code) async {
     final String apiUrl = dotenv.get('API_HOST');
     final String apiKey = dotenv.get('API_KEY');
     print(apiKey);
@@ -238,18 +226,76 @@ class AuthService {
       print('JWT Token: $accessToken'); // Ajouté pour afficher le JWT Token
 
       // Stockage des informations de l'utilisateur dans le stockage sécurisé
-      final String userData = jsonEncode(responseBody['user']);
-      await storage.write(key: 'user', value: userData);
+      final Map<String, dynamic> user = responseBody['user'];
+      await storage.write(key: 'user', value: jsonEncode(user));
+
+      // Stockage des propriétés de l'utilisateur dans le stockage sécurisé
+      await storage.write(key: 'firstname', value: user['firstname']);
+      await storage.write(key: 'lastname', value: user['lastname']);
+      await storage.write(key: 'email', value: user['email']);
+      await storage.write(key: 'role', value: user['role']);
+      await storage.write(key: 'phone', value: user['phone']);
+      await storage.write(key: 'profile_picture', value: user['profile_picture']);
+
+      // Stockage des propriétés de last_meal dans le stockage sécurisé
+      final Map<String, dynamic> lastMeal = user['last_meal'];
+      await storage.write(key: 'last_meal_image_path', value: lastMeal['image_path']);
+      await storage.write(key: 'last_meal_name', value: lastMeal['name']);
+      await storage.write(key: 'last_meal_calories', value: lastMeal['calories'].toString());
+      await storage.write(key: 'last_meal_proteins', value: lastMeal['proteins'].toString());
+      await storage.write(key: 'last_meal_lipids', value: lastMeal['lipids'].toString());
+      await storage.write(key: 'last_meal_glucids', value: lastMeal['glucids'].toString());
+      await storage.write(key: 'last_meal_fibers', value: lastMeal['fibers'].toString());
+      await storage.write(key: 'last_meal_calcium', value: lastMeal['calcium'].toString());
+      await storage.write(key: 'last_meal_created_at', value: lastMeal['created_at']);
+
+      // Stockage de secret_pin dans le stockage sécurisé
+      final int secretPin = user['secret_pin'];
+      await storage.write(key: 'secret_pin', value: secretPin.toString());
+
+      // Récupération de toutes les valeurs à partir du stockage sécurisé
+      final String? jwt = await storage.read(key: 'jwt');
+      final String? userJson = await storage.read(key: 'user');
+      final String? firstname = await storage.read(key: 'firstname');
+      final String? lastname = await storage.read(key: 'lastname');
+      final String? email = await storage.read(key: 'email');
+      final String? role = await storage.read(key: 'role');
+      final String? phone = await storage.read(key: 'phone');
+      final String? profilePicture = await storage.read(key: 'profile_picture');
+      final String? lastMealImagePath = await storage.read(key: 'last_meal_image_path');
+      final String? lastMealName = await storage.read(key: 'last_meal_name');
+      final String? lastMealCalories = await storage.read(key: 'last_meal_calories');
+      final String? lastMealProteins = await storage.read(key: 'last_meal_proteins');
+      final String? lastMealLipids = await storage.read(key: 'last_meal_lipids');
+      final String? lastMealGlucids = await storage.read(key: 'last_meal_glucids');
+      final String? lastMealFibers = await storage.read(key: 'last_meal_fibers');
+      final String? lastMealCalcium = await storage.read(key: 'last_meal_calcium');
+      final String? lastMealCreatedAt = await storage.read(key: 'last_meal_created_at');
+
+// Affichage de toutes les valeurs
+      print('JWT: $jwt');
+      print('User: $userJson');
+      print('Firstname: $firstname');
+      print('Lastname: $lastname');
+      print('Email: $email');
+      print('Role: $role');
+      print('Phone: $phone');
+      print('Profile Picture: $profilePicture');
+      print('Last Meal Image Path: $lastMealImagePath');
+      print('Last Meal Name: $lastMealName');
+      print('Last Meal Calories: $lastMealCalories');
+      print('Last Meal Proteins: $lastMealProteins');
+      print('Last Meal Lipids: $lastMealLipids');
+      print('Last Meal Glucids: $lastMealGlucids');
+      print('Last Meal Fibers: $lastMealFibers');
+      print('Last Meal Calcium: $lastMealCalcium');
+      print('Last Meal Created At: $lastMealCreatedAt');
+      print('Secret Pin: $secretPin');
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => UserPage()),
+        MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
       );
 
-      await storage.write(key: 'jwt', value: accessToken);
-      await storage.write(key: 'user', value: jsonEncode(userData));
-      print(accessToken);
-      print(userData);
-      print(response.body);
       print('Connexion réussie');
     } else {
       print('Erreur: ${response.statusCode}');
@@ -257,5 +303,24 @@ class AuthService {
       throw ServiceException(jsonDecode(response.body));
     }
   }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: 'jwt');
+  }
+
+  Future<bool> hasAnyUserRole(List<String> roles) async {
+    // Récupération du rôle de l'utilisateur à partir du stockage sécurisé
+    final String? userRole = await storage.read(key: 'role');
+
+    // Vérification si le rôle de l'utilisateur est dans la liste des rôles autorisés
+    if (roles.contains(userRole)) {
+      // Le rôle de l'utilisateur est dans la liste des rôles autorisés
+      return true;
+    } else {
+      // Le rôle de l'utilisateur n'est pas dans la liste des rôles autorisés
+      return false;
+    }
+  }
+
 
 }

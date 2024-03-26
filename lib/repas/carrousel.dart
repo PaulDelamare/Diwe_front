@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:diwe_front/model/Meal.dart'; // Assurez-vous que le chemin d'importation est correct
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 class MealCarouselWidget extends StatelessWidget {
-
   final List<Meals> meals;
   final String _baseUrl = dotenv.get('URL_IMAGE'); // Assigner une chaîne vide si la valeur est nulle
 
   MealCarouselWidget({Key? key, required this.meals}) : super(key: key);
 
   Widget _buildMeal(Meals meal) {
+    // Print des détails du repas pour déboguer
+    print('Détails du repas : $meal');
+
     // Concaténez _baseUrl avec imagePath pour obtenir une URL complète
     String imageUrl = _baseUrl + meal.imagePath;
+    print('URL de l\'image : $imageUrl');
+
     return Container(
       width: 70,
       height: 70,
