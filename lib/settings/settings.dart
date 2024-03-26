@@ -126,7 +126,11 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Center(
         child: Stack(
           children: [
             Positioned(
@@ -380,6 +384,52 @@ class _SettingPageState extends State<SettingPage> {
                         ? CircularProgressIndicator()
                         : Text('Enregistrer'),
                   ),
+
+                  // Texte cliquable pour les pages supplémentaires
+                  TextButton(
+                    onPressed: () {
+                      // Naviguer vers la page à propos
+                      // Remplacez '/about' par le nom de votre route pour la page à propos
+                      Navigator.pushNamed(context, '/about');
+                    },
+                    child: Text(
+                      'À propos',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Naviguer vers la page des mentions légales
+                      // Remplacez '/legal' par le nom de votre route pour les mentions légales
+                      Navigator.pushNamed(context, '/legal');
+                    },
+                    child: Text(
+                      'Mentions légales',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Naviguer vers la politique de confidentialité
+                      // Remplacez '/privacy' par le nom de votre route pour la politique de confidentialité
+                      Navigator.pushNamed(context, '/privacy');
+                    },
+                    child: Text(
+                      'Politique de confidentialité',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+
+
                 ],
 
               ),
@@ -388,6 +438,9 @@ class _SettingPageState extends State<SettingPage> {
           ],
         ),
       ),
+    ),
+        ),
+
     );
   }
 }

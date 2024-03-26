@@ -82,12 +82,14 @@ class _UserPageState extends State<UserPage> {
                 },
               ),
             ),
-            // InfosWidget
-            Positioned(
-              top: 220, // Ajustez la position verticale selon vos besoins
-              left: 40, // Ajustez la position horizontale selon vos besoins
-              child: InfosWidget(),
+            Padding(
+              padding: EdgeInsets.only(top: 230.0),
+              child: Center(
+                child: InfosWidget(),
+              ),
             ),
+
+
           ],
         ),
       ),

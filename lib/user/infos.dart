@@ -1,6 +1,7 @@
 import 'package:diwe_front/service/authService.dart';
 import 'package:flutter/material.dart';
 
+
 class InfosWidget extends StatefulWidget {
   @override
   _InfosWidgetState createState() => _InfosWidgetState();
@@ -28,53 +29,29 @@ class _InfosWidgetState extends State<InfosWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '${_userData?['firstname'] ?? ''} ${_userData?['lastname'] ?? ''}',
+          style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        SizedBox(height: 12), // Réduit l'espacement vertical
+        GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          crossAxisSpacing: 4, // Réduit l'espacement horizontal entre les cartes
+          mainAxisSpacing: 4, // Réduit l'espacement vertical entre les cartes
+          childAspectRatio: 1 / 1, // Permet de contrôler le rapport hauteur/largeur des cartes
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(width: 8),
-                Text(
-                  _userData?['firstname'] ?? '', // Assurez-vous que 'name' est la clé correcte
-                  style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 8),
-
-                Text(
-                  _userData?['lastname'] ?? '', // Assurez-vous que 'prenom' est la clé correcte
-                  style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildInfoCard('Info 1', _userData?['info1'] ?? '...'),
-                SizedBox(width: 20),
-                _buildInfoCard('Info 2', _userData?['info2'] ?? '...'),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildInfoCard('Info 3', _userData?['info3'] ?? '...'),
-                SizedBox(width: 20),
-                _buildInfoCard('Info 4', _userData?['info4'] ?? '...'),
-              ],
-            ),
+            _buildInfoCard('Info 1', _userData?['info1'] ?? '...'),
+            _buildInfoCard('Info 2', _userData?['info2'] ?? '...'),
+            _buildInfoCard('Info 3', _userData?['info3'] ?? '...'),
+            _buildInfoCard('Info 4', _userData?['info4'] ?? '...'),
           ],
         ),
-      ),
+      ],
     );
   }
 
@@ -83,21 +60,21 @@ class _InfosWidgetState extends State<InfosWidget> {
       color: Colors.blue,
       elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(16.0), // Réduit le rayon de la bordure
       ),
       child: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: const EdgeInsets.all(1.0), // Réduit le padding intérieur de la carte
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), // Réduit la taille de la police du titre
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 4), // Réduit l'espacement vertical entre le titre et le contenu
             Text(
               content,
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(fontSize: 14, color: Colors.white), // Réduit la taille de la police du contenu
             ),
           ],
         ),
