@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/service/authService.dart';
 
@@ -34,7 +35,9 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
   void _verifyCode() async {
     try {
       await authService.verifycode(context, widget.email, _codeController.text);
-      // La navigation est déjà gérée dans verifycode
+        Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
+      );
     } catch (e) {
       // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
       print(e);

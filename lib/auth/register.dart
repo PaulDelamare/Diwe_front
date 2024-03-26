@@ -270,10 +270,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (_currentPageState == 2 && !hasError) {
       _register();
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //       builder: (context) => CheckMailPage(email: emailController.text)),
-      // );
+       Navigator.of(context).push(
+         MaterialPageRoute(
+             builder: (context) => CheckMailPage(email: emailController.text)),
+       );
     }
   }
 
