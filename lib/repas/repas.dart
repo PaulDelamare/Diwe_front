@@ -18,8 +18,7 @@ class RepasPage extends StatefulWidget {
 class _RepasPageState extends State<RepasPage> {
   List<Meals> meals = [];
   bool isLoading = true;
-  final String _baseUrl = dotenv.get(
-      'URL_IMAGE'); // Assigner une chaîne vide si la valeur est nulle
+  final String _baseUrl = dotenv.get('URL_IMAGE'); // Assigner une chaîne vide si la valeur est nulle
 
 
   @override
@@ -51,9 +50,9 @@ class _RepasPageState extends State<RepasPage> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
-    print(meals); // Ajoutez cette ligne pour imprimer le contenu de la liste meals
     return Scaffold(
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -111,33 +110,38 @@ class _RepasPageState extends State<RepasPage> {
               },
             ),
           ),
-          if (meals.isNotEmpty)
-            Positioned(
-              top: 220,
-              left: 10,
-              right: 10,
-              child: MealInfoWidget(
-                mealImage: _baseUrl + meals.first.imagePath,
-                calories: meals.first.calories.toInt(),
-                proteins: meals.first.calcium,
-                lipids: meals.first.lipids,
-                glucides: meals.first.glucids,
-                fibres: meals.first.fibers,
-              ),
+          Positioned(
+            top: 220,
+            left: 10,
+            right: 10,
+            child: MealInfoWidget(
+              mealImage: _baseUrl + meals.first.imagePath, // Suppose que `imagePath` est une URL complète
+              calories: meals.first.calories.toInt(),
+              proteins: meals.first.calcium,
+              lipids: meals.first.lipids,
+              glucides: meals.first.glucids,
+              fibres: meals.first.fibers,
             ),
-
+          ),
+          Positioned(
+            top: 480,
+            left: 10,
+            right: 10,
+            // Utilisez les données dynamiques pour le carousel
+            child: MealCarouselWidget(meals: meals),
+          ),
           Positioned(
             bottom: 20,
             left: 0,
             right: 0,
-            child: GestureDetector(
+            child : GestureDetector(
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text('Historique des repas'),
-                      content: MealCarouselWidget(meals: meals), // Utilisez MealCarouselWidget avec les repas chargés
+                      content: MealsList(), // Remplacez MealsList() par le widget que vous souhaitez afficher dans la boîte de dialogue
                       actions: <Widget>[
                         TextButton(
                           child: Text('Fermer'),
@@ -161,9 +165,10 @@ class _RepasPageState extends State<RepasPage> {
               ),
             ),
           ),
+
+
         ],
       ),
     );
   }
 }
-

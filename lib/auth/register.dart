@@ -153,8 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
       print('eze');
       return 'Veuillez cocher votre role';
     } else {
-      return 'Veuillez cocher votre role';
-
+      return null;
     }
     return null;
   }
