@@ -15,6 +15,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? _selectedUnit = 'mmol/L';
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                   GlycemicChart(),
                   SizedBox(height: 25),
                   ButtonBlogCard(),
-                  ButtonOrdonnanceCard(),
+                  DownloadOrdonnancePage(),
                   ButtonScanCard(),
                 ],
               ),

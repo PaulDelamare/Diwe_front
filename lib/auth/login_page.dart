@@ -2,7 +2,6 @@ import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 import '../service/authService.dart';
-import '../../main.dart';
 
 
 
