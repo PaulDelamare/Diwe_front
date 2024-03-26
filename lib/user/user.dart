@@ -1,3 +1,4 @@
+import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 import 'avatar.dart';
 import 'infos.dart';
@@ -54,8 +55,10 @@ class _UserPageState extends State<UserPage> {
                 icon: Icon(Icons.settings, color: Colors.white),
                 onPressed: () {
                   // Naviguer vers la page des paramètres
-                  Navigator.pushNamed(context, '/settings');
-                },
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 5)),
+                  );
+                  },
               ),
             ),
             // Avatar

@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:diwe_front/service/Picture.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AvatarPage extends StatefulWidget {
   final void Function(File)? onImageSelected;
@@ -13,8 +16,28 @@ class AvatarPage extends StatefulWidget {
 
 class _AvatarPageState extends State<AvatarPage> {
   File? _image;
-
+  final storage = FlutterSecureStorage();
   final picker = ImagePicker();
+  final Picture _picture = Picture(); // Instancier la classe Picture
+  late String _baseUrl;
+  String? _profilePicture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfilePicture();
+    _baseUrl = dotenv.get('URL_IMAGE') ?? '';
+  }
+
+  Future<void> _loadProfilePicture() async {
+    _profilePicture = await storage.read(key: 'profile_picture');
+
+    if (_profilePicture != null) {
+      setState(() {
+        _image = File('$_baseUrl$_profilePicture');
+      });
+    }
+  }
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -25,10 +48,37 @@ class _AvatarPageState extends State<AvatarPage> {
         if (widget.onImageSelected != null) {
           widget.onImageSelected!(_image!);
         }
+
+        // Appeler la méthode updateProfilePicture lorsque l'image est sélectionnée
+        _updateProfilePicture(_image!);
       } else {
         print('Aucune image sélectionnée.');
       }
     });
+  }
+
+  // Méthode pour appeler la mise à jour de l'image de profil via l'API
+  void _updateProfilePicture(File imageFile) async {
+    try {
+      // Appeler la méthode updateProfilePicture de la classe Picture
+      await _picture.updateProfilePicture(imageFile);
+
+      // Afficher un message de succès
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Image de profil mise à jour avec succès.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (error) {
+      // Afficher un message d'erreur en cas d'échec de la mise à jour
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur lors de la mise à jour de l\'image de profil: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -62,8 +112,8 @@ class _AvatarPageState extends State<AvatarPage> {
                 fit: BoxFit.cover,
               )
                   : ClipOval(
-                child: Image.file(
-                  _image!,
+                child: Image.network(
+                  '$_baseUrl$_profilePicture', // Utiliser Image.network avec l'URL de l'image
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,
