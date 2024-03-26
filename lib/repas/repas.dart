@@ -114,14 +114,16 @@ class _RepasPageState extends State<RepasPage> {
             top: 220,
             left: 10,
             right: 10,
-            child: MealInfoWidget(
-              mealImage: _baseUrl + meals.first.imagePath, // Suppose que `imagePath` est une URL complète
+            child: meals.isNotEmpty
+                ? MealInfoWidget(
+              mealImage: _baseUrl + meals.first.imagePath,
               calories: meals.first.calories.toInt(),
               proteins: meals.first.calcium,
               lipids: meals.first.lipids,
               glucides: meals.first.glucids,
               fibres: meals.first.fibers,
-            ),
+            )
+                : Container(), // Vous pouvez remplacer Container() par un widget de chargement ou un message d'erreur selon vos besoins.
           ),
           Positioned(
             top: 480,
