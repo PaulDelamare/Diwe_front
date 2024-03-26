@@ -1,12 +1,9 @@
+import 'package:diwe_front/auth/double_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Importez le package SystemChrome
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/main.dart';
-import 'package:flutter/material.dart';
 import '../service/authService.dart';
-
-
-
-
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,7 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService authService = AuthService();
 
-  bool _isLoading = false; // Ajout de la variable pour suivre l'état du chargement
+  bool _isLoading =
+  false; // Ajout de la variable pour suivre l'état du chargement
 
   // Définition du widget de chargement
   Widget _buildLoadingWidget() {
@@ -30,28 +28,36 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   double getScreenHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height;
+    return MediaQuery
+        .of(context)
+        .size
+        .height;
   }
 
   Future<void> _login() async {
     setState(() {
-      _isLoading = true; // Affichage du chargement lorsque le processus de connexion commence
+      _isLoading =
+      true; // Affichage du chargement lorsque le processus de connexion commence
     });
 
     try {
       // Mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
-      await authService.login(_emailController.text, _passwordController.text);
+      await authService.login(
+          context, _emailController.text, _passwordController.text);
+
       final String? token = await authService.getToken();
       final dynamic user = await authService.getUser();
       // Jusqu'à cette partie
 
       // Si la connexion est réussie, naviguez vers la page principale (MyHomePage)
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage()),
+        MaterialPageRoute(builder: (context) => DoubleAuthPage(email: _emailController.text)),
       );
 
+
     } catch (error) {
-      String errorMessage = 'Erreur de connexion';
+      String errorMessage = 'Erreur de connexion $error';
+      print(error);
 
       if (error is ServiceException) {
         List<dynamic> errors = error.responseBody['errors'];
@@ -67,7 +73,8 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } finally {
       setState(() {
-        _isLoading = false; // Masquage du chargement une fois le processus terminé
+        _isLoading =
+        false; // Masquage du chargement une fois le processus terminé
       });
     }
   }
@@ -75,7 +82,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading // Affichage du widget de chargement si _isLoading est vrai
+      body:
+      _isLoading // Affichage du widget de chargement si _isLoading est vrai
           ? _buildLoadingWidget()
           : SingleChildScrollView(
         child: Container(
@@ -97,7 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: getScreenHeight(context) * 0.1,
                 ),
-
                 Image.asset(
                   'assets/images/diwe_blanc.png',
                   width: 250,
@@ -135,28 +142,32 @@ class _LoginPageState extends State<LoginPage> {
                   style: ButtonStyle(
                     backgroundColor:
                     MaterialStateProperty.all(Color(0xFF004396)),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    )),
-                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15)),
+                    foregroundColor:
+                    MaterialStateProperty.all(Colors.white),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        )),
+                    padding: MaterialStateProperty.all(
+                        EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15)),
                   ),
                   onPressed: () {
                     _login();
                   },
                   child: Text('VALIDER'),
                 ),
-          Center(
-            child: InkWell(
-              onTap: () {
-                // Naviguer vers une nouvelle page nommée AuthPage
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Authpage()));
-              },
-
-              child: Text('Retour en arrière', style: TextStyle(color: Colors.blue)),
-            ),
-          ),
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      // Naviguer vers une nouvelle page nommée AuthPage
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Authpage()));
+                    },
+                    child: Text('Retour en arrière',
+                        style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
               ],
             ),
           ),
