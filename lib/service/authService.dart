@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/auth/check_mail.dart';
 import 'package:diwe_front/auth/double_auth.dart';
 import 'package:diwe_front/main.dart';
@@ -193,7 +194,15 @@ class AuthService {
     return token != null;
   }
 
+  Future<void> logout(BuildContext context) async {
+    // Supprimer tous les éléments du stockage sécurisé
+    await storage.deleteAll();
 
+    // Rediriger vers la page d'authentification
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => Authpage()),
+    );
+  }
 
 
 
@@ -321,6 +330,64 @@ class AuthService {
       return false;
     }
   }
+
+
+  Future<void> updatePassword( String password, String newPassword) async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('API_KEY');
+    final String? jwtToken = await storage.read(key: 'jwt');
+
+    final response = await http.put(
+      Uri.parse(apiUrl + "user/update-password"),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'Authorization': 'Bearer $jwtToken', // Ajoutez le token JWT dans l'en-tête Authorization
+      },
+      body: jsonEncode({
+        'password': password,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print('Erreur: ${response.statusCode}');
+      print('Corps de la réponse: ${response.body}');
+      throw ServiceException(jsonDecode(response.body));
+    }
+  }
+
+  Future<void> updateEmail(String oldEmail, String newEmail, String password) async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String apiKey = dotenv.get('API_KEY');
+    final String? jwtToken = await storage.read(key: 'jwt');
+
+    final response = await http.put(
+      Uri.parse(apiUrl + "user/update-email"),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'Authorization': 'Bearer $jwtToken', // Ajoutez le token JWT dans l'en-tête Authorization
+      },
+      body: jsonEncode({
+        'password': password,
+        'oldEmail': oldEmail,
+        'newEmail': newEmail,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print('Erreur: ${response.statusCode}');
+      print('Corps de la réponse: ${response.body}');
+      throw ServiceException(jsonDecode(response.body));
+    }
+  }
+
+
 
 
 }
