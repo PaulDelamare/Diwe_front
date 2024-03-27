@@ -21,13 +21,13 @@ class _CheckMailPageState extends State<CheckMailPage> {
   @override
   void initState() {
     super.initState();
-    _verifyAccount(); // Appeler _verifyAccount lorsque vous arrivez sur la page
+    // Ne pas appeler _verifyAccount ici pour éviter l'envoi automatique de l'email de confirmation
   }
 
   void _verifyAccount() async {
     try {
       await authService.active_code(context, widget.email);
-      // La navigation est déjà gérée dans verifycode
+      // La navigation est déjà gérée dans active_code
     } catch (e) {
       // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
       print(e);

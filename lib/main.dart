@@ -1,5 +1,6 @@
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
+import 'package:diwe_front/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -62,11 +63,15 @@ class MyApp extends StatelessWidget {
           onLoggedIn: (context) => const CommandesPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
+        '/settings': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const SettingPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
       },
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   final int selectedIndex;
@@ -82,7 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
   late int _selectedIndex;
 
   _MyHomePageState({required int selectedIndex}) {
-    _selectedIndex = selectedIndex;
+    // Vérifiez que selectedIndex est compris entre 0 et 5
+    if (selectedIndex >= 0 && selectedIndex <= 5) {
+      _selectedIndex = selectedIndex;
+    } else {
+      throw ArgumentError('La valeur de selectedIndex doit être comprise entre 0 et 5');
+    }
   }
 
   late Widget _selectedPage;
@@ -110,6 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 4:
         _selectedPage = const CommandesPage();
+        break;
+      case 5:
+        _selectedPage = const SettingPage();
         break;
       default:
         _selectedPage = HomePage();
