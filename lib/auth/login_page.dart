@@ -5,7 +5,6 @@ import 'package:flutter/services.dart'; // Importez le package SystemChrome
 import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/main.dart';
 import '../service/authService.dart';
-import '../../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
