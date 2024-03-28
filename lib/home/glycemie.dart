@@ -47,10 +47,6 @@ class _GlycemieCircleState extends State<GlycemieCircle> {
         _mmolLValue = glycemieData[0];
         _mgdlValue = glycemieData[1];
       });
-      print("////////////////////////////////////////////////////");
-      print(_mmolLValue);
-      print("////////////////////////////////////////////////////");
-
     } catch (e) {
       print('Error fetching glycemie data: $e');
     }
