@@ -23,47 +23,42 @@ class AuthService {
 
 
   final storage = FlutterSecureStorage();
-  Future<void> login(BuildContext context, String email, String password) async {
+  Future<bool> login(BuildContext context, String email, String password) async {
     final String apiUrl = dotenv.get('API_HOST');
     final String apiKey = dotenv.get('API_KEY');
-    print(apiKey);
+
+    final response = await http.post(
+      Uri.parse(apiUrl + "auth/login"),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '$apiKey'
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      final token = responseBody['access_token'];
+      final user = responseBody['user'];
+
+      print('Connexion réussie');
+
+        return true;
+
+      return true; // Connexion réussie, retourne true
+    } else if (response.statusCode == 401) {
+      return false; // Connexion réussie, retourne true
 
 
-
-
-
-      final response = await http.post(
-        Uri.parse(apiUrl + "auth/login"),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': '$apiKey'
-        },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final token = jsonDecode(response.body)['access_token'];
-        final user = jsonDecode(response.body)['user'];
-
-        await storage.write(key: 'jwt', value: token);
-        await storage.write(key: 'user', value: jsonEncode(user));
-        print(token);
-        print(user);
-        print(response.body);
-        print('Connexion réussie');
-      } else {
-        print('Erreur: ${response.statusCode}');
-        print('Corps de la réponse: ${response.body}');
-        throw ServiceException(jsonDecode(response.body));
-      }
-
-
-
-
-
+    } else {
+      print('Erreur: ${response.statusCode}');
+      print('Corps de la réponse: ${response.body}');
+      throw ServiceException(jsonDecode(response.body));
+    }
+  }
 
 
 
@@ -71,14 +66,17 @@ class AuthService {
 
 
 
-    Future<Map<String, dynamic>?> getUser() async {
+
+
+
+  Future<Map<String, dynamic>?> getUser() async {
       final String? userJson = await storage.read(key: 'user');
       if (userJson != null) {
         return jsonDecode(userJson);
       }
       return null;
     }
-  }
+
 
   Future<void> registerTest(String name,
       String firstname,
@@ -179,13 +177,7 @@ class AuthService {
     return connectivityResult == ConnectivityResult.wifi;
   }
 
-  Future<Map<String, dynamic>?> getUser() async {
-    final String? userJson = await storage.read(key: 'user');
-    if (userJson != null) {
-      return jsonDecode(userJson);
-    }
-    return null;
-  }
+
 
 
 

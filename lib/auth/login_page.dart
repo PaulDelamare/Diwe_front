@@ -1,3 +1,4 @@
+import 'package:diwe_front/auth/check_mail.dart';
 import 'package:diwe_front/auth/double_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Importez le package SystemChrome
@@ -37,25 +38,31 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     setState(() {
-      _isLoading =
-      true; // Affichage du chargement lorsque le processus de connexion commence
+      _isLoading = true; // Affichage du chargement lorsque le processus de connexion commence
     });
 
     try {
-      // Mettre cette partie en commentaire pour voir la page suivante quand la connexion beug
-      await authService.login(
+      // Appel à la fonction login pour effectuer la connexion
+      bool isLoggedIn = await authService.login(
           context, _emailController.text, _passwordController.text);
-
-      final String? token = await authService.getToken();
-      final dynamic user = await authService.getUser();
-      // Jusqu'à cette partie
-
-      // Si la connexion est réussie, naviguez vers la page principale (MyHomePage)
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => DoubleAuthPage(email: _emailController.text)),
-      );
+      print(isLoggedIn);
 
 
+      // Si la connexion est réussie et qu'un code de vérification a été envoyé, redirige vers CheckMailPage
+      if (!isLoggedIn) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CheckMailPage(email: _emailController.text)),
+        );
+      } else {
+        // Sinon, redirige vers DoubleAuthPage
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DoubleAuthPage(email: _emailController.text)),
+
+
+        );
+      }
     } catch (error) {
       String errorMessage = 'Erreur de connexion $error';
       print(error);
@@ -64,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
         List<dynamic> errors = error.responseBody['errors'];
         errorMessage = 'Identifiants invalides';
       }
-
       print("ErrorMessage: $errorMessage");
 
       final snackBar = SnackBar(
@@ -74,11 +80,11 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } finally {
       setState(() {
-        _isLoading =
-        false; // Masquage du chargement une fois le processus terminé
+        _isLoading = false; // Masquage du chargement une fois le processus terminé
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
