@@ -102,11 +102,6 @@ class _PhotoRepasPageState  extends State<Photorepas> {
               ),
             ),
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: getImage,
-            child: Text('Choisir une photo'),
-          ),
         ],
       ),
     );

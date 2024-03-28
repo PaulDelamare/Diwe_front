@@ -10,6 +10,7 @@ class MealInfoWidget extends StatelessWidget {
   final int lipids;
   final int glucides;
   final int fibres;
+  final String name;
 
   const MealInfoWidget({
     Key? key,
@@ -19,6 +20,7 @@ class MealInfoWidget extends StatelessWidget {
     required this.lipids,
     required this.glucides,
     required this.fibres,
+    required this.name
   }) : super(key: key);
 
   @override
@@ -35,15 +37,16 @@ class MealInfoWidget extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  'Dernier repas',
+                  name,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(40.0), // Circular clip for image
-                  child: Image.network(mealImage, height: 120, width: 120, fit: BoxFit.cover,), // Make sure 'mealImage' is a valid URL
+                  child: Image.network(mealImage, height: 100, width: 100, fit: BoxFit.cover,), // Make sure 'mealImage' is a valid URL
                 ),
               ],
             ),
@@ -57,7 +60,7 @@ class MealInfoWidget extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                      fontSize: 22,
                     ),
                   ),
                   SizedBox(height: 8.0),

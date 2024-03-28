@@ -49,126 +49,84 @@ class _RepasPageState extends State<RepasPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 100,
-            child: Container(color: Colors.white),
-          ),
-          Positioned(
-            top: 70,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF004396), Color(0xFF0C8CE9)],
-                ),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 75,
-            left: 10,
-            child: IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
-              onPressed: () {},
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Photorepas(),
-            ),
-          ),
-          Positioned(
-            top: 75,
-            right: 10,
-            child: IconButton(
-              icon: Icon(Icons.mode_edit, color: Colors.white),
-              onPressed: () {
-                Navigator.pushNamed(context, '/edit');
-              },
-            ),
-          ),
-          Positioned(
-            top: 220,
-            left: 10,
-            right: 10,
-            child: meals.isNotEmpty
-                ? MealInfoWidget(
-              mealImage: _baseUrl + meals.first.imagePath,
-              calories: meals.first.calories.toInt(),
-              proteins: meals.first.calcium,
-              lipids: meals.first.lipids,
-              glucides: meals.first.glucids,
-              fibres: meals.first.fibers,
-            )
-                : Container(), // Vous pouvez remplacer Container() par un widget de chargement ou un message d'erreur selon vos besoins.
-          ),
-          Positioned(
-            top: 480,
-            left: 10,
-            right: 10,
-            // Utilisez les données dynamiques pour le carousel
-            child: MealCarouselWidget(meals: meals),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child : GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Historique des repas'),
-                      content: MealsList(), // Remplacez MealsList() par le widget que vous souhaitez afficher dans la boîte de dialogue
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('Fermer'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
+          : SingleChildScrollView(
+            child:Column(
+              children: [
+                Container(color: Colors.white),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xFF004396), Color(0xFF0C8CE9)],
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      Center(
+                      child: Photorepas(),
+                    ), 
+                    SizedBox(height: 10),
+                    meals.isNotEmpty
+                    ? MealInfoWidget(
+                      mealImage: _baseUrl + meals.first.imagePath,
+                      calories: meals.first.calories.toInt(),
+                      proteins: meals.first.calcium,
+                      lipids: meals.first.lipids,
+                      glucides: meals.first.glucids,
+                      fibres: meals.first.fibers,
+                      name: meals.first.name
+                    ): Container(),
+                    SizedBox(height: 10),
+                    MealCarouselWidget(meals: meals),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Historique des repas'),
+                              content: MealsList(), // Remplacez MealsList() par le widget que vous souhaitez afficher dans la boîte de dialogue
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Fermer'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
                           },
+                        );
+                      },
+                      child: Text(
+                        'Voir l\'historique',
+                        style: TextStyle(
+                          color: Color(0xFFFFFFff),
+                          fontSize: 18,
+                          decoration: TextDecoration.underline,
                         ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text(
-                'Voir l\'historique',
-                style: TextStyle(
-                  color: Color(0xFF004396),
-                  fontSize: 18,
-                  decoration: TextDecoration.underline,
-                ),
-                textAlign: TextAlign.center,
-              ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+              ],)
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      )
     );
   }
 }
