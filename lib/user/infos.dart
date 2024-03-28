@@ -107,7 +107,7 @@ class _InfosWidgetState extends State<InfosWidget> {
             if (includeUploadButton) // Condition pour ajouter le bouton uniquement sur la carte "Info 1"
               ElevatedButton(
                 onPressed: _pickAndUploadPdf,
-                child: Text('Envoyer PDF'),
+                child: Text('Modier l\'ordonnance'),
                 style: ElevatedButton.styleFrom(
                   // primary: Colors.white,
                   // onPrimary: Colors.blue,
