@@ -15,7 +15,7 @@ class ServiceException {
   ServiceException(this.responseBody);
 }
 
-class pdfService {
+class PdfService {
 
   static Future<void> downloadOrdonnance(BuildContext context) async {
     // URL de l'API et headers
@@ -79,8 +79,7 @@ class pdfService {
     final String? apiKey = dotenv.env['API_KEY'];
     final FlutterSecureStorage storage = FlutterSecureStorage();
     String? jwtToken = await storage.read(key: 'jwt');
-  print(apiKey);
-  print(jwtToken);
+
     if (jwtToken == null) {
       print('JWT Token not found');
       return;

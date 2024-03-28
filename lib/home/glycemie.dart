@@ -1,3 +1,4 @@
+import 'dart:async'; // Ajoutez cette ligne pour accéder à Timer
 import 'package:flutter/material.dart';
 import '/../service/glycemieService.dart'; // Importez votre service API
 
@@ -18,25 +19,39 @@ class GlycemieCircle extends StatefulWidget {
 class _GlycemieCircleState extends State<GlycemieCircle> {
   double _mmolLValue = 5; // Valeur glycémique par défaut en mmol/L
   double _mgdlValue = 112.0; // Valeur glycémique par défaut en mg/dl
+  Timer? _timer; // Variable pour le Timer
+
 
   @override
   void initState() {
     super.initState();
     // Appel de la méthode pour récupérer les données de glycémie lors de l'initialisation du widget
     _fetchGlycemieData();
+    // Démarre un Timer qui appelle _fetchGlycemieData toutes les 10 secondes
+    _timer = Timer.periodic(Duration(seconds: 2), (Timer t) => _fetchGlycemieData());
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Annuler le Timer quand le widget est détruit
+    super.dispose();
   }
 
   // Méthode pour récupérer les données de glycémie à partir du service API
   void _fetchGlycemieData() async {
     try {
       final glycemieData = await GlycemieService.getGlycemieData();
+      if (!mounted) return; // Vérifiez si le widget est toujours monté avant de déclencher setState
       setState(() {
         // Mettre à jour les valeurs de glycémie
         _mmolLValue = glycemieData[0];
         _mgdlValue = glycemieData[1];
       });
+      print("////////////////////////////////////////////////////");
+      print(_mmolLValue);
+      print("////////////////////////////////////////////////////");
+
     } catch (e) {
-      // Gérer les erreurs de récupération des données
       print('Error fetching glycemie data: $e');
     }
   }

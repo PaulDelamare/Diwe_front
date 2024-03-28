@@ -14,7 +14,7 @@ class _DownloadOrdonnancePageState extends State<DownloadOrdonnancePage> {
 
   Future<void> _downloadPDF() async{
     try{
-      await pdfService.downloadOrdonnance(context);
+      await PdfService.downloadOrdonnance(context);
     }catch(e){
       print('Erreur lors du telechargement');
     }

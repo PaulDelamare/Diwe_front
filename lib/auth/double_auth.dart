@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
+import 'package:diwe_front/main.dart';
 import 'package:diwe_front/service/authService.dart';
 
 class DoubleAuthPage extends StatefulWidget {
@@ -19,29 +19,19 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
   bool _isResendButtonDisabled = false;
   int _resendCountdownSeconds = 60;
 
-  @override
-  void initState() {
-    super.initState();
-    _sendMailOnPageLoad();
-  }
-
-  void _sendMailOnPageLoad() {
-    // Attendre 3 secondes avant d'envoyer le mail
-    Timer(Duration(seconds: 1), () {
-      _resendCode();
-    });
-  }
-
   void _verifyCode() async {
     try {
       await authService.verifycode(context, widget.email, _codeController.text);
-        Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
-      );
     } catch (e) {
       // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
       print(e);
+      return; // Arrêtez l'exécution de la méthode si une erreur se produit
     }
+
+    // La vérification du code a réussi, naviguez vers la nouvelle page
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
+    );
   }
 
   void _resendCode() async {

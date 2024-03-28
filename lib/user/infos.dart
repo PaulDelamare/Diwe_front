@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:diwe_front/service/pdfService.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:diwe_front/service/authService.dart';
+import 'package:diwe_front/service/pdfService.dart'; // Assurez-vous que le chemin est correct
+import 'package:diwe_front/service/authService.dart'; // Assurez-vous que le chemin est correct
 
 class InfosWidget extends StatefulWidget {
   @override
@@ -10,8 +10,9 @@ class InfosWidget extends StatefulWidget {
 }
 
 class _InfosWidgetState extends State<InfosWidget> {
+
   AuthService _authService = AuthService();
-  pdfService _pdfService = pdfService();
+  PdfService _pdfService = PdfService();
   Map<String, dynamic>? _userData;
 
   @override
@@ -22,7 +23,6 @@ class _InfosWidgetState extends State<InfosWidget> {
 
   Future<void> _loadUserData() async {
     Map<String, dynamic>? user = await _authService.getUser();
-    print(user);
     if (mounted) {
       setState(() {
         _userData = user;
@@ -30,73 +30,53 @@ class _InfosWidgetState extends State<InfosWidget> {
     }
   }
 
-  Future<void> _updatePdf(File pdf) async{
-    try{
+  Future<void> _updatePdf(File pdf) async {
+    try {
       await _pdfService.updateOrdonnance(pdf);
-      print('Telecharger avec succes');
-    }catch(e){
-      print('Erreur lors du telechargement');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Modifié avec succès')));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors du chargement du pdf: $e')));
+    }
+  }
+
+  Future<void> _pickAndUploadPdf() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      File pdf = File(result.files.single.path!);
+      await _updatePdf(pdf);
+    } else {
+      print('Aucun fichier sélectionné');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-        ),
+    return Scaffold(
+      body: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(width: 8),
-                Text(
-                  _userData?['firstname'] ?? '',
-                  style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 8),
-                Text(
-                  _userData?['lastname'] ?? '',
-                  style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Text(
+              '${_userData?['firstname'] ?? ''} ${_userData?['lastname'] ?? ''}',
+              style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            SizedBox(height: 12), // Réduit l'espacement vertical
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              crossAxisSpacing: 4, // Réduit l'espacement horizontal entre les cartes
+              mainAxisSpacing: 4, // Réduit l'espacement vertical entre les cartes
+              childAspectRatio: 1 / 1, // Permet de contrôler le rapport hauteur/largeur des cartes
               children: [
-                _buildInfoCard('Info 1', Text(('...'))),
-                SizedBox(width: 20),
-                _buildInfoCard('Info 2', Text('...')),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildInfoCard('Info 3', Text('...')),
-                SizedBox(width: 20),
-                _buildInfoCard('Ordonnance', ElevatedButton(
-                  onPressed: () async {
-                    FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['pdf'],
-                    );
-                    if (result != null) {
-                      File file = File(result.files.single.path!);
-                      await _updatePdf(file);
-                    } else {
-                      // L'utilisateur a annulé le choix de fichier
-                      print("Aucun fichier sélectionné");
-                    }
-                  },
-                  child: Text('Choisir un fichier PDF'),
-                ),
-                ),
+                _buildInfoCard('Info 1', Text(_userData?['info1'] ?? "..."), true),
+                _buildInfoCard('Info 2', Text(_userData?['info2'] ?? "..."), false),
+                _buildInfoCard('Info 3', Text(_userData?['info3'] ?? "..."), false),
+                _buildInfoCard('Info 4', Text(_userData?['info4'] ?? "..."), false),
               ],
             ),
           ],
@@ -105,24 +85,34 @@ class _InfosWidgetState extends State<InfosWidget> {
     );
   }
 
-  Widget _buildInfoCard(String title, Widget content) {
+  Widget _buildInfoCard(String title, Widget content, bool includeUploadButton) {
     return Card(
       color: Colors.blue,
       elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 12),
-            content
+            SizedBox(height: 4),
+            content,
+            Spacer(),
+            if (includeUploadButton) // Condition pour ajouter le bouton uniquement sur la carte "Info 1"
+              ElevatedButton(
+                onPressed: _pickAndUploadPdf,
+                child: Text('Envoyer PDF'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  onPrimary: Colors.blue,
+                ),
+              ),
           ],
         ),
       ),
