@@ -126,7 +126,7 @@ class _CheckMailPageState extends State<CheckMailPage> {
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: _isButtonDisabled ? null : _sendMailAgain,
+                        onPressed: _isButtonDisabled ? null : _verifyAccount,
                         child: Text(
                           'Renvoyer le mail',
                           style: TextStyle(
@@ -136,6 +136,7 @@ class _CheckMailPageState extends State<CheckMailPage> {
                         ),
                         style: ElevatedButton.styleFrom(),
                       ),
+
                       if (_isButtonDisabled)
                         Padding(
                           padding: const EdgeInsets.only(top: 20),

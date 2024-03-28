@@ -44,6 +44,8 @@ dependencies:
   connectivity: ^3.0.6
   carousel_slider: ^4.2.1
   image: ^4.1.7
+  file_picker: ^8.0.0+1
+
 
 
 

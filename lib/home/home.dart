@@ -4,6 +4,8 @@ import 'graphique.dart';
 import 'buttonBlog.dart';
 import 'buttonOrdonnance.dart';
 import 'buttonScanne.dart';
+import 'package:diwe_front/bolus/boutons.dart' as Bolus; // Alias pour les boutons de bolus
+import 'package:diwe_front/home/contactCard.dart' as Home; // Alias pour le formulaire de contact
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? _selectedUnit = 'mmol/L';
+  bool showEmailHistoryWidget = false;
+  bool showContactForm = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +76,34 @@ class _HomePageState extends State<HomePage> {
                   ButtonBlogCard(),
                   ButtonOrdonnanceCard(),
                   ButtonScanCard(),
+                  SizedBox(height: 30),
+                  Bolus.ButtonRow(
+                    resetButtonText: 'Historique',
+                    saveButtonText: 'Rédiger',
+                    onResetPressed: () {
+                      setState(() {
+                        showContactForm = false;
+                        showEmailHistoryWidget = true;
+                      });
+                    },
+                    onSavePressed: () {
+                      setState(() {
+                        showContactForm = true;
+                        showEmailHistoryWidget = false;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 30),
+                  // Afficher EmailHistoryWidget si showEmailHistoryWidget est vrai, sinon afficher un conteneur vide
+                  showEmailHistoryWidget ? Home.EmailHistoryWidget() : SizedBox.shrink(),
+                  // Afficher ContactFormWidget si showContactForm est vrai, sinon afficher un conteneur vide
+                  showContactForm ? Home.ContactFormWidget() : SizedBox.shrink(),
                 ],
               ),
             ),
           ],
         ),
       ),
-
     );
   }
 }
