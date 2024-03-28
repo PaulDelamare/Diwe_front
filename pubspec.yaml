@@ -45,13 +45,10 @@ dependencies:
   carousel_slider: ^4.2.1
   image: ^4.1.7
   file_picker: ^8.0.0+1
-
-
-
-
-
+  http_parser: ^4.0.0
   image_picker: ^0.8.4
-
+  permission_handler: ^8.0.0
+  open_file: ^3.2.1
 
 dev_dependencies:
   flutter_test:

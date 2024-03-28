@@ -1,5 +1,5 @@
-import 'package:diwe_front/Auth/register.dart';
 import 'package:diwe_front/auth/login_page.dart';
+import 'package:diwe_front/auth/register.dart';
 import 'package:diwe_front/custom/background_bubble_custom.dart';
 import 'package:flutter/material.dart';
 import '../custom/custom_input.dart';
