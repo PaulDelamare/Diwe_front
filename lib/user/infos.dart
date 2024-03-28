@@ -109,8 +109,8 @@ class _InfosWidgetState extends State<InfosWidget> {
                 onPressed: _pickAndUploadPdf,
                 child: Text('Envoyer PDF'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.blue,
+                  // primary: Colors.white,
+                  // onPrimary: Colors.blue,
                 ),
               ),
           ],

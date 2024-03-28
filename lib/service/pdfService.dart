@@ -48,16 +48,24 @@ class PdfService {
 
       if (response.statusCode == 200) {
         // Trouver un emplacement pour sauvegarder le fichier
-        final directory = await getApplicationDocumentsDirectory();
-        final filePath = '/storage/emulated/0/Download/ordonnance.pdf';
-        final file = File(filePath);
-        // Écrire les bytes du PDF dans le fichier
-        await file.writeAsBytes(response.bodyBytes);
+        final directory = await getDownloadsDirectory();
+        print(directory);
+        if (directory != null) {
+            final filePath = '${directory.path}/ordonnance.pdf';
+            final file = File(filePath);
+            // Écrire les bytes du PDF dans le fichier
+            await file.writeAsBytes(response.bodyBytes);
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Ordonnance téléchargée avec succès.'),
-          backgroundColor: Colors.green,
-        ));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Ordonnance téléchargée avec succès.'),
+              backgroundColor: Colors.green,
+            ));
+        } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Impossible de trouver le répertoire de téléchargements.'),
+              backgroundColor: Colors.red,
+            ));
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Erreur lors du téléchargement de l\'ordonnance.'),
