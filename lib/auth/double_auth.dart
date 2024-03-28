@@ -13,26 +13,38 @@ class DoubleAuthPage extends StatefulWidget {
 }
 
 class _DoubleAuthPageState extends State<DoubleAuthPage> {
-  final AuthService authService = AuthService();
+  final AuthService authService = AuthService(); // Initialisation de AuthService
   final TextEditingController _codeController = TextEditingController();
   bool _isVerifyButtonDisabled = false;
   bool _isResendButtonDisabled = false;
   int _resendCountdownSeconds = 60;
 
   void _verifyCode() async {
+    // Afficher l'indicateur de chargement
+    setState(() {
+      _isVerifyButtonDisabled = true;
+    });
+
     try {
+      // Vérifiez le code
       await authService.verifycode(context, widget.email, _codeController.text);
+
+      // Si la vérification réussit, naviguez vers la nouvelle page
+      print('Code vérifié avec succès');
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
+      );
     } catch (e) {
       // Gérez l'erreur si nécessaire, par exemple, en affichant une SnackBar
       print(e);
-      return; // Arrêtez l'exécution de la méthode si une erreur se produit
+    } finally {
+      // Arrêtez l'indicateur de chargement
+      setState(() {
+        _isVerifyButtonDisabled = false;
+      });
     }
-
-    // La vérification du code a réussi, naviguez vers la nouvelle page
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
-    );
   }
+
 
   void _resendCode() async {
     print("Resend code");
@@ -137,7 +149,58 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
                         ),
                         SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: _isVerifyButtonDisabled ? null : _verifyCode,
+                          onPressed: _isVerifyButtonDisabled
+                              ? null
+                              : () async {
+                            setState(() {
+                              _isVerifyButtonDisabled = true;
+                            });
+                            try {
+                              await authService.verifycode(context, widget.email, _codeController.text);
+                              // Si la vérification réussit, naviguez vers la nouvelle page
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
+                              );
+                            } catch (e) {
+                              String errorMessage = '';
+                              if (e is ServiceException) {
+                                final responseBody = e.responseBody;
+                                if (responseBody['status'] == 200) {
+                                  print('Statut de l\'erreur: ${responseBody['status']}');
+                                  // Faire quelque chose ici pour le statut 200
+                                } else {
+                                  List<dynamic> errors = responseBody['errors'];
+                                  errorMessage = errors
+                                      .map((error) => error.containsKey('msg')
+                                      ? error['msg']
+                                      : (error.containsKey('message') ? error['message'] : ''))
+                                      .join('\n');
+                                }
+                              } else {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 2)),
+                                );
+                              }
+
+                              // Afficher le SnackBar uniquement si errorMessage n'est pas vide
+                              if (errorMessage.isNotEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(errorMessage),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+
+                              print(e);
+                            }
+
+                            finally {
+                              setState(() {
+                                _isVerifyButtonDisabled = false;
+                              });
+                            }
+                          },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(Color(0xff004396)),
                             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -147,8 +210,18 @@ class _DoubleAuthPageState extends State<DoubleAuthPage> {
                               ),
                             ),
                           ),
-                          child: Text('Vérifier le code', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          child: _isVerifyButtonDisabled
+                              ? SizedBox( // Afficher l'indicateur de chargement
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                              : Text('Vérifier le code', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                         ),
+
+
 
                         SizedBox(height: 20),
                         ElevatedButton(
