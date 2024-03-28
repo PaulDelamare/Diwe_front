@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "258744938130",
+    "project_id": "diwe-59734",
+    "storage_bucket": "diwe-59734.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258744938130:android:328f8d2464f46f950a404b",
+        "android_client_info": {
+          "package_name": "com.example.diwe_front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHn_DhfafKVM-3uf4A9IK0MC4G3VHsRyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

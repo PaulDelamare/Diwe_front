@@ -41,3 +41,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+#.env
+.env
+
+# Ignore generated files
+build/generated/*g
