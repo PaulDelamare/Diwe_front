@@ -109,7 +109,16 @@ class _BolusPageState extends State<BolusPage> {
               top: 645,
               left: 0,
               right: 0,
-              child: ButtonRow(), // Utilisation du widget ButtonRow pour les boutons
+              child: ButtonRow(
+                resetButtonText: 'Réinitialiser',
+                saveButtonText: 'Enregistrer',
+                onResetPressed: () {
+                  // Action pour le bouton Réinitialiser
+                },
+                onSavePressed: () {
+                  // Action pour le bouton Enregistrer
+                },
+              ), // Utilisation du widget ButtonRow pour les boutons
             ),
           ],
         ),

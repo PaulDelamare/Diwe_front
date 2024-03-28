@@ -1,3 +1,4 @@
+import 'package:diwe_front/main.dart';
 import 'package:flutter/material.dart';
 
 class ButtonScanCard extends StatelessWidget {
@@ -5,7 +6,10 @@ class ButtonScanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Action à effectuer lorsque la carte est cliquée
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 3)),
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20), // Marge uniforme pour la card
@@ -16,7 +20,10 @@ class ButtonScanCard extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () {
-              // Action à effectuer lorsque la carte est cliquée
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage(selectedIndex: 3)),
+              );
             },
             child: Row(
               children: <Widget>[

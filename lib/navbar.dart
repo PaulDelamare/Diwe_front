@@ -17,20 +17,23 @@ class _NavbarState extends State<Navbar> {
     'home',
     'repas',
     'commandes',
+    'settings'
   ];
 
   @override
   Widget build(BuildContext context) {
+    final int itemCount = _labels.length > 4 ? 4 : _labels.length;
+
     return BottomNavigationBar(
       backgroundColor: const Color(0xFFF8F8F8),
       selectedItemColor: const Color(0xFF0C8CE9),
       unselectedItemColor: const Color(0xFF004396),
-      currentIndex: widget.selectedIndex, // Utilisez la propriété selectedIndex passée par le parent
+      currentIndex: widget.selectedIndex >= itemCount ? 0 : widget.selectedIndex, // Assurez-vous que currentIndex est dans les limites valides
       onTap: (index) {
         widget.onItemTapped(index); // Utiliser la fonction fournie par le widget parent
       },
       items: List.generate(
-        _labels.length,
+        itemCount, // Utilisez les quatre premiers labels ou tous les labels s'il y en a moins de quatre
             (index) => BottomNavigationBarItem(
           icon: SizedBox(
             width: 30,

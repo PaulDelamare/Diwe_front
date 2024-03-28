@@ -1,4 +1,6 @@
+import 'package:diwe_front/Auth/register.dart';
 import 'package:diwe_front/auth/login_page.dart';
+import 'package:diwe_front/custom/background_bubble_custom.dart';
 import 'package:flutter/material.dart';
 import '../custom/custom_input.dart';
 
@@ -7,63 +9,20 @@ import '../custom/custom_input.dart';
 class Authpage extends StatelessWidget {
   const Authpage ({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
           // Grand cercle orange en bas à droite
-          Positioned(
-            right: 250,
-            bottom: -120,
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFAB91).withOpacity(0.9),
-              ),
-            ),
-          ),
+          BackgroundBubble(right: 250,bottom: -120 ,color: Color(0xFFFFAB91).withOpacity(0.9), width: 300, height: 300),
           // Petit cercle orange en bas à droite
-          Positioned(
-            right: 130,
-            bottom: 130,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFAB91).withOpacity(0.9),
-              ),
-            ),
-          ),
+          BackgroundBubble(right: 130,bottom: 130 ,color: Color(0xFFFFAB91).withOpacity(0.9), width: 80, height: 80),
           // Grand cercle orange en haut à gauche
-          Positioned(
-            right: -100,
-            top: -80,
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFAB91).withOpacity(0.9),
-              ),
-            ),
-          ),
+          BackgroundBubble(right: -100,top: -80 ,color: Color(0xFFFFAB91).withOpacity(0.9), width: 300, height: 300),
           // Petit cercle orange en haut à gauche
-          Positioned(
-            left: 100,
-            top: 40,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFAB91).withOpacity(0.9),
-              ),
-            ),
-          ),
+          BackgroundBubble(left: 100,top: 40 ,color: Color(0xFFFFAB91).withOpacity(0.9), width: 80, height: 80),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +55,9 @@ class Authpage extends StatelessWidget {
                   width: 250.0,
                   onTap: () {
                     // Action à exécuter au tapotement
-
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => RegisterPage()), // Assurez-vous que la destination est valide.
+                    );
                   },
                 ),
 

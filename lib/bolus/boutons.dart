@@ -46,9 +46,19 @@ class CustomButton extends StatelessWidget {
   }
 }
 
-
 class ButtonRow extends StatelessWidget {
-  const ButtonRow({Key? key}) : super(key: key);
+  final String resetButtonText;
+  final String saveButtonText;
+  final VoidCallback onResetPressed;
+  final VoidCallback onSavePressed;
+
+  const ButtonRow({
+    Key? key,
+    required this.resetButtonText,
+    required this.saveButtonText,
+    required this.onResetPressed,
+    required this.onSavePressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +66,16 @@ class ButtonRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomButton(
-          text: 'Réinitialiser',
+          text: resetButtonText,
           textColor: Color(0xFF004396),
           buttonColor: Colors.white,
-          onPressed: () {
-            // Action pour le bouton Réinitialiser
-          },
+          onPressed: onResetPressed,
         ),
         CustomButton(
-          text: 'Enregistrer',
+          text: saveButtonText,
           textColor: Colors.white,
           buttonColor: Color(0xFF004396),
-          onPressed: () {
-            // Action pour le deuxième bouton
-          },
+          onPressed: onSavePressed,
         ),
       ],
     );

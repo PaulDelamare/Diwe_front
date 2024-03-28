@@ -1,22 +1,23 @@
 import 'package:diwe_front/auth/Authhandler.dart';
 import 'package:diwe_front/auth/auth_page.dart';
-import 'package:diwe_front/auth/login_page.dart';
+import 'package:diwe_front/settings/settings.dart';
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'home/home.dart';
 import 'user/user.dart';
 import 'bolus/bolus.dart';
 import 'repas/repas.dart';
 import 'commandes/commandes.dart';
-import 'service/authService.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:diwe_front/util/connectivity_service.dart'; // Import du package connectivity
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'navbar.dart';
 
-
-void main() async{
-  //Find the .env for use it in other file
+void main() async {
   await dotenv.load(fileName: ".env");
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
 }
 
@@ -31,31 +32,40 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // Utilisez AuthHandler pour gérer l'authentification et l'autorisation
       home: AuthHandler(
         roles: ['user', 'health'],
-        onLoggedIn: (context) => const MyHomePage(),
+        onLoggedIn: (context) => const MyHomePage(selectedIndex: 2),
         onLoggedOut: (context) => const Authpage(),
       ),
       routes: {
+        '/home': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const HomePage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
         '/user': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const UserPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/bolus': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const BolusPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/repas': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
-          onLoggedIn: (context) => const RepasPage(),
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => RepasPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
         '/commandes': (context) => AuthHandler(
-          roles:  ['user', 'admin', 'health', 'blog'],
+          roles: ['user', 'admin', 'health', 'blog'],
           onLoggedIn: (context) => const CommandesPage(),
+          onLoggedOut: (context) => const Authpage(),
+        ),
+        '/settings': (context) => AuthHandler(
+          roles: ['user', 'admin', 'health', 'blog'],
+          onLoggedIn: (context) => const SettingPage(),
           onLoggedOut: (context) => const Authpage(),
         ),
       },
@@ -64,55 +74,64 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final int selectedIndex;
+
+  const MyHomePage({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() =>
+      _MyHomePageState(selectedIndex: selectedIndex);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 2; // Initialisez avec la valeur correspondant à la page d'accueil
+  late int _selectedIndex;
 
-  // Variable pour stocker le contenu de la page sélectionnée
+  _MyHomePageState({required int selectedIndex}) {
+    // Vérifiez que selectedIndex est compris entre 0 et 5
+    if (selectedIndex >= 0 && selectedIndex <= 5) {
+      _selectedIndex = selectedIndex;
+    } else {
+      throw ArgumentError('La valeur de selectedIndex doit être comprise entre 0 et 5');
+    }
+  }
+
   late Widget _selectedPage;
 
   @override
   void initState() {
     super.initState();
-    _selectedPage = const HomePage(); // Définit la page d'accueil comme page sélectionnée au démarrage
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      switch (_selectedIndex) {
-        case 0:
-          _selectedPage = const UserPage();
-          break;
-        case 1:
-          _selectedPage = const BolusPage();
-          break;
-        case 2:
-          _selectedPage = const HomePage();
-          break;
-        case 3:
-          _selectedPage = const RepasPage();
-          break;
-        case 4:
-          _selectedPage = const CommandesPage();
-          break;
-        default:
-          _selectedPage = Container();
-      }
-    });
+    _selectedPage = const HomePage();
   }
 
   @override
   Widget build(BuildContext context) {
+    switch (_selectedIndex) {
+      case 0:
+        _selectedPage = const UserPage();
+        break;
+      case 1:
+        _selectedPage = const BolusPage();
+        break;
+      case 2:
+        _selectedPage = const HomePage();
+        break;
+      case 3:
+        _selectedPage = RepasPage();
+        break;
+      case 4:
+        _selectedPage = const CommandesPage();
+        break;
+      case 5:
+        _selectedPage = const SettingPage();
+        break;
+      default:
+        _selectedPage = HomePage();
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.only(left: 15.0), // Ajoutez du padding à gauche du logo
+          padding: const EdgeInsets.only(left: 15.0),
           child: Image.asset(
             'assets/images/diwe_logo.png',
           ),
@@ -138,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Center(
                 child: IconButton(
                   onPressed: () {
-                    _launchEmergencyCall('tel:15'); // Appeler le numéro d'urgence
+                    _launchEmergencyCall('tel:15');
                   },
                   icon: const Icon(
                     Icons.phone,
@@ -152,15 +171,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
-      // Afficher le contenu de la page sélectionnée
       body: _selectedPage,
       bottomNavigationBar: Navbar(
-        // Indiquer l'index correspondant à la page d'accueil pour la navigation
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   void _launchEmergencyCall(String phoneNumber) async {
@@ -171,4 +193,3 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
-
