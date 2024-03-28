@@ -8,8 +8,6 @@ class GlycemieService {
     final FlutterSecureStorage storage = FlutterSecureStorage();
     String? jwtToken = await storage.read(key: 'jwt');
 
-    await dotenv.load();
-
     final apiKey = dotenv.env['API_KEY'];
 
     if (apiKey == null || apiKey.isEmpty) {
