@@ -1,11 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:diwe_front/auth/auth_page.dart';
-import 'package:diwe_front/auth/check_mail.dart';
-import 'package:diwe_front/auth/double_auth.dart';
 import 'package:diwe_front/main.dart';
-import 'package:diwe_front/user/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';

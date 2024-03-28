@@ -1,6 +1,6 @@
-import 'package:diwe_front/service/authService.dart';
 import 'package:flutter/material.dart';
-
+import 'package:diwe_front/service/authService.dart' as serviceAuth;
+import 'package:diwe_front/user/doctorManager.dart' as doctorManager;
 
 class InfosWidget extends StatefulWidget {
   @override
@@ -8,7 +8,8 @@ class InfosWidget extends StatefulWidget {
 }
 
 class _InfosWidgetState extends State<InfosWidget> {
-  AuthService _authService = AuthService();
+  serviceAuth.AuthService _authService = serviceAuth.AuthService();
+
   Map<String, dynamic>? _userData;
 
   @override
@@ -18,8 +19,8 @@ class _InfosWidgetState extends State<InfosWidget> {
   }
 
   Future<void> _loadUserData() async {
+    // Remplacez par votre logique de récupération des données utilisateur
     Map<String, dynamic>? user = await _authService.getUser();
-    print(user);
     if (mounted) {
       setState(() {
         _userData = user;
@@ -37,45 +38,50 @@ class _InfosWidgetState extends State<InfosWidget> {
           style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 12), // Réduit l'espacement vertical
+        SizedBox(height: 12),
         GridView.count(
           shrinkWrap: true,
           crossAxisCount: 2,
-          crossAxisSpacing: 4, // Réduit l'espacement horizontal entre les cartes
-          mainAxisSpacing: 4, // Réduit l'espacement vertical entre les cartes
-          childAspectRatio: 1 / 1, // Permet de contrôler le rapport hauteur/largeur des cartes
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+          childAspectRatio: 1 / 1,
           children: [
-            _buildInfoCard('Info 1', _userData?['info1'] ?? '...'),
-            _buildInfoCard('Info 2', _userData?['info2'] ?? '...'),
-            _buildInfoCard('Info 3', _userData?['info3'] ?? '...'),
-            _buildInfoCard('Info 4', _userData?['info4'] ?? '...'),
+            _buildInfoCard(
+              'Accéder à la Gestion des Docteurs',
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => doctorManager.DoctorManagerPage()),
+                ),
+                child: Text('Gestion des Docteurs'),
+              ),
+            ),
+            _buildInfoCard('Info 2', Text(_userData?['info2'] ?? '...')),
+            _buildInfoCard('Info 3', Text(_userData?['info3'] ?? '...')),
+            _buildInfoCard('Info 4', Text(_userData?['info4'] ?? '...')),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildInfoCard(String title, String content) {
+  Widget _buildInfoCard(String title, Widget content) {
     return Card(
       color: Colors.blue,
       elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0), // Réduit le rayon de la bordure
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(1.0), // Réduit le padding intérieur de la carte
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold), // Réduit la taille de la police du titre
+              style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 4), // Réduit l'espacement vertical entre le titre et le contenu
-            Text(
-              content,
-              style: TextStyle(fontSize: 14, color: Colors.white), // Réduit la taille de la police du contenu
-            ),
+            SizedBox(height: 4),
+            content,
           ],
         ),
       ),
