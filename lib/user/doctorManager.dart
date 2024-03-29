@@ -184,7 +184,7 @@ class _UserRoleContentPageState extends State<UserRoleContentPage> {
         Text("Contenu pour les utilisateurs avec le rôle 'user'"),
         // Vous pouvez réutiliser les widgets de votre HomePage ou en créer de nouveaux
         ButtonBlogCard(),
-        ButtonOrdonnanceCard(),
+        // ButtonOrdonnanceCard(),
         ButtonScanCard(),
         // Implémentez les fonctionnalités pour ces boutons selon vos besoins
         Bolus.ButtonRow(

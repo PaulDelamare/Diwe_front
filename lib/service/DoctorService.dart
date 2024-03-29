@@ -46,7 +46,6 @@ class DoctorService {
         // Extraire le message d'erreur de la réponse de l'API
         String errorMessage = decodedResponseBody['errors'][0]['msg'];
         throw Exception(errorMessage);
-        print(responseBody);
       } else {
         throw Exception('Failed to create doctor');
       }
@@ -56,7 +55,6 @@ class DoctorService {
 
   Future<Map<String, dynamic>> findDoctor(String email) async {
     final String apiUrl = dotenv.get('API_HOST');
-
     final String? jwtToken = await storage.read(key: 'jwt');
     String? apiKey = dotenv.env['API_KEY'];
     if (jwtToken == null || apiKey == null) {
@@ -73,10 +71,8 @@ class DoctorService {
         'Content-Type': 'application/json',
       },
     );
-
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // Médecin trouvé avec succès
-      print(response.body);
       return json.decode(response.body);
     } else {
       // Erreur lors de la recherche du médecin
@@ -168,10 +164,10 @@ class DoctorService {
   }
 
   Future<List<Map<String, dynamic>>?> getLinkedDoctors() async {
-    final String apiUrl =  'http://2bci.portfolio-etudiant-rouen.com:30000/api/' ;
+    
+    final String apiUrl = dotenv.get('API_HOST');
     final String? jwtToken = await storage.read(key: 'jwt');
     final String? apiKey = dotenv.env['API_KEY'];
-    print(apiUrl);
 
     if (jwtToken == null || apiKey == null) {
       throw Exception('JWT Token or API Key not found');
@@ -190,6 +186,31 @@ class DoctorService {
       final List<dynamic> doctors = responseData['doctors'];
       List<Map<String, dynamic>> linkedDoctors = doctors.cast<Map<String, dynamic>>();
       return linkedDoctors;
+    } else {
+      throw Exception('Failed to load linked doctors: ${response.statusCode}');
+    }
+  }
+  
+  Future<void> deleteLink(String doctorId) async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String? jwtToken = await storage.read(key: 'jwt');
+    final String? apiKey = dotenv.env['API_KEY'];
+
+    if (jwtToken == null || apiKey == null) {
+      throw Exception('JWT Token or API Key not found');
+    }
+
+    final response = await http.put(
+      Uri.parse(apiUrl + 'user/delete-link?id_delete=$doctorId'),
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+        'x-api-key': apiKey,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Doctor created successfully.');
+      return ;
     } else {
       throw Exception('Failed to load linked doctors: ${response.statusCode}');
     }
