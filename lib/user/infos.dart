@@ -1,4 +1,5 @@
 import 'package:diwe_front/user/doctor.dart';
+import 'package:diwe_front/user/history.dart';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/service/authService.dart' as serviceAuth;
 import 'package:diwe_front/user/doctorManager.dart' as doctorManager;
@@ -91,7 +92,16 @@ class _InfosWidgetState extends State<InfosWidget> {
                     },
                     child: _buildInfoCard('Professionnels', Icon( Icons.person, size: 80.0, color: Colors.white,), false),
                   ),
-                _buildInfoCard('Info 3', Text(_userData?['info3'] ?? ""), false),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HistoryMail()), // Remplacez VosMailsPage par le nom de votre page de messagerie
+                    );
+                  },
+                  child: _buildInfoCard('Vos mails', Icon(Icons.email, size: 80.0, color: Colors.white), false),
+                ),
+
                 _buildInfoCard('Info 4', Text(_userData?['info4'] ?? ""), false),
               ],
             ),
