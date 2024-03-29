@@ -1,3 +1,4 @@
+import 'package:diwe_front/user/doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:diwe_front/service/authService.dart' as serviceAuth;
 import 'package:diwe_front/user/doctorManager.dart' as doctorManager;
@@ -46,16 +47,16 @@ class _InfosWidgetState extends State<InfosWidget> {
           mainAxisSpacing: 4,
           childAspectRatio: 1 / 1,
           children: [
-            _buildInfoCard(
-              'Accéder à la Gestion des Docteurs',
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => doctorManager.DoctorManagerPage()),
-                ),
-                child: Text('Gestion des Docteurs'),
-              ),
-            ),
             _buildInfoCard('Info 2', Text(_userData?['info2'] ?? '...')),
+            InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DoctorListingPage()),
+                  );
+                },
+                child: _buildInfoCard('Info 2', Text(_userData?['info2'] ?? '...')),
+              ),
             _buildInfoCard('Info 3', Text(_userData?['info3'] ?? '...')),
             _buildInfoCard('Info 4', Text(_userData?['info4'] ?? '...')),
           ],
