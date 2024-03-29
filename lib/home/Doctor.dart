@@ -137,10 +137,11 @@ class _DoctorSearchFormWidgetState extends State<DoctorSearchFormWidget> {
       try {
         // Utilisation du DoctorService pour rechercher le médecin
         Map<String, dynamic> doctorData = await _findDoctorService.findDoctor(_email);
-
         setState(() {
           _doctorData = doctorData;
         });
+        print(_doctorData);
+        
       } catch (e) {
         // Si l'API renvoie une erreur, la stocker dans _apiError pour l'afficher
         setState(() {
@@ -203,7 +204,7 @@ class _DoctorSearchFormWidgetState extends State<DoctorSearchFormWidget> {
                   child: Text('Recherchez un docteur'),
                 ),
               ),
-              if (_doctorData != null) ...[
+              if (_doctorData != null && _doctorData?['doctor'] != null) ...[
                 // Afficher les données du médecin si elles sont disponibles
                 SizedBox(height: 20),
                 Text(
@@ -223,7 +224,47 @@ class _DoctorSearchFormWidgetState extends State<DoctorSearchFormWidget> {
                   child: Text('Liée ce médecin à mon compte'),
                 ),
 
-              ],
+              ] else ...[
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Ajouter un docteur"),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  DoctorFormWidget(),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Annuler'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    
+                    child: Text(
+                      "Ajouter un docteur fictif",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                )
+              ]
             ],
           ),
         ),
@@ -234,11 +275,24 @@ class _DoctorSearchFormWidgetState extends State<DoctorSearchFormWidget> {
 
 class ListDoctorWidget extends StatelessWidget {
   final DoctorService doctorService;
+  
 
   const ListDoctorWidget({
     Key? key,
     required this.doctorService,
   }) : super(key: key);
+
+
+    void _deleteLink(String doctorId) async {
+
+    try {
+      // Delete link route
+      await doctorService.deleteLink(doctorId);  
+
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -252,17 +306,30 @@ class ListDoctorWidget extends StatelessWidget {
         } else if (snapshot.hasData && snapshot.data != null) {
           final List<Map<String, dynamic>> doctorData = snapshot.data!;
           return ListView.separated(
-            itemCount: doctorData.length,
-            separatorBuilder: (context, index) => SizedBox(height: 10), // Espacement entre les éléments
-            itemBuilder: (context, index) {
-              final doctor = doctorData[index];
-              return ProfileWidget(
-                nom: doctor['lastname'],
-                prenom: doctor['firstname'],
-                email: doctor['email'],
-              );
-            },
-          );
+  itemCount: doctorData.length,
+  separatorBuilder: (context, index) => SizedBox(height: 10), // Espacement entre les éléments
+  itemBuilder: (context, index) {
+    final doctor = doctorData[index];
+    return Row(
+      children: [
+        Expanded(
+          child: ProfileWidget(
+            nom: doctor['lastname'],
+            prenom: doctor['firstname'],
+            email: doctor['email'],
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            _deleteLink(doctor['_id']);
+          },
+          child: Text('Delete Link'),
+        ),
+      ],
+    );
+  },
+);
+
         } else {
           return Text('No data available');
         }

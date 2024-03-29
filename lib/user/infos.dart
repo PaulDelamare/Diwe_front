@@ -1,3 +1,7 @@
+import 'package:diwe_front/user/doctor.dart';
+import 'package:flutter/material.dart';
+import 'package:diwe_front/service/authService.dart' as serviceAuth;
+import 'package:diwe_front/user/doctorManager.dart' as doctorManager;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -10,8 +14,8 @@ class InfosWidget extends StatefulWidget {
 }
 
 class _InfosWidgetState extends State<InfosWidget> {
+  serviceAuth.AuthService _authService = serviceAuth.AuthService();
 
-  AuthService _authService = AuthService();
   PdfService _pdfService = PdfService();
   Map<String, dynamic>? _userData;
 
@@ -22,6 +26,7 @@ class _InfosWidgetState extends State<InfosWidget> {
   }
 
   Future<void> _loadUserData() async {
+    // Remplacez par votre logique de récupération des données utilisateur
     Map<String, dynamic>? user = await _authService.getUser();
     if (mounted) {
       setState(() {
@@ -55,6 +60,7 @@ class _InfosWidgetState extends State<InfosWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
@@ -76,7 +82,15 @@ class _InfosWidgetState extends State<InfosWidget> {
               childAspectRatio: 1 / 1, // Permet de contrôler le rapport hauteur/largeur des cartes
               children: [
                 _buildInfoCard('',   Icon( Icons.picture_as_pdf, size: 80.0, color: Colors.white,), true),// Ajoute la taille de l'icône 
-                _buildInfoCard('Info 2', Text(_userData?['info2'] ?? ""), false),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DoctorListingPage()),
+                      );
+                    },
+                    child: _buildInfoCard('Info 2', Text(_userData?['info2'] ?? '...'), false),
+                  ),
                 _buildInfoCard('Info 3', Text(_userData?['info3'] ?? ""), false),
                 _buildInfoCard('Info 4', Text(_userData?['info4'] ?? ""), false),
               ],
