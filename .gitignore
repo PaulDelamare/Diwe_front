@@ -46,4 +46,4 @@ app.*.map.json
 .env
 
 # Ignore generated files
-build/generated/*
+build/generated/*g

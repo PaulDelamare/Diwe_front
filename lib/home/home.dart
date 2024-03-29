@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _doctorService = DoctorService();
-    _authservice = AuthService();// Initialisez votre instance DoctorService
+    _authservice = AuthService();
   }
 
   @override
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                       GlycemicChart(),
                       SizedBox(height: 25),
                       ButtonBlogCard(),
-                      ButtonOrdonnanceCard(),
+                      // ButtonOrdonnanceCard(),
                       ButtonScanCard(),
                       SizedBox(height: 30),
                       // Affichez que si le il a le role user
@@ -106,6 +106,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         )
+
       ),
     );
   }

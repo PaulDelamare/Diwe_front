@@ -25,7 +25,7 @@ class _PhotoRepasPageState  extends State<Photorepas> {
 
 // Fonction pour récupérer une image à partir de la galerie
   Future<void> getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery); // Sélectionne une image depuis la galerie
+    final pickedFile = await picker.getImage(source: ImageSource.camera); // Sélectionne une image depuis la galerie
 
     if (pickedFile != null) { // Vérifie si une image a été sélectionnée
       setState(() {
@@ -101,11 +101,6 @@ class _PhotoRepasPageState  extends State<Photorepas> {
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: getImage,
-            child: Text('Choisir une photo'),
           ),
         ],
       ),

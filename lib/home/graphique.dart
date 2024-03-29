@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:diwe_front/service/graphiqueService.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class GlycemicChart extends StatefulWidget {
   @override
@@ -8,20 +11,45 @@ class GlycemicChart extends StatefulWidget {
 }
 
 class _GlycemicChartState extends State<GlycemicChart> {
-  bool _showByDay = true;
   List<double> _chartData = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchChartData();
-  }
+@override
+void initState() {
+  super.initState();
 
+  // Récupérer la première donnée et mettre à jour le graphique
+  WidgetsBinding.instance!.addPostFrameCallback((_) {
+    _fetchChartData();
+  });
+
+  // Mettre à jour le graphique toutes les 15 secondes
+  Timer.periodic(Duration(seconds: 15), (Timer t) {
+    if (mounted) {
+      _fetchChartData();
+    } else {
+      t.cancel();
+    }
+  });
+}
+
+@override
+void dispose() {
+  super.dispose();
+}
+
+// Function for get last data
   Future<void> _fetchChartData() async {
     try {
-      final chartData = await GraphiqueService.getGlycemicChartData(byDay: _showByDay);
+      // get last data
+      final chartData = await GraphiqueService.getGlycemicChartData();
+      // Have only 7 data
+      if (_chartData.length >= 8) {
+        // remove the last data
+        _chartData.removeAt(0);
+      }
+      // Push the last data in list
       setState(() {
-        _chartData = chartData;
+        _chartData.add(chartData);
       });
     } catch (e) {
       // Gérer les erreurs de récupération des données
@@ -33,56 +61,6 @@ class _GlycemicChartState extends State<GlycemicChart> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              DropdownButton<bool>(
-                value: _showByDay,
-                onChanged: (newValue) {
-                  setState(() {
-                    _showByDay = newValue!;
-                    _fetchChartData(); // Actualiser les données du graphique lors du changement de sélection
-                  });
-                },
-                underline: Container(),
-                style: TextStyle(
-                  color: _showByDay ? Colors.white : Colors.black,
-                ),
-                items: [
-                  DropdownMenuItem(
-                    value: true,
-                    child: Container(
-                      color: _showByDay ? Color(0xFF004396) : Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Par jour',
-                          style: TextStyle(color: _showByDay ? Colors.white : Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: false,
-                    child: Container(
-                      color: !_showByDay ? Color(0xFF004396) : Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Par heure',
-                          style: TextStyle(color: !_showByDay ? Colors.white : Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 0.5),
         AspectRatio(
           aspectRatio: 1.8,
           child: Container(
@@ -95,7 +73,7 @@ class _GlycemicChartState extends State<GlycemicChart> {
               padding: const EdgeInsets.all(16),
               child: _chartData.isNotEmpty
                   ? LineChart(
-                _showByDay ? _getDayChartData() : _getHourChartData(),
+                _getPulse(),
               )
                   : Center(
                 child: CircularProgressIndicator(), // Afficher un indicateur de chargement pendant la récupération des données
@@ -107,27 +85,27 @@ class _GlycemicChartState extends State<GlycemicChart> {
     );
   }
 
-  LineChartData _getDayChartData() {
+  LineChartData _getPulse() {
     return LineChartData(
-      lineBarsData: [
-        LineChartBarData(
-          spots: _chartData
-              .asMap()
-              .map((index, value) => MapEntry(index.toDouble(), FlSpot(index.toDouble(), value)))
-              .values
-              .toList(),
-          isCurved: true,
-          colors: [Colors.blue],
-          barWidth: 4,
-          isStrokeCapRound: true,
-          belowBarData: BarAreaData(show: false),
+      // Defined the minimum and maximum values
+      minY: 40,
+      maxY: 200,
+      // Define the grid data to hidden
+      gridData: FlGridData(
+        show: false,
+      ),
+      // Display the bottom data
+      titlesData: FlTitlesData(
+        bottomTitles: SideTitles(
+          showTitles: true,
         ),
-      ],
-    );
-  }
-
-  LineChartData _getHourChartData() {
-    return LineChartData(
+        // Hide the left title
+        leftTitles: SideTitles(
+          showTitles: false,
+          reservedSize: 0,
+        ),
+      ),
+      // Define graph
       lineBarsData: [
         LineChartBarData(
           spots: _chartData
@@ -145,3 +123,4 @@ class _GlycemicChartState extends State<GlycemicChart> {
     );
   }
 }
+

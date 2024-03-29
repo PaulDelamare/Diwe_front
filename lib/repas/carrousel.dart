@@ -56,7 +56,7 @@ class MealCarouselWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 100,
+            height: 70,
             child: totalWidth < MediaQuery.of(context).size.width
                 ? Row(
               mainAxisAlignment: MainAxisAlignment.center,

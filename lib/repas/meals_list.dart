@@ -13,7 +13,7 @@ class _MealsListState extends State<MealsList> {
   List<Meals> _meals = [];
   int _currentPage = 1;
   bool _isLoading = true;
-  final String _baseUrl = dotenv.env['http://10.0.2.2:3000'] ?? ''; // Assigner une chaîne vide si la valeur est nulle
+  final String _baseUrl = dotenv.env['API_HOST'] ?? ''; // Assigner une chaîne vide si la valeur est nulle
 
 
   @override
@@ -28,7 +28,7 @@ class _MealsListState extends State<MealsList> {
       List<Meals> loadedMeals = await mealGet.fetchMealsWithPage(page); // Récupère les repas à partir de l'API avec la pagination
 
       setState(() {
-        _meals.addAll(loadedMeals); // Ajoute les repas récupérés à la liste des repas existante
+        _meals = loadedMeals; // Ajoute les repas récupérés à la liste des repas existante
         _isLoading = false; // Indique que le chargement des repas est terminé
       });
     } on FetchMealsException catch (e) { // Gère les exceptions spécifiques à la récupération des repas
@@ -115,11 +115,16 @@ class _MealsListState extends State<MealsList> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Display meal information on popup
                   ListTile(
-                    title: Text(meal.name),
-                    subtitle: Text('Glucides : ${meal.glucids} g'),
-                    trailing: Text('Calories : ${meal.calories} kcal'),
-
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(meal.name),
+                        Text('Glucides : ${meal.glucids} g'),
+                        Text('Calories : ${meal.calories} kcal'),
+                      ],
+                    ),
                   ),
                   // Bouton de suppression
                   ElevatedButton(
