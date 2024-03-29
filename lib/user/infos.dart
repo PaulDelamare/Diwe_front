@@ -56,7 +56,9 @@ class _InfosWidgetState extends State<InfosWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: Colors.transparent,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0), // Ajoute un padding horizontal de 20
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -69,14 +71,14 @@ class _InfosWidgetState extends State<InfosWidget> {
             GridView.count(
               shrinkWrap: true,
               crossAxisCount: 2,
-              crossAxisSpacing: 4, // Réduit l'espacement horizontal entre les cartes
-              mainAxisSpacing: 4, // Réduit l'espacement vertical entre les cartes
+              crossAxisSpacing: 0, // Réduit l'espacement horizontal entre les cartes
+              mainAxisSpacing: 0, // Réduit l'espacement vertical entre les cartes
               childAspectRatio: 1 / 1, // Permet de contrôler le rapport hauteur/largeur des cartes
               children: [
-                _buildInfoCard('Info 1', Text(_userData?['info1'] ?? "..."), true),
-                _buildInfoCard('Info 2', Text(_userData?['info2'] ?? "..."), false),
-                _buildInfoCard('Info 3', Text(_userData?['info3'] ?? "..."), false),
-                _buildInfoCard('Info 4', Text(_userData?['info4'] ?? "..."), false),
+                _buildInfoCard('',   Icon( Icons.picture_as_pdf, size: 80.0, color: Colors.white,), true),// Ajoute la taille de l'icône 
+                _buildInfoCard('Info 2', Text(_userData?['info2'] ?? ""), false),
+                _buildInfoCard('Info 3', Text(_userData?['info3'] ?? ""), false),
+                _buildInfoCard('Info 4', Text(_userData?['info4'] ?? ""), false),
               ],
             ),
           ],
@@ -86,36 +88,40 @@ class _InfosWidgetState extends State<InfosWidget> {
   }
 
   Widget _buildInfoCard(String title, Widget content, bool includeUploadButton) {
-    return Card(
-      color: Colors.blue,
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 4),
-            content,
-            Spacer(),
-            if (includeUploadButton) // Condition pour ajouter le bouton uniquement sur la carte "Info 1"
-              ElevatedButton(
-                onPressed: _pickAndUploadPdf,
-                child: Text('Modier l\'ordonnance'),
-                style: ElevatedButton.styleFrom(
-                  // primary: Colors.white,
-                  // onPrimary: Colors.blue,
+  return Card(
+    color: Colors.blue,
+    elevation: 3,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16.0),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // Centrer le contenu de la colonne verticalement
+        crossAxisAlignment: CrossAxisAlignment.center, // Centrer le contenu de la colonne horizontalement
+        children: [
+          content,
+          if (includeUploadButton) // Condition pour ajouter le bouton uniquement sur la carte "Info 1"
+            ElevatedButton.icon(
+              onPressed: _pickAndUploadPdf,
+              icon: Icon(Icons.edit),
+              label: Text(
+                'Modifier\nl\'ordonnance', // Ajoute un retour à la ligne
+                textAlign: TextAlign.center, // Centre le texte
+                style: TextStyle(fontSize: 14),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

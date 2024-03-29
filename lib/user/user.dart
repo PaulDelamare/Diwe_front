@@ -17,19 +17,9 @@ class _UserPageState extends State<UserPage> {
       body: Center( // Centrer le contenu de UserPage
         child: Stack(
           children: [
-            // Espace au-dessus du fond bleu
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 100, // Hauteur de l'espace au-dessus du fond bleu
-              child: Container(
-                color: Colors.white, // Couleur de l'espace au-dessus du fond bleu
-              ),
-            ),
             // Fond bleu
             Positioned(
-              top: 70, // Hauteur de l'espace au-dessus du fond bleu
+              top: 0, // Hauteur de l'espace au-dessus du fond bleu
               left: 0,
               right: 0,
               bottom: 0,
@@ -49,7 +39,7 @@ class _UserPageState extends State<UserPage> {
             ),
             // Icon Paramètres
             Positioned(
-              top: 75,
+              top: 10,
               left: 10,
               child: IconButton(
                 icon: Icon(Icons.settings, color: Colors.white),
@@ -63,33 +53,19 @@ class _UserPageState extends State<UserPage> {
             ),
             // Avatar
             Positioned(
-              top: 0,
+              top: 10,
               left: 0,
               right: 0,
               child: Center(
                 child: AvatarPage(),
               ),
             ),
-            // Icon edit
-            Positioned(
-              top: 75,
-              right: 10,
-              child: IconButton(
-                icon: Icon(Icons.mode_edit, color: Colors.white),
-                onPressed: () {
-                  // Naviguer vers la page des modifications
-                  Navigator.pushNamed(context, '/edit');
-                },
-              ),
-            ),
             Padding(
-              padding: EdgeInsets.only(top: 230.0),
+              padding: EdgeInsets.only(top: 120.0),
               child: Center(
                 child: InfosWidget(),
               ),
             ),
-
-
           ],
         ),
       ),
