@@ -19,25 +19,12 @@ class _BolusPageState extends State<BolusPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Stack(
-          children: [
-            // Espace au-dessus du fond bleu
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 100, // Hauteur de l'espace au-dessus du fond bleu
-              child: Container(
-                color: Colors.white, // Couleur de l'espace au-dessus du fond bleu
-              ),
-            ),
-            // Fond bleu
-            Positioned(
-              top: 70, // Hauteur de l'espace au-dessus du fond bleu
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.8,
+                padding: EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -49,17 +36,10 @@ class _BolusPageState extends State<BolusPage> {
                     topRight: Radius.circular(20),
                   ),
                 ),
-              ),
-            ),
-            // GlycemieWidget
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child:SingleChildScrollView( 
+                  child:Column(
                   children: [
+                    SizedBox(height: 10),
                     GlycemieCircle(
                       selectedUnit: _selectedUnit,
                       onUnitChanged: (newValue) {
@@ -68,59 +48,39 @@ class _BolusPageState extends State<BolusPage> {
                         });
                       },
                     ),
-                    SizedBox(height: 16), // Espacement entre le cercle et le texte
+                    SizedBox(height: 10),
                     Text(
                       'GLYCEMIE',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 17,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
+                    SizedBox(height: 10),
+                    GlucideBlock(),
+                    SizedBox(height: 10),
+                    CorrectionBlock(),
+                    SizedBox(height: 10),
+                    SuggestionBlock(),
+                    SizedBox(height: 20),
+                    ButtonRow(
+                      resetButtonText: 'Réinitialiser',
+                      saveButtonText: 'Enregistrer',
+                      onResetPressed: () {
+                        // Action pour le bouton Réinitialiser
+                      },
+                      onSavePressed: () {
+                        // Action pour le bouton Enregistrer
+                      },
+                    ),
+                ],
                 ),
+                ) 
               ),
-            ),
-            Positioned(
-              top: 270, // Ajustez la position verticale selon vos besoins
-              left: 0, // Ajustez la position horizontale selon vos besoins
-              right: 0,
-              child: Center(
-                child: GlucideBlock(),
-              ),
-            ),
-            Positioned(
-              top: 400, // Ajustez la position verticale selon vos besoins
-              left: 0, // Ajustez la position horizontale selon vos besoins
-              right: 0,
-              child: Center(
-                child: CorrectionBlock(),
-              ),
-            ),
-            Positioned(
-              top: 530, // Ajustez la position verticale selon vos besoins
-              left: 0, // Ajustez la position horizontale selon vos besoins
-              right: 0,
-              child: Center(
-                child: SuggestionBlock(),
-              ),
-            ),
-            Positioned(
-              top: 645,
-              left: 0,
-              right: 0,
-              child: ButtonRow(
-                resetButtonText: 'Réinitialiser',
-                saveButtonText: 'Enregistrer',
-                onResetPressed: () {
-                  // Action pour le bouton Réinitialiser
-                },
-                onSavePressed: () {
-                  // Action pour le bouton Enregistrer
-                },
-              ), // Utilisation du widget ButtonRow pour les boutons
-            ),
-          ],
+            ],
+          )
+          
         ),
       ),
     );

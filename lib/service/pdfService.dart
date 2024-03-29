@@ -49,7 +49,6 @@ class PdfService {
       if (response.statusCode == 200) {
         // Trouver un emplacement pour sauvegarder le fichier
         final directory = await getDownloadsDirectory();
-        print(directory);
         if (directory != null) {
             final filePath = '${directory.path}/ordonnance.pdf';
             final file = File(filePath);

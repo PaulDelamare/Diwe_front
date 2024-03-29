@@ -118,11 +118,6 @@ class _AvatarPageState extends State<AvatarPage> {
               ),
             ),
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: getImage,
-            child: Text('Choisir une photo'),
-          ),
         ],
       ),
     );
