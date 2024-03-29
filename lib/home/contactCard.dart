@@ -195,7 +195,6 @@ class _ContactFormWidgetState extends State<ContactFormWidget> {
     );
   }
 }
-
 class EmailHistoryWidget extends StatefulWidget {
   @override
   _EmailHistoryWidgetState createState() => _EmailHistoryWidgetState();
@@ -233,75 +232,76 @@ class _EmailHistoryWidgetState extends State<EmailHistoryWidget> {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
-            child: Text(
-              'Aucun historique d\'e-mail disponible',
-              style: TextStyle(
-                color: Colors.white, // Définissez la couleur du texte en blanc
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Aucun historique d\'e-mail disponible',
+                  style: TextStyle(
+                    color: Colors.white, // Définissez la couleur du texte en blanc
+                  ),
+                ),
+                SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ContactMail()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue, // Couleur du cercle
+                    ),
+                    padding: EdgeInsets.all(8), // Espacement à l'intérieur du cercle
+                    child: Icon(Icons.add, color: Colors.white), // Icône de cercle
+                  ),
+                ),
+              ],
             ),
           );
         } else {
           // Charger les e-mails à afficher
           displayedEmails = snapshot.data!.take(displayedEmailsCount).toList();
+
           // Afficher l'historique des e-mails
           return SingleChildScrollView(
-            // Utiliser SingleChildScrollView ici
             child: Column(
               children: [
                 ListView.builder(
                   shrinkWrap: true,
-                  physics:
-                      NeverScrollableScrollPhysics(), // Désactiver le défilement du ListView
-                  itemCount: displayedEmails.length * 2 -
-                      1, // Compter les espaces verticaux
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: displayedEmails.length * 2 - 1,
                   itemBuilder: (context, index) {
-                    if (index.isOdd)
-                      return SizedBox(height: 16); // Espacement vertical
+                    if (index.isOdd) return SizedBox(height: 16);
                     final dataIndex = index ~/ 2;
                     Map<String, dynamic> emailData = displayedEmails[dataIndex];
-                    bool isEmailRead =
-                        emailData['read'] ?? false; // Supposons cette propriété
+                    final bool isRead = emailData['read'] ?? false;
                     return FractionallySizedBox(
-                      widthFactor: 0.8, // 80% de la largeur du parent
+                      widthFactor: 0.8,
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(10), // Coins arrondis
+                          borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: Color(0xFF004396), // Couleur de la bordure
-                            width: 2, // Épaisseur de la bordure en pixels
+                            color: Color(0xFF004396),
+                            width: 2,
                           ),
                         ),
                         child: ListTile(
                           leading: CircleAvatar(
                             child: Icon(Icons.person),
                           ),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        emailData['sender'] ??
-                                            'Expéditeur inconnu',
-                                        style: TextStyle(
-                                            color: Color(0xFF004396))),
-                                    Text(
-                                        'Sujet : ' +
-                                            (emailData['subject'] ?? ''),
-                                        style: TextStyle(
-                                            color: Color(0xFF004396))),
-                                  ],
-                                ),
+                              Text(
+                                emailData['sender'] ?? 'Expéditeur inconnu',
+                                style: TextStyle(color: Color(0xFF004396)),
                               ),
-                              // Pastille pour emails non lus
-                              if (!isEmailRead) // Condition pour afficher la pastille
-                                Icon(Icons.fiber_manual_record,
-                                    size: 12, color: Colors.red),
                             ],
+                          ),
+                          subtitle: Text(
+                            'Sujet : ' + (emailData['subject'] ?? '') + (isRead ? ' (Lu)' : ''),
+                            style: TextStyle(color: Color(0xFF004396)),
                           ),
                           onTap: () {
                             // Ajouter la logique pour ouvrir le détail de l'e-mail ici
@@ -316,27 +316,21 @@ class _EmailHistoryWidgetState extends State<EmailHistoryWidget> {
                   children: [
                     ElevatedButton.icon(
                       onPressed: loadMoreEmails,
-                      icon: Icon(Icons.circle), // Icône de plus
-                      label: Text('Charger plus'), // Texte du bouton
+                      icon: Icon(Icons.circle),
+                      label: Text('Charger plus'),
                     ),
-                    SizedBox(
-                        width: 20), // Espacement entre l'icône et le bouton
+                    SizedBox(width: 20),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ContactMail()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ContactMail()));
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.blue, // Couleur du cercle
+                          color: Colors.blue,
                         ),
-                        padding: EdgeInsets.all(
-                            8), // Espacement à l'intérieur du cercle
-                        child: Icon(Icons.add,
-                            color: Colors.white), // Icône de cercle
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.add, color: Colors.white),
                       ),
                     ),
                   ],
