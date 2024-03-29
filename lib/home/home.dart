@@ -220,6 +220,68 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
+
+                  FutureBuilder<bool>(
+                    future: _authservice.hasAnyUserRole(['health']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.data == true) {
+                        return Column(
+                          children: [
+                            Bolus.ButtonRow(
+                              resetButtonText: 'Historique',
+                              saveButtonText: 'Rédiger',
+                              onResetPressed: () {
+                                setState(() {
+                                  showContactForm = false;
+                                  showEmailHistoryWidget = true;
+                                });
+                              },
+                              onSavePressed: () {
+                                setState(() {
+                                  showContactForm = true;
+                                  showEmailHistoryWidget = false;
+                                });
+                              },
+                            ),
+                            SizedBox(height: 30),
+                            // Afficher EmailHistoryWidget si showEmailHistoryWidget est vrai, sinon afficher un conteneur vide
+                            Container(
+                            width: 300, // Définissez la largeur souhaitée ici
+                            padding: EdgeInsets.all(10), // Ajoutez un espace autour des enfants du Row
+                            child: Row(
+                            children: [
+                            Expanded(
+                            flex: 8, // Utilise 80% de l'espace disponible
+                            child: showEmailHistoryWidget ? Home.EmailHistoryWidget() : SizedBox.shrink(),
+                            ),
+                            Expanded(
+                            flex: 2, // Utilise 20% de l'espace disponible
+                            child: showContactForm ? Home.ContactFormWidget() : SizedBox.shrink(),
+                            ),
+                            ],
+                            ),
+                            ),
+
+                            // Utilisation de Column pour défilement vertical
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ListUserRequestWidget(doctorService: _doctorService),
+                              ],
+                            ),
+                          ],
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
+                  ),
+
                 ],
               ),
             ),

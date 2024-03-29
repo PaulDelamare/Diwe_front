@@ -39,28 +39,23 @@ class AuthService {
       }),
     );
 
+    final responseBody = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      final responseBody = jsonDecode(response.body);
       final token = responseBody['access_token'];
       final user = responseBody['user'];
 
       print('Connexion réussie');
 
-        return true;
-
-      return true; // Connexion réussie, retourne true
-    } else if (response.statusCode == 401) {
-      return false; // Connexion réussie, retourne true
-
-
+      return true;
+    } else if (responseBody.containsKey('redirect') && responseBody['redirect'] == true) {
+      return false; // Connexion non réussie, retourne false
     } else {
       print('Erreur: ${response.statusCode}');
       print('Corps de la réponse: ${response.body}');
       throw ServiceException(jsonDecode(response.body));
     }
   }
-
-
 
 
 

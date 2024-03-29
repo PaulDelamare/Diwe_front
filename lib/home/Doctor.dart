@@ -232,6 +232,7 @@ class _DoctorSearchFormWidgetState extends State<DoctorSearchFormWidget> {
   }
 }
 
+
 class ListDoctorWidget extends StatelessWidget {
   final DoctorService doctorService;
 
@@ -270,4 +271,55 @@ class ListDoctorWidget extends StatelessWidget {
     );
   }
 }
+
+class ListUserRequestWidget extends StatelessWidget {
+  final DoctorService doctorService;
+
+  const ListUserRequestWidget({
+    Key? key,
+    required this.doctorService,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // Définir une taille fixe ou utiliser un Expanded pour occuper tout l'espace disponible
+      height: MediaQuery.of(context).size.height, // Par exemple, utiliser la hauteur de l'écran
+      child: FutureBuilder<List<Map<String, dynamic>>?>(
+        future: doctorService.getRequestLinkToDoctor(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData && snapshot.data != null) {
+            final List<Map<String, dynamic>> userData = snapshot.data!;
+            return ListView.separated(
+              itemCount: userData.length,
+              separatorBuilder: (context, index) => SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                final user = userData[index];
+                return ProfileWidget(
+                  nom: user['firstname'],
+                  prenom: user['lastname'], // Ajout de la virgule ici
+                  email: user['email'],
+                );
+
+              },
+            );
+          } else {
+            return Text('No data available');
+          }
+        },
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
 

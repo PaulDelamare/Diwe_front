@@ -134,36 +134,46 @@ class DoctorService {
   Future<List<Map<String, dynamic>>> getRequestLinkToDoctor() async {
     final String apiUrl = dotenv.get('API_HOST');
     final String? jwtToken = await storage.read(key: 'jwt');
+    final String? apiKey = dotenv.env['API_KEY'];
 
     if (jwtToken == null) {
       throw Exception('JWT Token not found');
     }
 
-    final String url = '$apiUrl/user/request';
+    if (apiKey == null) {
+      throw Exception('API Key not found');
+    }
+
+    final String url = '$apiUrl/doctor/users';
 
     var response = await http.get(
       Uri.parse(url),
       headers: {
         'Authorization': 'Bearer $jwtToken',
         'Content-Type': 'application/json',
+        'x-api-key': apiKey
       },
     );
 
     if (response.statusCode == 200) {
       // La demande a réussi
-      List<dynamic> requests = json.decode(response.body)['requests'];
-      List<Map<String, dynamic>> formattedRequests = requests.map<Map<String, dynamic>>((request) => {
-        'status': request['status'],
-        'created_at': DateTime.parse(request['created_at']),
-        'doctor': request['doctor'][0], // Prend le premier docteur dans la liste
+      List<dynamic> users = json.decode(response.body)['users'];
+      List<Map<String, dynamic>> formattedUsers = users.map<Map<String, dynamic>>((user) =>
+      {
+        'firstname': user['firstname'],
+        'lastname': user['lastname'],
+        'email': user['email'],
+        'phone': user['phone'],
       }).toList();
-
-      return formattedRequests;
-    } else {
+      return formattedUsers;
+    } else if (response.statusCode == 403) {
       // Erreur lors de la demande
       print('Error: ${response.statusCode}');
       print('Response body: ${response.body}');
-      throw Exception('Failed to get request link to doctor');
+      throw Exception('Failed to get user data');
+    } else {
+      // Autres cas d'erreur, retourne une liste vide
+      return [];
     }
   }
 
@@ -190,6 +200,53 @@ class DoctorService {
       final List<dynamic> doctors = responseData['doctors'];
       List<Map<String, dynamic>> linkedDoctors = doctors.cast<Map<String, dynamic>>();
       return linkedDoctors;
+    } else {
+      throw Exception('Failed to load linked doctors: ${response.statusCode}');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>?> getRequestLinkToDoctorDetails() async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String? apiKey = dotenv.env['API_KEY'];
+
+
+    final String? jwtToken = await storage.read(key: 'jwt');
+    if (jwtToken == null || apiKey == null) {
+      throw Exception('JWT Token or API Key not found');
+    }
+    final response = await http.get(Uri.parse('$apiUrl/user/request'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'x-api-key': apiKey,
+    });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List<Map<String, dynamic>> requests = List.from(jsonResponse['requests']);
+      return requests;
+    } else {
+      throw Exception('Failed to load request link to doctor: ${response.statusCode}');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>?> getDoctorLinked() async {
+    final String apiUrl = dotenv.get('API_HOST');
+    final String? apiKey = dotenv.env['API_KEY'];
+
+
+    final String? jwtToken = await storage.read(key: 'jwt');
+    if (jwtToken == null || apiKey == null) {
+      throw Exception('JWT Token or API Key not found');
+    }
+
+    final response = await http.get(Uri.parse('$apiUrl/user/doctor'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'x-api-key': apiKey,
+    });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List<Map<String, dynamic>> doctors = List.from(jsonResponse['doctors']);
+      return doctors;
     } else {
       throw Exception('Failed to load linked doctors: ${response.statusCode}');
     }

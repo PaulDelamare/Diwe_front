@@ -48,6 +48,8 @@ class ButtonRow extends StatelessWidget {
   }
 }
 
+
+
 class ContactFormWidget extends StatefulWidget {
   @override
   _ContactFormWidgetState createState() => _ContactFormWidgetState();
@@ -57,8 +59,10 @@ class _ContactFormWidgetState extends State<ContactFormWidget> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _subjectController = TextEditingController();
+  final TextEditingController _bodyController = TextEditingController();
   List<File> _selectedFiles = [];
-  final Contact contact = Contact(); // Créez une instance de Contact
+  final Contact contact = Contact();
+  bool? _prescription; // Déclaration de la variable d'état pour la prescription
 
   Future<void> pickPDFFiles() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -73,20 +77,37 @@ class _ContactFormWidgetState extends State<ContactFormWidget> {
       });
     }
   }
-
   Future<void> _sendForm() async {
-    // Supposons que `prescription` est un booléen que tu détermines ailleurs dans ton UI
-    bool? prescription = true; // Placeholder pour l'exemple
+    bool? prescription = _prescription;
 
-    // Ici, tu appelles la méthode sendEmail de ton instance contact
-    await contact.sendEmail(
+    String? result = await contact.sendEmail(
       files: _selectedFiles,
       prescription: prescription,
       email: _emailController.text,
       subject: _subjectController.text,
-      body: "Nom: ${_nameController.text}\nEmail: ${_emailController.text}\nSujet: ${_subjectController.text}",
+      body: _bodyController.text,
     );
+
+    if (result != null) {
+      // Affichez le message d'erreur dans la Snackbar en cas d'échec
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      // Affichez le message de succès dans la Snackbar en cas de succès
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('E-mail envoyé avec succès'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +124,7 @@ class _ContactFormWidgetState extends State<ContactFormWidget> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(labelText: 'Nom'),
             ),
             SizedBox(height: 10),
             TextField(
@@ -113,34 +134,59 @@ class _ContactFormWidgetState extends State<ContactFormWidget> {
             SizedBox(height: 10),
             TextField(
               controller: _subjectController,
-              decoration: InputDecoration(labelText: 'Subject'),
+              decoration: InputDecoration(labelText: 'Objet'),
+            ),
+            TextField(
+              controller: _bodyController,
+              maxLines: 5,
+              decoration: InputDecoration(labelText: 'Contenue'),
             ),
             SizedBox(height: 10),
-            // Ajoutez vos autres champs de saisie ici...
             ElevatedButton(
               onPressed: pickPDFFiles,
               child: Text('Joindre des fichiers PDF'),
             ),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Logique pour joindre une prescription
-                pickPDFFiles();
-              },
-              child: Text('Joindre une prescription'),
+            ListTile(
+              title: Text('Prescription'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Radio<bool>(
+                    value: true,
+                    groupValue: _prescription,
+                    onChanged: (value) {
+                      setState(() {
+                        _prescription = value;
+                      });
+                    },
+                  ),
+                  Text('Oui'),
+                  Radio<bool>(
+                    value: false,
+                    groupValue: _prescription,
+                    onChanged: (value) {
+                      setState(() {
+                        _prescription = value;
+                      });
+                    },
+                  ),
+                  Text('Non'),
+                ],
+              ),
             ),
             SizedBox(height: 10),
             _selectedFiles.isNotEmpty
                 ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _selectedFiles.map((file) {
-                return Text(file.path); // Affiche le chemin de chaque fichier sélectionné
+                return Text(file.path);
               }).toList(),
             )
                 : Text('Aucun fichier sélectionné'),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _sendForm, // Appeler la fonction _sendForm lors de l'appui sur le bouton
+              onPressed: _sendForm,
               child: Text('Envoyer'),
             ),
           ],
@@ -150,7 +196,6 @@ class _ContactFormWidgetState extends State<ContactFormWidget> {
   }
 }
 
-
 class EmailHistoryWidget extends StatefulWidget {
   @override
   _EmailHistoryWidgetState createState() => _EmailHistoryWidgetState();
@@ -158,7 +203,9 @@ class EmailHistoryWidget extends StatefulWidget {
 
 class _EmailHistoryWidgetState extends State<EmailHistoryWidget> {
   final Contact contact = Contact(); // Créez une instance de Contact
-  late Future<List<Email>> emailsFuture;
+  late Future<List<Map<String, dynamic>>> emailsFuture;
+  List<Map<String, dynamic>> displayedEmails = [];
+  int displayedEmailsCount = 5;
 
   @override
   void initState() {
@@ -167,13 +214,21 @@ class _EmailHistoryWidgetState extends State<EmailHistoryWidget> {
     emailsFuture = contact.getEmails();
   }
 
+  void loadMoreEmails() {
+    setState(() {
+      displayedEmailsCount += 5;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Email>>(
+    return FutureBuilder<List<Map<String, dynamic>>>(
       future: emailsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -186,21 +241,82 @@ class _EmailHistoryWidgetState extends State<EmailHistoryWidget> {
             ),
           );
         } else {
+          // Charger les e-mails à afficher
+          displayedEmails = snapshot.data!.take(displayedEmailsCount).toList();
+
           // Afficher l'historique des e-mails
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              Email email = snapshot.data![index];
-              return ListTile(
-                leading: Icon(email.read ? Icons.mail_outline : Icons.mail),
-                title: Text(email.sender),
-                subtitle: Text(email.subject),
-                trailing: Text(email.createdAt.toString()),
-                onTap: () {
-                  // Ajouter la logique pour ouvrir le détail de l'e-mail ici
-                },
-              );
-            },
+          return Container( // Ajoutez un Container ici
+            height: MediaQuery.of(context).size.height, // Définissez une hauteur fixe ou des contraintes
+            child: ListView(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: displayedEmails.length * 2 - 1, // Compter les espaces verticaux
+                  itemBuilder: (context, index) {
+                    if (index.isOdd) return SizedBox(height: 16); // Espacement vertical
+                    final dataIndex = index ~/ 2;
+                    Map<String, dynamic> emailData = displayedEmails[dataIndex];
+                    return FractionallySizedBox(
+                      widthFactor: 0.8, // 80% de la largeur du parent
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10), // Coins arrondis
+                          border: Border.all(
+                            color: Color(0xFF004396), // Couleur de la bordure
+                            width: 2, // Épaisseur de la bordure en pixels
+                          ),                    ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Icon(Icons.person),
+                          ),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+
+                              Text(emailData['sender'] ?? 'Expéditeur inconnu',
+                                  style: TextStyle(color: Color(0xFF004396))),
+                            ],
+                          ),
+                          subtitle: Text('Sujet : ' + (emailData['subject'] ?? ''),
+                              style: TextStyle(color: Color(0xFF004396))),
+                          onTap: () {
+                            // Ajouter la logique pour ouvrir le détail de l'e-mail ici
+                          },
+                        ),
+                      ),
+                    );
+
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: loadMoreEmails,
+                      icon: Icon(Icons.circle), // Icône de plus
+                      label: Text('Charger plus'), // Texte du bouton
+                    ),
+                    SizedBox(width: 20), // Espacement entre l'icône et le bouton
+                    GestureDetector(
+                      onTap: () {
+                        // Redirection vers une autre page
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => NouvellePage()));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue, // Couleur du cercle
+                        ),
+                        padding: EdgeInsets.all(8), // Espacement à l'intérieur du cercle
+                        child: Icon(Icons.add, color: Colors.white), // Icône de cercle
+                      ),
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
           );
         }
       },

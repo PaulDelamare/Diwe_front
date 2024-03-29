@@ -5,6 +5,7 @@ class Email {
   final String body;
   final bool read;
   final DateTime createdAt;
+  final String attachment; // Nouvelle propriété ajoutée
 
   Email({
     required this.id,
@@ -13,6 +14,7 @@ class Email {
     required this.body,
     required this.read,
     required this.createdAt,
+    required this.attachment, // Ajout de la nouvelle propriété ici
   });
 
   factory Email.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Email {
       body: json['body'],
       read: json['read'], // Assurez-vous que 'read' est un booléen dans votre JSON
       createdAt: DateTime.parse(json['createdAt']), // Parsez 'createdAt' en tant que DateTime
+      attachment: json['attachment'], // Assurez-vous que la clé 'attachment' existe dans votre JSON
     );
   }
 }
