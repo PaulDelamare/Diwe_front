@@ -72,7 +72,7 @@ class Contact {
 
 
   Future<List<Map<String, dynamic>>> getEmails() async {
-    final String apiUrl = 'http://10.0.2.2:3000/api/';
+    final String? apiUrl = dotenv.env['API_HOST'];
     final String? jwtToken = await storage.read(key: 'jwt');
     final String? apiKey = dotenv.env['API_KEY'];
 

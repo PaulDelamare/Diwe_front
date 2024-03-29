@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height,
+            minHeight: MediaQuery.of(context).size.height *0.8,
           ),
           child: IntrinsicHeight(
             child:  Column(
