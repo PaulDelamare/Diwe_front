@@ -1,4 +1,6 @@
+import 'package:diwe_front/auth/auth_page.dart';
 import 'package:diwe_front/main.dart';
+import 'package:diwe_front/service/authService.dart';
 import 'package:flutter/material.dart';
 import 'avatar.dart';
 import 'infos.dart';
@@ -66,7 +68,7 @@ class _UserPageState extends State<UserPage> {
                 child: InfosWidget(),
               ),
             ),
-          ],
+            ],
         ),
       ),
     );

@@ -129,7 +129,6 @@ class _SettingPageState extends State<SettingPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -142,9 +141,14 @@ class _SettingPageState extends State<SettingPage> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                child:  Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Déconnexion",style: TextStyle( color: Colors.white, ),),
                   IconButton(
                     icon: Icon(Icons.logout, color: Colors.white),
                     onPressed: () {
@@ -177,13 +181,11 @@ class _SettingPageState extends State<SettingPage> {
                       );
                     },
                   ),
-                  SizedBox(height: 120),
-                  Positioned(
-                    top: 100,
-                    left: 20,
-                    right: 20,
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Container(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
                           'Réinitialisation de mot de passe',
@@ -404,6 +406,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ],
               ),
+              )
+             
             ),
           ],
         ),
