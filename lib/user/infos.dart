@@ -89,7 +89,7 @@ class _InfosWidgetState extends State<InfosWidget> {
                         MaterialPageRoute(builder: (context) => DoctorListingPage()),
                       );
                     },
-                    child: _buildInfoCard('Info 2', Text(_userData?['info2'] ?? '...'), false),
+                    child: _buildInfoCard('Professionnels', Icon( Icons.person, size: 80.0, color: Colors.white,), false),
                   ),
                 _buildInfoCard('Info 3', Text(_userData?['info3'] ?? ""), false),
                 _buildInfoCard('Info 4', Text(_userData?['info4'] ?? ""), false),
@@ -114,6 +114,7 @@ class _InfosWidgetState extends State<InfosWidget> {
         mainAxisAlignment: MainAxisAlignment.center, // Centrer le contenu de la colonne verticalement
         crossAxisAlignment: CrossAxisAlignment.center, // Centrer le contenu de la colonne horizontalement
         children: [
+          Text(title, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
           content,
           if (includeUploadButton) // Condition pour ajouter le bouton uniquement sur la carte "Info 1"
             ElevatedButton.icon(
